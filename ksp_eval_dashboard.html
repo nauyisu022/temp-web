@@ -53,20 +53,45 @@
     <p class="subtitle" style="margin-top: -1rem;">注：Qwen3-8B 为 499 条，其余模型均为 500 条</p>
 
     <div class="metric-desc">
-      <h3>一致率（identical_rate）</h3>
-      <p>KSP 短语与搜索词库中某个搜索词<strong>完全一致</strong>（或词干化后一致）的比例。要求最严格。</p>
-      <h3>短语命中率（hit_rate_phrase）</h3>
-      <p>KSP 短语能被搜索词库<strong>匹配到</strong>（含子串、词干等）的比例。比一致率更宽松。</p>
-      <h3>单词命中率（hit_rate_word）</h3>
-      <p>KSP 拆词后，每个单词在搜索词库中能匹配到的比例。最宽松的指标。</p>
-      <h3>FactScore（忠实度）</h3>
-      <p>KSP 中的词有多少能在原文（title+description）中作为子串出现。越高表示越少编造。</p>
-      <h3>L1 品牌品类一致率</h3>
-      <p>top_attractiveness（brand、product_type、compatibility）层的短语与搜索词完全一致的比例。</p>
-      <h3>L2 USP 一致率</h3>
-      <p>unique_selling_points 层的短语与搜索词完全一致的比例。</p>
-      <h3>L3 长尾词一致率</h3>
-      <p>long_tail_keywords 层的短语与搜索词完全一致的比例。该层差距通常最大。</p>
+      <h3 style="margin-bottom: 0.75rem;">指标说明</h3>
+      <table style="margin-bottom: 0;">
+        <thead>
+          <tr>
+            <th style="width: 25%;">指标名称</th>
+            <th style="text-align: left;">说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">一致率<br>(identical_rate)</td>
+            <td style="text-align: left;">KSP 短语与搜索词库中某个搜索词<strong>完全一致</strong>（或词干化后一致）的比例。要求最严格。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">短语命中率<br>(hit_rate_phrase)</td>
+            <td style="text-align: left;">KSP 短语能被搜索词库<strong>匹配到</strong>（含子串、词干等）的比例。比一致率更宽松。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">单词命中率<br>(hit_rate_word)</td>
+            <td style="text-align: left;">KSP 拆词后，每个单词在搜索词库中能匹配到的比例。最宽松的指标。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">FactScore<br>(忠实度)</td>
+            <td style="text-align: left;">KSP 中的词有多少能在原文（title+description）中作为子串出现。越高表示越少编造。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">L1 品牌品类一致率</td>
+            <td style="text-align: left;">top_attractiveness（brand、product_type、compatibility）层的短语与搜索词完全一致的比例。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">L2 USP 一致率</td>
+            <td style="text-align: left;">unique_selling_points 层的短语与搜索词完全一致的比例。</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: 600;">L3 长尾词一致率</td>
+            <td style="text-align: left;">long_tail_keywords 层的短语与搜索词完全一致的比例。该层差距通常最大。</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <table>
