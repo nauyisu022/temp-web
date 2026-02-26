@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Gemini vs 7B KSP 对比</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 24px; background: #f5f5f5; }
+    h1 { color: #333; }
+    h2 { color: #c00; margin-top: 32px; border-bottom: 2px solid #c00; padding-bottom: 8px; }
+    h2:last-of-type { color: #0a0; border-color: #0a0; }
+    .case { background: #fff; padding: 16px; margin: 16px 0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .case h3 { margin: 0 0 8px 0; font-size: 1.1em; }
+    .title { font-weight: 600; color: #333; margin: 8px 0; }
+    .meta { color: #666; font-size: 0.9em; margin: 8px 0; }
+    .ksp-row { display: flex; gap: 24px; margin-top: 12px; }
+    .ksp-col { flex: 1; }
+    .ksp-col h4 { margin: 0 0 8px 0; font-size: 0.95em; color: #555; }
+    .ksp-col ul { margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.5; }
+    .ksp-col li.match { background: #e8f5e9; margin: 2px 0; padding: 2px 6px; border-radius: 4px; }
+    .ksp-col li.hit { background: #fff3e0; border-left: 3px solid #ff9800; }
+    .ksp-col li.hit.match { background: #e8f5e9; border-left: 3px solid #4caf50; }
+    .hit-badge { font-size: 0.75em; color: #e65100; font-weight: 600; margin-left: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Gemini 2.5 Flash vs Qwen2.5-7B KSP 对比</h1>
+  <p>生成时间: 2026-02-26 15:23</p>
+  <h2>Bad case（一致率低，随机 20 条）</h2>
+    <div class="case">
+      <h3>Bad #1</h3>
+      <p class="title">Placa Petri De Vidro 100x20mm -esp</p>
+      <p class="meta">品类: Health | 7B一致率: 12.5% | Gemini一致率: 5.3% | KSP F1: 34.3% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match">100x20mm</li><li class="match">cultura de microrganismos</li><li class="match">identificação de microrganismos</li><li class="match">laboratório</li><li class="match">microbiologia</li><li class="match">Placa de Petri</li><li>100mm de diâmetro x 20mm de altura</li><li class="hit" title="搜索词: desinfetante (stem_identical)">desinfetado <span class="hit-badge">✓ 命中</span></li><li>durável</li><li>hygiene</li><li>laboratório de microbiologia</li><li>labware</li><li class="hit" title="搜索词: limpador (stem_identical)">limpo <span class="hit-badge">✓ 命中</span></li><li>resistente</li><li>rotinas de bacteriologia</li><li>rotinas de laboratório</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match">100x20mm</li><li class="match">cultura de microrganismos</li><li class="match">identificação de microrganismos</li><li class="match">laboratório</li><li class="match">microbiologia</li><li class="match">placa de petri</li><li>100mm diâmetro</li><li>20mm altura</li><li>bacteriologia</li><li>cultura de bactérias</li><li>esterilizável</li><li>material de laboratório vidro</li><li>petri dish de vidro</li><li>placa de cultura microrganismos</li><li>placa de petri laboratório</li><li>placa para bacteriologia</li><li>placa petri vidro</li><li>reutilizável</li><li class="hit" title="搜索词: vidro (identical)">vidro <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #2</h3>
+      <p class="title">Alca De Drigalski</p>
+      <p class="meta">品类: Health | 7B一致率: 8.0% | Gemini一致率: 5.3% | KSP F1: 9.5% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (25 条)</h4>
+          <ul><li class="match">alca de drigalski</li><li class="match">pesquisadores</li><li>autêntico</li><li>clínicas</li><li>desconto</li><li>disponível</li><li>em estoque</li><li>equipamento de laboratório</li><li>equipamento médico</li><li>equipamento para hospital</li><li>estoque</li><li>hospital</li><li>laboratório clínico</li><li>laboratório clínico</li><li>laboratório de pesquisa</li><li>materiais de laboratório</li><li class="hit" title="搜索词: medicamento (stem_identical)">médicos <span class="hit-badge">✓ 命中</span></li><li>nurses</li><li class="hit" title="搜索词: oferta (identical)">oferta <span class="hit-badge">✓ 命中</span></li><li>original/origem</li><li>pesquisa médica</li><li>preço competitivo</li><li>preço promocional</li><li>profissionais de saúde</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match">ALCA DE DRIGALSKI</li><li class="match">pesquisadores</li><li class="hit" title="搜索词: alcinha (stem_identical)">Alca <span class="hit-badge">✓ 命中</span></li><li>Alca para laboratório</li><li>Drigalski</li><li>Drigalski análise</li><li>análise clínica</li><li>confiabilidade</li><li>diagnóstico laboratorial</li><li>estudantes de ciências</li><li>insumo laboratorial</li><li>meio de cultura</li><li>meio de cultura laboratório</li><li>meio microbiologia</li><li>microbiologia</li><li>placa de Petri</li><li>precisão</li><li>profissionais de laboratório</li><li>qualidade</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #3</h3>
+      <p class="title">Capa De Chuva Moto Motoqueiro Impermeável Tamanho Especial</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 20.0% | Gemini一致率: 26.9% | KSP F1: 17.4% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (20 条)</h4>
+          <ul><li class="match">100% impermeável</li><li class="match">ajuste personalizado</li><li class="match">resistente a rasgos</li><li class="match">RM Bronze</li><li class="hit" title="搜索词: capa de chuva moto (identical)">Capa de Chuva Moto <span class="hit-badge">✓ 命中</span></li><li>ajustado ao corpo</li><li>ajuste nos punhos</li><li>ajuste para motoqueiro</li><li>capa de chuva moto especial</li><li>capa de chuva moto tamanho especial</li><li class="hit" title="搜索词: capa moto impermeavel (stem_identical)">capa moto impermeável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li>durável</li><li class="hit" title="搜索词: impermeável (identical)">impermeável <span class="hit-badge">✓ 命中</span></li><li>liberdade de movimento</li><li>proteção contra chuva moto</li><li>proteção impecável</li><li>proteção moto chuva</li><li>regulagem nos punhos e pernas</li><li>resistente a desgastes</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (26 条)</h4>
+          <ul><li class="match">100% impermeável</li><li class="match">ajuste personalizado</li><li class="match">resistente a rasgos</li><li class="match">RM Bronze</li><li>4G</li><li>GGG</li><li>ajuste perfeito</li><li class="hit" title="搜索词: capa de chuva motoqueiro (identical)">capa de chuva motoqueiro <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para moto (identical)">capa de chuva para moto <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para moto grande (identical)">capa de chuva para moto grande <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para motociclista (identical)">capa de chuva para motociclista <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para viagem (identical)">capa de chuva para viagem <span class="hit-badge">✓ 命中</span></li><li>durabilidade excepcional</li><li>estaturas especiais</li><li>impermeável para moto</li><li>mantém o piloto seco</li><li>materiais de alta qualidade</li><li class="hit" title="搜索词: proteção contra chuva (identical)">proteção contra chuva <span class="hit-badge">✓ 命中</span></li><li>regulagem nas pernas</li><li>regulagem nos punhos</li><li>resistência duradoura</li><li class="hit" title="搜索词: roupa de chuva moto (identical)">roupa de chuva moto <span class="hit-badge">✓ 命中</span></li><li>sem capuz</li><li>tamanho especial</li><li>tamanhos especiais</li><li>total impermeabilidade</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #4</h3>
+      <p class="title">Yoda Tampa Pasta de Dente - personagem Baby Yoda, pintada à mão, sai pela boca d</p>
+      <p class="meta">品类: Health | 7B一致率: 25.0% | Gemini一致率: 20.0% | KSP F1: 6.2% | 共同: 1 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match">pintada à mão</li><li class="hit" title="搜索词: tampa para pasta de dente (identical)">Tampa para pasta de dente <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: bebê (identical)">bebê <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: crianças (stem_identical)">criança <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: familia (stem_identical)">família <span class="hit-badge">✓ 命中</span></li><li>sai pela boca do personagem</li><li>sai pela boca do personagem</li><li>sai pela boca do personagem</li><li>tampa de dente com personagem</li><li>tampa de dente com personagem Baby Yoda</li><li>tampa de dente divertida</li><li>tampa de dente manual</li><li>tampa para pasta de dente Baby Yoda</li><li>tampa personalizada para pasta de dente</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match">pintada à mão</li><li>acessório Baby Yoda</li><li>capa pasta de dente</li><li>compatível Colgate</li><li>compatível Oral B</li><li>compatível Sorriso</li><li class="hit" title="搜索词: crianças (identical)">crianças <span class="hit-badge">✓ 命中</span></li><li>dispensador Baby Yoda</li><li class="hit" title="搜索词: dispensador de pasta de dente (identical)">dispensador de pasta de dente <span class="hit-badge">✓ 命中</span></li><li>fãs Mandalorian</li><li>fãs Star Wars</li><li class="hit" title="搜索词: impressão 3d (identical)">impressão 3D <span class="hit-badge">✓ 命中</span></li><li>pasta de dente convencional</li><li>personagem Baby Yoda</li><li>presente Baby Yoda</li><li>presente para fãs</li><li>saída de pasta pela boca</li><li>tampa Baby Yoda</li><li class="hit" title="搜索词: tampa de pasta de dente (identical)">tampa de pasta de dente <span class="hit-badge">✓ 命中</span></li><li>tampa divertida pasta</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #5</h3>
+      <p class="title">Adesivo Titan 160 - Faixa Tanque | Produzidos em Recorte Eletrônico, Laminação p</p>
+      <p class="meta">品类: Stationery | 7B一致率: 11.8% | Gemini一致率: 22.7% | KSP F1: 5.1% | 共同: 1 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match">longa durabilidade</li><li class="hit" title="搜索词: adesivo titan 160 (identical)">Adesivo Titan 160 <span class="hit-badge">✓ 命中</span></li><li>Titan 160 2022-2024</li><li>adesivo para proteção moto</li><li class="hit" title="搜索词: adesivos automotivos (identical)">adesivos automotivos <span class="hit-badge">✓ 命中</span></li><li>aplicação sobrepondo adesivo</li><li>brilho adesivo automotivo</li><li>brilho duradouro</li><li>compatível com moto</li><li>produzidos em recorte eletrônico</li><li>proteção contra manchas</li><li>proteção contra riscos</li><li>proteção contra riscos adesivo</li><li>proteção de adesivo moto</li><li>proteção de adesivo para carro</li><li>sem desbotar</li><li>vinil proteção automotiva</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match">longa durabilidade</li><li class="hit" title="搜索词: adesivo (identical)">adesivo <span class="hit-badge">✓ 命中</span></li><li>adesivo Titan 160 proteção</li><li class="hit" title="搜索词: adesivo titan 160 tanque (identical)">adesivo Titan 160 tanque <span class="hit-badge">✓ 命中</span></li><li>adesivo moto Honda Titan</li><li>adesivo recorte eletrônico moto</li><li>compatível Titan 160 2022&gt;</li><li>compatível Titan 160 2023</li><li>compatível Titan 160 2024</li><li>evitar produtos químicos agressivos</li><li class="hit" title="搜索词: faixa (identical)">faixa <span class="hit-badge">✓ 命中</span></li><li>faixa Titan 160 laminada</li><li class="hit" title="搜索词: kit adesivo titan 160 (identical)">kit adesivo Titan 160 <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: laminação (identical)">laminação <span class="hit-badge">✓ 命中</span></li><li>linha Flúor</li><li>material importado Oracal</li><li>não desbota</li><li>não perde a cor</li><li>não usar solventes</li><li>não usar álcool</li><li>proteção e brilho</li><li>recorte eletrônico</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #6</h3>
+      <p class="title">Anel De Aço Carbono Com Mufa – 10 Cm Cod 020-3</p>
+      <p class="meta">品类: Health | 7B一致率: 0.0% | Gemini一致率: 15.8% | KSP F1: 5.7% | 共同: 1 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match">arame de aço carbono</li><li>100mm</li><li>90mm</li><li>anel de aço carbono</li><li>anel de aço carbono laboratório</li><li>anel de aço carbono multifuncional</li><li>anel de aço carbono para laboratório</li><li>anel de fixação de tela refratária</li><li>anel de suporte de tela refratária</li><li>anel de suporte refratário</li><li>funil de separação de líquidos não miscíveis</li><li>funil simples</li><li>mufa em alumínio</li><li>parafuso de fixação tipo borboleta</li><li>resistente ao calor</li><li>suporte para tela de fibra cerâmica refratária</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match">arame de aço carbono</li><li>acabamento esmaltado</li><li>anel com garra</li><li>anel de 10 cm</li><li>anel de aço para laboratório</li><li>anel de laboratório</li><li>arame Ø 4mm</li><li>argola de 100mm</li><li>argola metálica laboratório</li><li class="hit" title="搜索词: aço carbono (identical)">aço carbono <span class="hit-badge">✓ 命中</span></li><li>cabo com mufa</li><li>material de laboratório</li><li>mufa de alumínio</li><li>mufa de alumínio para suporte</li><li class="hit" title="搜索词: parafuso borboleta (identical)">parafuso borboleta <span class="hit-badge">✓ 命中</span></li><li>suporte para experimentos</li><li>suporte para funil</li><li>suporte para tela de fibra</li><li class="hit" title="搜索词: suporte universal (identical)">suporte universal <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #7</h3>
+      <p class="title">Estante 24 Furos Para Tubo De Ensaio 13mm</p>
+      <p class="meta">品类: Health | 7B一致率: 6.7% | Gemini一致率: 6.2% | KSP F1: 19.4% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (15 条)</h4>
+          <ul><li class="match">13mm</li><li class="match">24 furos</li><li class="match">laboratório</li><li>13 milímetros</li><li>24 furos para tubos</li><li>24 tubos</li><li>Estante 24 Furos</li><li>armazenamento de tubos de ensaio</li><li>equipe de pesquisa</li><li>estante de armazenamento de tubos</li><li>estante de laboratório</li><li>estante para experimentos</li><li>estante para tubos de ensaio</li><li class="hit" title="搜索词: labou (stem_identical)">lab <span class="hit-badge">✓ 命中</span></li><li>laboratório de pesquisa</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (16 条)</h4>
+          <ul><li class="match">13mm</li><li class="match">24 furos</li><li class="match">laboratório</li><li>arame com PVC</li><li>estante de arame laboratório</li><li>estante para 24 tubos</li><li>estante para tubo de ensaio</li><li>estudante</li><li>organizador de tubos de ensaio</li><li>para 24 tubos</li><li>para tubo de ensaio 13mm</li><li>pesquisa</li><li>rack de tubos 13mm</li><li>revestido com PVC</li><li class="hit" title="搜索词: suporte para tubo (stem_identical)">suporte para tubos <span class="hit-badge">✓ 命中</span></li><li>suporte tubos ensaio PVC</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #8</h3>
+      <p class="title">Kit perfeito os tres magnésio mais vendido Quelato Dimalato L-Treonato coraçã co</p>
+      <p class="meta">品类: Health | 7B一致率: 29.4% | Gemini一致率: 18.2% | KSP F1: 20.5% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match hit" title="搜索词: magnésio dimalato (identical)">magnésio dimalato <span class="hit-badge">✓ 命中</span></li><li class="match">magnésio L-treonato</li><li class="match hit" title="搜索词: magnésio quelato (identical)">magnésio quelato <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: suplemento de magnésio (identical)">suplemento de magnésio <span class="hit-badge">✓ 命中</span></li><li>absorção melhorada</li><li>ajuda na função muscular</li><li>apoio à função cognitiva</li><li>magnésio para adultos</li><li>magnésio para relaxamento</li><li>magnésio para saúde cerebral</li><li>melhor absorção</li><li class="hit" title="搜索词: suplementação (identical)">suplementação <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: suplemento (identical)">suplemento <span class="hit-badge">✓ 命中</span></li><li>suplemento dietético</li><li>suplemento para atletas</li><li>suplemento para nutrição</li><li>suporte à produção de energia</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match hit" title="搜索词: magnésio dimalato (identical)">magnésio dimalato <span class="hit-badge">✓ 命中</span></li><li class="match">magnésio L-treonato</li><li class="match hit" title="搜索词: magnésio quelato (identical)">magnésio quelato <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: suplemento de magnésio (identical)">suplemento de magnésio <span class="hit-badge">✓ 命中</span></li><li>absorção otimizada</li><li>adultos</li><li>combinação de magnésio</li><li>função muscular</li><li>kit de magnésio</li><li>magnésio multi-forma</li><li>magnésio para energia</li><li>magnésio para foco</li><li>magnésio para músculos</li><li>magnésio três em um</li><li class="hit" title="搜索词: melhor magnésio (identical)">melhor magnésio <span class="hit-badge">✓ 命中</span></li><li>melhora cognitiva</li><li>melhora de desempenho</li><li>saúde da mente</li><li>saúde do coração</li><li>saúde do corpo</li><li>saúde e bem-estar</li><li>suplemento para mente</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #9</h3>
+      <p class="title">Ferramenta Chave Extrator Saca Pino Corrente Bicicleta Bike</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 20.0% | Gemini一致率: 18.2% | KSP F1: 5.4% | 共同: 1 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (15 条)</h4>
+          <ul><li class="match">Aço de Alta Dureza</li><li>Aço</li><li class="hit" title="搜索词: chave extrator (identical)">Chave Extrator <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: chave de corrente (identical)">chave de corrente <span class="hit-badge">✓ 命中</span></li><li>colocação corrente bike</li><li>colocação simples</li><li>extração rápida</li><li>extração rápida corrente</li><li>ferramenta corrente</li><li>kit de manutenção bike</li><li>manutenção corrente bicicleta</li><li>manutenção fácil</li><li class="hit" title="搜索词: para bicicleta (identical)">para bicicleta <span class="hit-badge">✓ 命中</span></li><li>para corrente fina</li><li>para corrente grossa</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match">aço de alta dureza</li><li>aço cromado</li><li>aço resistente</li><li>chave para corrente bike</li><li>compatível com corrente fina</li><li>compatível com corrente grossa</li><li>desmontar corrente bicicleta</li><li class="hit" title="搜索词: extrator de corrente (identical)">extrator de corrente <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: extrator pino corrente (identical)">extrator pino corrente <span class="hit-badge">✓ 命中</span></li><li>ferramenta manutenção bike</li><li>ferramenta saca pino</li><li>fácil de usar</li><li>manutenção de corrente</li><li>monta e desmonta corrente</li><li class="hit" title="搜索词: para ciclista (stem_identical)">para ciclistas <span class="hit-badge">✓ 命中</span></li><li>para todas as correntes</li><li>reparador de corrente</li><li>reparar corrente</li><li class="hit" title="搜索词: saca pino corrente (identical)">saca pino corrente <span class="hit-badge">✓ 命中</span></li><li>simples e rápido</li><li>uso amador</li><li>uso profissional</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #10</h3>
+      <p class="title">Anel De Aço Carbono C/ Mufa 10 Cm Cod 020-3</p>
+      <p class="meta">品类: Health | 7B一致率: 6.7% | Gemini一致率: 15.0% | KSP F1: 0.0% | 共同: 0 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (15 条)</h4>
+          <ul><li>100mm</li><li>90mm</li><li class="hit" title="搜索词: alumínio fundido (identical)">alumínio fundido <span class="hit-badge">✓ 命中</span></li><li>anel de aço carbono</li><li>anel de aço carbono com mufa</li><li>anel de aço carbono multi-função</li><li>anel de aço carbono para laboratório</li><li>anel de aço carbono para suporte</li><li>anel de aço carbono para suporte de funil</li><li>anel de aço carbono para suporte de tela</li><li>arame de aço carbono</li><li>funil simples</li><li>se adapta ao suporte universal</li><li>suporte para funil de separação</li><li>suporte para tela de fibra cerâmica refratária</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li>10 cm</li><li>acabamento esmaltado</li><li>anel com mufa 10 cm</li><li>anel de fixação para funil</li><li>anel de laboratório</li><li>anel para suporte universal laboratório</li><li>anel Ø 100mm</li><li>argola metálica para laboratório</li><li class="hit" title="搜索词: aço carbono (identical)">aço carbono <span class="hit-badge">✓ 命中</span></li><li>cabo com mufa 90mm</li><li class="hit" title="搜索词: experimentos (identical)">experimentos <span class="hit-badge">✓ 命中</span></li><li>laboratório</li><li>mufa em alumínio fundido</li><li>parafuso de alumínio e poliestireno</li><li>parafuso de fixação tipo borboleta</li><li>pesquisa</li><li>suporte para funil</li><li>suporte para laboratório aço carbono</li><li>suporte para tela de fibra cerâmica</li><li class="hit" title="搜索词: suporte universal (identical)">suporte universal <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #11</h3>
+      <p class="title">Kit placas evaporativas | 6 unidades | A.44 x L.41 x E.4cm, A.34 x L.20 x E.4cm</p>
+      <p class="meta">品类: Stationery | 7B一致率: 14.3% | Gemini一致率: 10.0% | KSP F1: 0.0% | 共同: 0 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (21 条)</h4>
+          <ul><li>44 cm x 41 cm x 4 cm</li><li>A.44 x L.41 x E.4cm</li><li>Kit placas evaporativas</li><li>adequado</li><li>ambientalmente amigável</li><li>compatível</li><li>compatível ventisol</li><li>dimensões</li><li class="hit" title="搜索词: duramo (stem_identical)">dura <span class="hit-badge">✓ 命中</span></li><li>durável</li><li>econômico</li><li class="hit" title="搜索词: evaporador de água (identical)">evaporador de água <span class="hit-badge">✓ 命中</span></li><li>evaporador para horta</li><li>evaporador para jardim</li><li>evaporador para jardim de casa</li><li>evaporador para plantas</li><li>matéria-prima 100% nacional</li><li class="hit" title="搜索词: placa evaporativa (identical)">placa evaporativa <span class="hit-badge">✓ 命中</span></li><li>produzidas a partir de fontes renováveis</li><li>proporciona o máximo de durabilidade</li><li>resistente</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li>34x20x4cm</li><li>44x41x4cm</li><li>6 unidades</li><li class="hit" title="搜索词: ventisol (identical)">Ventisol <span class="hit-badge">✓ 命中</span></li><li>compatível Ventisol 35 litros</li><li>compatível Ventisol 60 litros</li><li>compatível Ventisol 80 litros</li><li>fontes renováveis</li><li>kit 6 placas</li><li>kit com 6</li><li>kit placas reposição</li><li>matéria prima 100% nacional</li><li>medidas placas</li><li>máximo de durabilidade</li><li>placa evaporativa 44x41</li><li>placa onda baixa</li><li class="hit" title="搜索词: placa evaporativa (stem_identical)">placas evaporativas <span class="hit-badge">✓ 命中</span></li><li>refil evaporativo Ventisol</li><li>reposição Ventisol</li><li>tamanho placa evaporativa</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #12</h3>
+      <p class="title">TOP FITNESS GOTA AÇAÍ</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 8.7% | Gemini一致率: 29.6% | KSP F1: 40.0% | 共同: 10 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match">absorção de suor</li><li class="match">compressão adequada</li><li class="match">decote em gota</li><li class="match">estilo moderno</li><li class="match hit" title="搜索词: maremar brasil (identical)">Maremar Brasil <span class="hit-badge">✓ 命中</span></li><li class="match">modelagem exclusiva</li><li class="match">não desfia</li><li class="match">não rasga</li><li class="match">resistente ao desgaste</li><li class="match hit" title="搜索词: top fitness (identical)">top fitness <span class="hit-badge">✓ 命中</span></li><li>84% poliamida e 16% elastano</li><li>durável</li><li>fácil de lavar</li><li>não desfia nem rasga</li><li>suporte adicional</li><li>tecido de secagem rápida</li><li>tecnologia de tecido de alta qualidade</li><li>top fitness Maremar Brasil</li><li>top fitness azul ciano</li><li>top fitness com bojo removível</li><li>top fitness com proteção UV</li><li>top fitness gota</li><li>top fitness para academia</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (27 条)</h4>
+          <ul><li class="match">absorção de suor</li><li class="match">compressão adequada</li><li class="match">decote em gota</li><li class="match">estilo moderno</li><li class="match hit" title="搜索词: maremar brasil (identical)">Maremar Brasil <span class="hit-badge">✓ 命中</span></li><li class="match">modelagem exclusiva</li><li class="match">não desfia</li><li class="match">não rasga</li><li class="match">resistente ao desgaste</li><li class="match hit" title="搜索词: top fitness (identical)">top fitness <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: bojo removível (identical)">bojo removível <span class="hit-badge">✓ 命中</span></li><li>macio</li><li class="hit" title="搜索词: poliamida elastano (identical)">poliamida elastano <span class="hit-badge">✓ 命中</span></li><li>proteção UV 50</li><li>resistente a fungos</li><li>roupa fitness premium</li><li>secagem rápida</li><li>sustentação</li><li>sutiã esportivo gota</li><li>tecido durável</li><li class="hit" title="搜索词: tecido premium (identical)">tecido premium <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: top academia feminino (identical)">top academia feminino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: top com bojo removível (identical)">top com bojo removível <span class="hit-badge">✓ 命中</span></li><li>top fitness sem transparência</li><li class="hit" title="搜索词: top para treino (identical)">top para treino <span class="hit-badge">✓ 命中</span></li><li>toque suave</li><li>zero transparência</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #13</h3>
+      <p class="title">Pinça de mohr em latão cromado 70mm cod 024-2</p>
+      <p class="meta">品类: Health | 7B一致率: 21.1% | Gemini一致率: 4.8% | KSP F1: 20.0% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (19 条)</h4>
+          <ul><li class="match">70mm</li><li class="match">laboratório</li><li class="match">latão cromado</li><li class="match">Pinça de Mohr</li><li>7 centímetros</li><li>durável</li><li>indústria</li><li class="hit" title="搜索词: longo (stem_identical)">longa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: mangueira (identical)">mangueira <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: mangueira cromada (identical)">mangueira cromada <span class="hit-badge">✓ 命中</span></li><li>mangueira obstrução</li><li>manutenção</li><li class="hit" title="搜索词: metalosa (stem_identical)">metálico <span class="hit-badge">✓ 命中</span></li><li>obstruir passagem de gás</li><li>obstruir passagem de líquido</li><li>obstrução de líquido</li><li>pinça de mohr 70mm</li><li>pinça de mohr laboratório</li><li>pinça de mohr para manutenção</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (21 条)</h4>
+          <ul><li class="match">70mm</li><li class="match">laboratório</li><li class="match">latão cromado</li><li class="match">pinça de mohr</li><li>braçadeira de mangueira flexível</li><li>clamp para mangueira</li><li>comprimento 70mm</li><li>controle de fluxo</li><li>mangueiras de até 1 polegada</li><li>mangueiras de até 25,4mm</li><li>manutenção de equipamentos médicos</li><li>obstruir passagem</li><li>obturador de mangueira</li><li>para líquidos e gases</li><li>pesquisa</li><li>pinça de latão cromado</li><li>pinça para laboratório</li><li>preserva a parede da mangueira</li><li>regulador de fluxo latão</li><li>resistente</li><li class="hit" title="搜索词: tubo flexível (stem_identical)">tubos flexíveis <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #14</h3>
+      <p class="title">Kit C/ 30 Placa Petri De Vidro 150x20mm</p>
+      <p class="meta">品类: Health | 7B一致率: 6.7% | Gemini一致率: 5.6% | KSP F1: 12.1% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (15 条)</h4>
+          <ul><li class="match">laboratório</li><li class="match">placa de petri para laboratório</li><li>150mm de diâmetro x 20mm de altura</li><li>150mm x 20mm</li><li>30 placas</li><li>Placa de Petri</li><li class="hit" title="搜索词: origens (stem_identical)">original <span class="hit-badge">✓ 命中</span></li><li>original de fabricante</li><li>pacote de 30 placas</li><li>placa de petri 150mm</li><li>placa de petri 20mm</li><li>placa de petri de vidro</li><li>placa de petri para cultura de microrganismos</li><li>placa de petri para microbiologia</li><li>rotinas de microbiologia</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (18 条)</h4>
+          <ul><li class="match">Laboratório</li><li class="match">placa de petri para laboratório</li><li>150mm diâmetro x 20mm altura</li><li>150x20mm</li><li>Bacteriologia</li><li>Conjunto com 30</li><li>De Vidro</li><li>Kit C/ 30 Placas</li><li>Microbiologia</li><li>Placa Petri</li><li>Reutilizável</li><li class="hit" title="搜索词: vidro (identical)">Vidro <span class="hit-badge">✓ 命中</span></li><li>Vidro resistente</li><li>kit placa petri microbiologia</li><li>petri dish de vidro 30 unidades</li><li>placa de cultura de vidro</li><li>placas de petri 150mm</li><li>placas de vidro para cultura</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #15</h3>
+      <p class="title">Bastão De Agitação Em Polipropileno 1 Lado Leque 10X200mm</p>
+      <p class="meta">品类: Health | 7B一致率: 6.7% | Gemini一致率: 0.0% | KSP F1: 17.6% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (15 条)</h4>
+          <ul><li class="match">10x200mm</li><li class="match">Bastão De Agitação</li><li class="match">bastão de agitação autoclavável</li><li>autoclável</li><li>bastão de agitação de polipropileno</li><li>bastão de agitação laboratório</li><li>bastão de agitação para soluções</li><li>bastão de mistura polipropileno</li><li>fácil de limpar</li><li>hidrofóbico</li><li>laboratório</li><li>múltiplos usos</li><li>pesquisa</li><li class="hit" title="搜索词: polipropileno (identical)">polipropileno <span class="hit-badge">✓ 命中</span></li><li>rodízio de laboratório</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match">10x200mm</li><li class="match">bastão de agitação</li><li class="match">bastão de agitação autoclavável</li><li>10mm diâmetro</li><li>200mm comprimento</li><li>agitador de laboratório plástico</li><li>agitar soluções</li><li>autoclavável</li><li>bastão agitador polipropileno</li><li>bastão de agitação 10x200mm</li><li>bastão para misturar líquidos</li><li>homogeneizar soluções</li><li>material autoclavável</li><li>misturar líquidos</li><li>para laboratório</li><li>para pesquisa</li><li>para química</li><li>polipropileno maciço</li><li>vareta de agitação laboratório</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #16</h3>
+      <p class="title">Frasco de Erlenmeyer Graduado com rolha plastica – 1000 ml</p>
+      <p class="meta">品类: Health | 7B一致率: 6.2% | Gemini一致率: 21.4% | KSP F1: 13.3% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match">1 litro</li><li class="match hit" title="搜索词: vidro (identical)">vidro <span class="hit-badge">✓ 命中</span></li><li>1000ml</li><li>Erlenmeyer graduado</li><li>ensaios químicos</li><li>frasco 1000ml</li><li>frasco Erlenmeyer</li><li>frasco graduado</li><li>frasco laboratório</li><li>frasco para laboratório</li><li>frasco química</li><li>laboratório universitário</li><li>proteção contra contaminação</li><li>rolha plastica</li><li>seguro para laboratório</li><li>vedação plástica</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (14 条)</h4>
+          <ul><li class="match">1 litro</li><li class="match hit" title="搜索词: vidro (identical)">vidro <span class="hit-badge">✓ 命中</span></li><li>1000 ml</li><li>Erlenmeyer com rolha</li><li>Erlenmeyer de vidro</li><li>Frasco de Erlenmeyer</li><li>com rolha plástica</li><li>frasco graduado 1000ml</li><li>frasco para química</li><li>graduado</li><li>para laboratório</li><li>recipiente para experimentos</li><li class="hit" title="搜索词: vidrarias de laboratório (stem_identical)">vidraria de laboratório <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: vidrarias de laboratório (stem_identical)">vidro de laboratório <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #17</h3>
+      <p class="title">Cadinho Forma Alta c/Tampa 25 ml cod 40-25</p>
+      <p class="meta">品类: Health | 7B一致率: 17.4% | Gemini一致率: 30.0% | KSP F1: 27.9% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match hit" title="搜索词: 25 ml (identical)">25 ml <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: cadinho (identical)">cadinho <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: cerâmica (identical)">cerâmica <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: porcelana (identical)">porcelana <span class="hit-badge">✓ 命中</span></li><li class="match">resistente a altas temperaturas</li><li class="match">reutilizável</li><li>23 mm</li><li>38 mm</li><li>40 mm</li><li>altura</li><li>cadinho 25 ml</li><li>cadinho laboratório</li><li>cadinho para química</li><li>diametro inferior</li><li>diametro superior</li><li>durável</li><li>laboratório cadinho</li><li>material seguro</li><li>recipiente para reação química</li><li>recipiente química</li><li>resistente a reações químicas</li><li>resistente ao calor</li><li>uso em laboratório</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: 25 ml (identical)">25 ml <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: cadinho (identical)">cadinho <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: cerâmica (identical)">cerâmica <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: porcelana (identical)">porcelana <span class="hit-badge">✓ 命中</span></li><li class="match">resistente a altas temperaturas</li><li class="match">reutilizável</li><li>cadinho 25ml</li><li>cadinho com tampa</li><li>cadinho de porcelana</li><li>cadinho para laboratório</li><li>com tampa</li><li>experimentos químicos</li><li class="hit" title="搜索词: forma alta (identical)">forma alta <span class="hit-badge">✓ 命中</span></li><li>laboratório</li><li class="hit" title="搜索词: material ceramica (stem_identical)">material cerâmico <span class="hit-badge">✓ 命中</span></li><li>para aquecer sólidos</li><li>pesquisa científica</li><li>pote de laboratório</li><li>recipiente para aquecimento</li><li>recipiente químico</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #18</h3>
+      <p class="title">Gel Dental Carmed Fini Beijos 70g Sabor Morango e Nata</p>
+      <p class="meta">品类: Health | 7B一致率: 29.4% | Gemini一致率: 19.1% | KSP F1: 21.1% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match hit" title="搜索词: carmed (identical)">Carmed <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: gel dental (identical)">gel dental <span class="hit-badge">✓ 命中</span></li><li class="match">hálito fresco</li><li class="match">proteção contra cáries</li><li>cuidado bucal</li><li>cuidado diário</li><li class="hit" title="搜索词: gel dental carmed (identical)">gel dental Carmed <span class="hit-badge">✓ 命中</span></li><li>gel dental com sabor a morango</li><li>gel dental de 70g</li><li>gel dental de nata</li><li>gel dental morango</li><li>gel dental para hálito fresco</li><li class="hit" title="搜索词: morango (identical)">morango <span class="hit-badge">✓ 命中</span></li><li>morango e nata</li><li class="hit" title="搜索词: nata (identical)">nata <span class="hit-badge">✓ 命中</span></li><li>prevenção de cáries</li><li>saúde dos dentes</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (21 条)</h4>
+          <ul><li class="match hit" title="搜索词: carmed (identical)">Carmed <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: gel dental (identical)">Gel Dental <span class="hit-badge">✓ 命中</span></li><li class="match">hálito fresco</li><li class="match">proteção contra cáries</li><li>70g</li><li>90g</li><li class="hit" title="搜索词: fini (identical)">Fini <span class="hit-badge">✓ 命中</span></li><li>creme dental Morango e Nata</li><li>cuidado bucal com sabor</li><li>dentes mais saudáveis</li><li>embalagem prática</li><li>gel dental sabor doce</li><li>higiene bucal divertida</li><li>limpeza eficaz</li><li class="hit" title="搜索词: pasta de dente fini (identical)">pasta de dente Fini <span class="hit-badge">✓ 命中</span></li><li>pasta de dente infantil Fini</li><li>previne cáries</li><li>sabor Beijos Fini</li><li>sabor Morango e Nata</li><li>sabor doce</li><li>sabor suave e agradável</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #19</h3>
+      <p class="title">Anel De Aço Carbono Com Mufa – 13 Cm Cod 020-4</p>
+      <p class="meta">品类: Health | 7B一致率: 17.4% | Gemini一致率: 20.0% | KSP F1: 27.9% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match">13 cm</li><li class="match">arame de aço carbono</li><li class="match hit" title="搜索词: aço carbono (identical)">aço carbono <span class="hit-badge">✓ 命中</span></li><li class="match">suporte para funil</li><li class="match">suporte para tela de fibra cerâmica</li><li class="match hit" title="搜索词: suporte universal (identical)">suporte universal <span class="hit-badge">✓ 命中</span></li><li>13 centímetros</li><li>130mm</li><li>anel de aço carbono com mufa</li><li>anel de aço carbono para suporte</li><li>anel de suporte</li><li>anel de suporte para experimento</li><li>anel de suporte para funil</li><li>anel de suporte para tela de fibra cerâmica</li><li>anel de suporte universal</li><li>aço</li><li>fixação</li><li>funil de separação de líquidos</li><li>funil simples</li><li class="hit" title="搜索词: parafuso (identical)">parafuso <span class="hit-badge">✓ 命中</span></li><li>parafuso de fixação tipo borboleta</li><li class="hit" title="搜索词: refratário (identical)">refratário <span class="hit-badge">✓ 命中</span></li><li>resistente ao calor</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match">13 cm</li><li class="match">arame de aço carbono</li><li class="match hit" title="搜索词: aço carbono (identical)">aço carbono <span class="hit-badge">✓ 命中</span></li><li class="match">suporte para funil</li><li class="match">suporte para tela de fibra cerâmica</li><li class="match hit" title="搜索词: suporte universal (identical)">suporte universal <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: alumínio fundido (identical)">alumínio fundido <span class="hit-badge">✓ 命中</span></li><li>anel 13 cm</li><li>anel 130mm</li><li>anel aço carbono laboratório</li><li>anel com mufa</li><li>anel de laboratório</li><li>anel de suporte laboratório</li><li>argola metálica laboratório</li><li>educação</li><li class="hit" title="搜索词: experimentos (identical)">experimentos <span class="hit-badge">✓ 命中</span></li><li>laboratório</li><li>material laboratório 13cm</li><li>pesquisa</li><li>suporte funil laboratório</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Bad #20</h3>
+      <p class="title">Chave De Instalar Rolamento Movimento Central E Direção Bike</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 28.6% | Gemini一致率: 13.6% | KSP F1: 16.7% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (14 条)</h4>
+          <ul><li class="match hit" title="搜索词: aço inoxidável (identical)">aço inoxidável <span class="hit-badge">✓ 命中</span></li><li class="match">fácil de usar</li><li class="match hit" title="搜索词: rolamento de bicicleta (identical)">rolamento de bicicleta <span class="hit-badge">✓ 命中</span></li><li>Chave de instalar rolamento</li><li class="hit" title="搜索词: bicicleta (identical)">bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caixa de direção (identical)">caixa de direção <span class="hit-badge">✓ 命中</span></li><li>chave de montagem de caixa de direção</li><li>chave de montagem de rolamento</li><li>chave para instalar rolamento</li><li>ferramenta de reparo de bicicleta</li><li>ferramenta para instalar caixa de direção</li><li>ferramenta para instalar rolamento de bicicleta</li><li>fácil de instalar</li><li>ligas de alumínio</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match hit" title="搜索词: aço inoxidável (identical)">aço inoxidável <span class="hit-badge">✓ 命中</span></li><li class="match">fácil de usar</li><li class="match hit" title="搜索词: rolamento de bicicleta (identical)">rolamento de bicicleta <span class="hit-badge">✓ 命中</span></li><li>alta força</li><li>aço inoxidável endurecido</li><li>chave de instalar direção</li><li>chave para rolamento bike</li><li>conveniente instalar</li><li>ferramenta de instalação de rolamento</li><li>ferramenta de reparo bicicleta</li><li>ferramenta instalação caixa direção</li><li>ferramenta instalação movimento central</li><li class="hit" title="搜索词: haste de aço (identical)">haste de aço <span class="hit-badge">✓ 命中</span></li><li>instalador de caixa de direção</li><li>instalador rolamento bicicleta</li><li>kit instalação movimento central</li><li>liga de alumínio</li><li>maioria tubos principais</li><li>prensa rolamento bicicleta</li><li>resistente</li><li>suporte inferior e direção</li><li>trabalho profissional</li></ul>
+        </div>
+      </div>
+    </div><h2>Good case（一致率高，随机 20 条）</h2>
+    <div class="case">
+      <h3>Good #1</h3>
+      <p class="title">Estojo 100 pens box slim personalizado stitch azul elastico 26 canetas escolar p</p>
+      <p class="meta">品类: Stationery | 7B一致率: 56.5% | Gemini一致率: 50.0% | KSP F1: 4.7% | 共同: 1 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match hit" title="搜索词: estojo 100 pens (identical)">estojo 100 pens <span class="hit-badge">✓ 命中</span></li><li>22 cm x 16 cm x 6 cm</li><li>aba interna</li><li>alta qualidade</li><li>aluno</li><li>dimensões</li><li class="hit" title="搜索词: elásticos (identical)">elásticos <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: escolar (stem_identical)">escola <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estampa digital (identical)">estampa digital <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estojo 100 canetas (identical)">estojo 100 canetas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estojo escolar para professor (identical)">estojo escolar para professor <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estojo para caneta personalizado (stem_identical)">estojo para canetas personalizado <span class="hit-badge">✓ 命中</span></li><li>estojo para organização</li><li class="hit" title="搜索词: estojo para professores (identical)">estojo para professores <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estojo personalizado (identical)">estojo personalizado <span class="hit-badge">✓ 命中</span></li><li>estudante</li><li class="hit" title="搜索词: nome (identical)">nome <span class="hit-badge">✓ 命中</span></li><li>padrão cinza</li><li class="hit" title="搜索词: personalizado (identical)">personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: portátil (identical)">portátil <span class="hit-badge">✓ 命中</span></li><li>professora</li><li class="hit" title="搜索词: sintético (identical)">sintético <span class="hit-badge">✓ 命中</span></li><li>tamanho</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: estojo 100 pens (identical)">Estojo 100 pens <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: bolsas em tela (stem_identical)">bolso em tela <span class="hit-badge">✓ 命中</span></li><li>design slim</li><li>elásticos para 26 lápis</li><li class="hit" title="搜索词: estampa digital personalizada (identical)">estampa digital personalizada <span class="hit-badge">✓ 命中</span></li><li>estojo durável sintético</li><li class="hit" title="搜索词: estojo escolar (identical)">estojo escolar <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: estojo escolar azul (identical)">estojo escolar azul <span class="hit-badge">✓ 命中</span></li><li>estojo grande 26 canetas</li><li>estojo organizador papelaria</li><li class="hit" title="搜索词: estojo personalizado professora (identical)">estojo personalizado professora <span class="hit-badge">✓ 命中</span></li><li>estojo slim stitch</li><li>excelente acabamento</li><li>incluir nome</li><li>não descasca</li><li class="hit" title="搜索词: organizar canetas (identical)">organizar canetas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: personalizado com nome (identical)">personalizado com nome <span class="hit-badge">✓ 命中</span></li><li>sintético de alta qualidade</li><li class="hit" title="搜索词: stitch azul (identical)">stitch azul <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: zíper (identical)">zíper <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #2</h3>
+      <p class="title">Tanquini Plus size com bojo composse ref: 2449</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 34.6% | Gemini一致率: 56.0% | KSP F1: 19.6% | 共同: 5 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (26 条)</h4>
+          <ul><li class="match hit" title="搜索词: biquíni plus size (identical)">biquíni plus size <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">dias de sol</li><li class="match">não irrita a pele</li><li class="match">Summer Color</li><li>90% poliamida e 10% elastano</li><li>G</li><li>GG</li><li>Tanquini Plus size com bojo composse</li><li>XG</li><li>XG OU XGG</li><li class="hit" title="搜索词: xgg (identical)">XGG <span class="hit-badge">✓ 命中</span></li><li>alta durabilidade</li><li class="hit" title="搜索词: biquíni (identical)">biquíni <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: biquíni com bojo (identical)">biquíni com bojo <span class="hit-badge">✓ 命中</span></li><li>biquíni de alta qualidade</li><li>biquíni macio</li><li class="hit" title="搜索词: biquíni para praia (identical)">biquíni para praia <span class="hit-badge">✓ 命中</span></li><li>biquíni summer color</li><li>macio</li><li>materiais de altíssima qualidade</li><li class="hit" title="搜索词: modelos plus size (identical)">modelos plus size <span class="hit-badge">✓ 命中</span></li><li>muito grande</li><li class="hit" title="搜索词: piscina (identical)">piscina <span class="hit-badge">✓ 命中</span></li><li>praia</li><li class="hit" title="搜索词: tecido de alta qualidade (identical)">tecido de alta qualidade <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (25 条)</h4>
+          <ul><li class="match hit" title="搜索词: biquíni plus size (identical)">biquíni plus size <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">dias de sol</li><li class="match">não irrita a pele</li><li class="match">Summer Color</li><li class="hit" title="搜索词: tanquine (stem_identical)">Tanquini <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: acolchoado (identical)">acolchoado <span class="hit-badge">✓ 命中</span></li><li>alta qualidade</li><li class="hit" title="搜索词: biquíni estilo top (identical)">biquíni estilo top <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: com bojo (identical)">com bojo <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto biquíni plus size (identical)">conjunto biquíni plus size <span class="hit-badge">✓ 命中</span></li><li>durável</li><li>excelente acabamento</li><li class="hit" title="搜索词: maiô plus size com bojo (identical)">maiô plus size com bojo <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: moda praia (identical)">moda praia <span class="hit-badge">✓ 命中</span></li><li>moda praia feminina plus</li><li class="hit" title="搜索词: para gordinhas (identical)">para gordinhas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: para piscina (identical)">para piscina <span class="hit-badge">✓ 命中</span></li><li>para verão</li><li class="hit" title="搜索词: plus size (identical)">plus size <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: poliamida e elastano (identical)">poliamida e elastano <span class="hit-badge">✓ 命中</span></li><li>roupa de banho tamanhos grandes</li><li>tamanhos grandes</li><li>tanquini para praia plus size</li><li class="hit" title="搜索词: tecido macio (identical)">tecido macio <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #3</h3>
+      <p class="title">Cardápio / Menu personalizado. Pcte c/ 30 unids.</p>
+      <p class="meta">品类: Stationery | 7B一致率: 53.6% | Gemini一致率: 37.9% | KSP F1: 17.9% | 共同: 5 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (28 条)</h4>
+          <ul><li class="match">30 unidades</li><li class="match hit" title="搜索词: cardápio para casamento (identical)">cardápio para casamento <span class="hit-badge">✓ 命中</span></li><li class="match">customizado</li><li class="match hit" title="搜索词: papel couchê fosco (identical)">papel couchê fosco <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: personalizado (identical)">personalizado <span class="hit-badge">✓ 命中</span></li><li>20 centímetros x 21 centímetros</li><li>20 por 21 centímetros</li><li>20 por 21 cm</li><li>20cm x 21cm</li><li>30 unidades de menu</li><li>30 unids</li><li>30 unids de menu</li><li class="hit" title="搜索词: aniversários (identical)">aniversários <span class="hit-badge">✓ 命中</span></li><li>cardápio para eventos</li><li class="hit" title="搜索词: cardapio para festa (stem_identical)">cardápio para festa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cardápio personalizado (identical)">cardápio personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cardápio personalizado (identical)">cardápio personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cases (stem_identical)">casamentos <span class="hit-badge">✓ 命中</span></li><li>customizada</li><li>eventos</li><li class="hit" title="搜索词: festa (identical)">festa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: jante (stem_identical)">jantares <span class="hit-badge">✓ 命中</span></li><li>menu para aniversário</li><li class="hit" title="搜索词: menu personalizado (identical)">menu personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: papel cartão (identical)">papel cartão <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: papel couchê (identical)">papel couchê <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: papel couché fosco (stem_identical)">papél couchê fosco <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: personalizada (identical)">personalizada <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (29 条)</h4>
+          <ul><li class="match">30 unidades</li><li class="match hit" title="搜索词: cardápio para casamento (identical)">cardápio para casamento <span class="hit-badge">✓ 命中</span></li><li class="match">customizado</li><li class="match hit" title="搜索词: papel couchê fosco (identical)">papel couchê fosco <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: personalizado (identical)">personalizado <span class="hit-badge">✓ 命中</span></li><li>10cm x 21cm fechado</li><li>20cm x 21cm aberto</li><li class="hit" title="搜索词: cardápio (identical)">Cardápio <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: menu (identical)">Menu <span class="hit-badge">✓ 命中</span></li><li>cardápio couchê fosco</li><li>cardápio dobrável evento</li><li class="hit" title="搜索词: cartão (identical)">cartão <span class="hit-badge">✓ 命中</span></li><li>com dobra</li><li>de abrir</li><li class="hit" title="搜索词: dobrável (identical)">dobrável <span class="hit-badge">✓ 命中</span></li><li>kit 30 menus</li><li>kraft pardo</li><li>menu kraft personalizado</li><li>menu para ocasiões especiais</li><li>menu personalizado festa</li><li>pacote com 30</li><li class="hit" title="搜索词: papel 250g (identical)">papel 250g <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: para aniversário (stem_identical)">para aniversários <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: para casamento (stem_identical)">para casamentos <span class="hit-badge">✓ 命中</span></li><li>para eventos</li><li class="hit" title="搜索词: para festa (stem_identical)">para festas <span class="hit-badge">✓ 命中</span></li><li>para jantares</li><li>sob medida</li><li>tamanho dobrável</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #4</h3>
+      <p class="title">Scooter Elétrica WeHawk WX-11 1000W 60V 20Ah | 2 Lugares | SEM CNH | Iluminação </p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 58.3% | Gemini一致率: 43.5% | KSP F1: 25.5% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (24 条)</h4>
+          <ul><li class="match hit" title="搜索词: alarme com bloqueio (identical)">alarme com bloqueio <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: freios a disco (identical)">freios a disco <span class="hit-badge">✓ 命中</span></li><li class="match">iluminação full LED</li><li class="match hit" title="搜索词: scooter elétrica (identical)">scooter elétrica <span class="hit-badge">✓ 命中</span></li><li class="match">sem CNH</li><li class="match hit" title="搜索词: wehawk (identical)">WeHawk <span class="hit-badge">✓ 命中</span></li><li>autonomia 45 km</li><li class="hit" title="搜索词: bateria 60v 20ah (identical)">bateria 60V 20Ah <span class="hit-badge">✓ 命中</span></li><li>capacidade para 2 pessoas</li><li class="hit" title="搜索词: carregador bivolt (stem_identical)">carregamento bivolt <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cartões nfc (identical)">cartões NFC <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: controle remoto (identical)">controle remoto <span class="hit-badge">✓ 命中</span></li><li>função ré</li><li class="hit" title="搜索词: motor brushless 1000w (identical)">motor brushless 1000W <span class="hit-badge">✓ 命中</span></li><li>painel digital multifuncional</li><li class="hit" title="搜索词: scooter elétrica 1000w (identical)">scooter elétrica 1000W <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: scooter elétrica 60v (identical)">scooter elétrica 60V <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: scooter elétrica wehawk (identical)">scooter elétrica WeHawk <span class="hit-badge">✓ 命中</span></li><li>scooter elétrica com iluminação LED</li><li>scooter elétrica para dois lugares</li><li class="hit" title="搜索词: scooter elétrica sem cnh (identical)">scooter elétrica sem CNH <span class="hit-badge">✓ 命中</span></li><li>segurança completa</li><li class="hit" title="搜索词: trava (identical)">trava <span class="hit-badge">✓ 命中</span></li><li>velocidade máxima 32 km/h</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (23 条)</h4>
+          <ul><li class="match hit" title="搜索词: alarme com bloqueio (identical)">alarme com bloqueio <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: freios a disco (identical)">Freios a Disco <span class="hit-badge">✓ 命中</span></li><li class="match">Iluminação Full LED</li><li class="match hit" title="搜索词: scooter elétrica (identical)">Scooter Elétrica <span class="hit-badge">✓ 命中</span></li><li class="match">sem CNH</li><li class="match hit" title="搜索词: wehawk (identical)">WeHawk <span class="hit-badge">✓ 命中</span></li><li>2 lugares</li><li>Bluetooth e NFC</li><li class="hit" title="搜索词: painel digital (identical)">Painel Digital <span class="hit-badge">✓ 命中</span></li><li>autonomia até 45 km</li><li>bateria removível</li><li>dispensa CNH</li><li>duas pessoas</li><li class="hit" title="搜索词: moto elétrica urban (stem_identical)">moto elétrica urbana <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: motor 1000w (identical)">motor 1000W <span class="hit-badge">✓ 命中</span></li><li>não precisa de CNH</li><li>para 2 pessoas</li><li class="hit" title="搜索词: patinete elétrico 2 lugares (identical)">patinete elétrico 2 lugares <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: scooter elétrica bateria removível (identical)">scooter elétrica bateria removível <span class="hit-badge">✓ 命中</span></li><li>scooter elétrica para cidade</li><li>scooter elétrica para o dia a dia</li><li class="hit" title="搜索词: trava de segurança (identical)">trava de segurança <span class="hit-badge">✓ 命中</span></li><li>veículo elétrico sem CNH</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #5</h3>
+      <p class="title">Camiseta Selene Dryfit Básica Feminina Branca</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 45.0% | Gemini一致率: 65.0% | KSP F1: 10.0% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: camiseta de treino (identical)">camiseta de treino <span class="hit-badge">✓ 命中</span></li><li class="match">tecnologia DRYFIT</li><li>60 x 44 cm</li><li>62 x 46 cm</li><li>64 x 48 cm</li><li>66 x 50 cm</li><li class="hit" title="搜索词: camiseta (identical)">Camiseta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: dryfit (identical)">DRYFIT <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta branca para academia (identical)">camiseta branca para academia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta fitness (identical)">camiseta fitness <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: feminina (identical)">feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: feminino (identical)">feminino <span class="hit-badge">✓ 命中</span></li><li>fácil de lavar</li><li class="hit" title="搜索词: mulherzinhas (stem_identical)">mulher <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: poliamida (identical)">poliamida <span class="hit-badge">✓ 命中</span></li><li>sistema DRYFIT</li><li>t-shirt branca</li><li>t-shirt branca para treino</li><li>t-shirt de academia</li><li>tela poliamida</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: camiseta de treino (identical)">camiseta de treino <span class="hit-badge">✓ 命中</span></li><li class="match">tecnologia Dryfit</li><li>100% poliamida</li><li class="hit" title="搜索词: selene (identical)">Selene <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta dryfit feminina (identical)">camiseta Dryfit feminina <span class="hit-badge">✓ 命中</span></li><li>camiseta Selene branca</li><li class="hit" title="搜索词: camiseta esportiva (identical)">camiseta esportiva <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta feminina (identical)">camiseta feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta fitness feminina (identical)">camiseta fitness feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta para malhar (identical)">camiseta para malhar <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: camiseta respirável (identical)">camiseta respirável <span class="hit-badge">✓ 命中</span></li><li>design básico</li><li>elimina umidade</li><li class="hit" title="搜索词: gola careca (identical)">gola careca <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: manga curta (identical)">manga curta <span class="hit-badge">✓ 命中</span></li><li>mantém corpo seco</li><li>para atividade física</li><li class="hit" title="搜索词: regulador temperatura (stem_identical)">regula temperatura <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa de treino feminina (identical)">roupa de treino feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tecido poliamida (identical)">tecido poliamida <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #6</h3>
+      <p class="title">Saida De Praia Feminina Verao Moda Blogueira</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 39.1% | Gemini一致率: 64.0% | KSP F1: 8.5% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">tricot acrílico</li><li>36 ao 42</li><li class="hit" title="搜索词: saida de praia (identical)">Saida De Praia <span class="hit-badge">✓ 命中</span></li><li>acintura</li><li>acinturado biquíni</li><li>beach</li><li class="hit" title="搜索词: biquíni blogueira (identical)">biquíni blogueira <span class="hit-badge">✓ 命中</span></li><li>blogueira</li><li class="hit" title="搜索词: feminino (identical)">feminino <span class="hit-badge">✓ 命中</span></li><li>fenda longa</li><li>fenda longa biquíni</li><li>lavável a mão</li><li class="hit" title="搜索词: moda (identical)">moda <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saída de praia feminina (identical)">saída de praia feminina <span class="hit-badge">✓ 命中</span></li><li>secagem em varal</li><li class="hit" title="搜索词: summi (stem_identical)">summer <span class="hit-badge">✓ 命中</span></li><li>swimsuit para verão</li><li>tamanho adequado</li><li>transparência</li><li>tricot transparente</li><li class="hit" title="搜索词: veste bem (identical)">veste bem <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: veste bem (identical)">veste bem <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (25 条)</h4>
+          <ul><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">tricot acrílico</li><li>alta qualidade</li><li class="hit" title="搜索词: canga saída de praia (identical)">canga saída de praia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: feminina (identical)">feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: moda blogueira (identical)">moda blogueira <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: mulherzinhas (stem_identical)">mulheres <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: piscina (identical)">piscina <span class="hit-badge">✓ 命中</span></li><li>praia</li><li class="hit" title="搜索词: resortera (stem_identical)">resort <span class="hit-badge">✓ 命中</span></li><li>roupa de praia verão</li><li class="hit" title="搜索词: saída de banho feminina (identical)">saída de banho feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saída de praia (identical)">saída de praia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saida de praia acinturada (stem_identical)">saída de praia acinturada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saida de praia com fenda (stem_identical)">saída de praia com fenda <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saida de praia de tricot (stem_identical)">saída de praia de tricot <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saída de praia vazada (identical)">saída de praia vazada <span class="hit-badge">✓ 命中</span></li><li>tamanho único</li><li class="hit" title="搜索词: tricot (identical)">tricot <span class="hit-badge">✓ 命中</span></li><li>verão</li><li>veste 36 ao 42</li><li class="hit" title="搜索词: vestido de praia tricot (identical)">vestido de praia tricot <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: vestidos transparentes (stem_identical)">vestido transparente <span class="hit-badge">✓ 命中</span></li><li>viagem</li><li>ótimo preço</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #7</h3>
+      <p class="title">ADESIVO DE CAPA DE CADERNO Cobra Real Naja Serpente  Tab18</p>
+      <p class="meta">品类: Stationery | 7B一致率: 50.0% | Gemini一致率: 50.0% | KSP F1: 10.5% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match hit" title="搜索词: adesivo de capa de caderno (identical)">adesivo de capa de caderno <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: adesivo vinil (identical)">adesivo vinil <span class="hit-badge">✓ 命中</span></li><li>a prova d'água</li><li>adesivo de cobra para caderno</li><li class="hit" title="搜索词: adesivo para capa de caderno (identical)">adesivo para capa de caderno <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivo para cobrir caderno (stem_identical)">adesivo para cobra caderno <span class="hit-badge">✓ 命中</span></li><li>alta durabilidade</li><li class="hit" title="搜索词: capa de caderno personalizada (identical)">capa de caderno personalizada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: decoração de caderno (identical)">decoração de caderno <span class="hit-badge">✓ 命中</span></li><li>frente do caderno</li><li>frente e verso</li><li>informação personalizada</li><li class="hit" title="搜索词: nome personalizado (identical)">nome personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: personalizar caderno (identical)">personalizar caderno <span class="hit-badge">✓ 命中</span></li><li>tamanho grande</li><li>tema personalizado</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match hit" title="搜索词: adesivo de capa de caderno (identical)">adesivo de capa de caderno <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: adesivo vinil (identical)">adesivo vinil <span class="hit-badge">✓ 命中</span></li><li>adesivo capa caderno 21x30cm</li><li>adesivo cobra para caderno</li><li>adesivo decorativo caderno</li><li>adesivo naja para caderno</li><li class="hit" title="搜索词: adesivo para caderno personalizado (identical)">adesivo para caderno personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivo para personalizar caderno (identical)">adesivo para personalizar caderno <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivo personalizado (identical)">adesivo personalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: anime (identical)">anime <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caderno escolar (identical)">caderno escolar <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caderno universitário (identical)">caderno universitário <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cobras realistas (stem_identical)">cobra real <span class="hit-badge">✓ 命中</span></li><li>com nome</li><li class="hit" title="搜索词: desenhos (identical)">desenhos <span class="hit-badge">✓ 命中</span></li><li>fácil de aplicar</li><li>material de alta qualidade</li><li class="hit" title="搜索词: naja (identical)">naja <span class="hit-badge">✓ 命中</span></li><li>para estudantes</li><li>qualquer tema</li><li>serpente</li><li>tema de sua preferência</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #8</h3>
+      <p class="title">Tênis Masculino Corrida Torrenezzi Confortável Treino Caminhadas Macio</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 56.0% | Gemini一致率: 68.2% | KSP F1: 25.5% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (25 条)</h4>
+          <ul><li class="match hit" title="搜索词: academia (identical)">academia <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: casual (identical)">casual <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">dia a dia</li><li class="match">macio</li><li class="match">Torrenezzi</li><li>1 mês após a entrega</li><li class="hit" title="搜索词: tênis masculino de corrida (identical)">Tênis Masculino de Corrida <span class="hit-badge">✓ 命中</span></li><li>Tênis R2</li><li>ajuste perfeito</li><li>cabaça sintética</li><li class="hit" title="搜索词: caminha (stem_identical)">caminhadas <span class="hit-badge">✓ 命中</span></li><li>corridas leves</li><li>garantia do vendedor</li><li class="hit" title="搜索词: material sintético (identical)">material sintético <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: origens (stem_identical)">original <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: preto (identical)">preto <span class="hit-badge">✓ 命中</span></li><li>preto e branco</li><li class="hit" title="搜索词: tenis de corrida confortável (identical)">tenis de corrida confortável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tenis macio e confortável (identical)">tenis macio e confortável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tenis masculino (identical)">tenis masculino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tenis masculino de corrida (identical)">tenis masculino de corrida <span class="hit-badge">✓ 命中</span></li><li>tenis original e garantido</li><li class="hit" title="搜索词: tenis para academia (identical)">tenis para academia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tenis para caminhada (identical)">tenis para caminhada <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match hit" title="搜索词: academia (identical)">academia <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: casual (identical)">casual <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="match">dia a dia</li><li class="match">macio</li><li class="match">Torrenezzi</li><li>cabedal ajustável</li><li class="hit" title="搜索词: calçado masculino confortável (identical)">calçado masculino confortável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caminha (stem_identical)">caminhada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: corrente (stem_identical)">corrida <span class="hit-badge">✓ 命中</span></li><li>exercícios leves</li><li class="hit" title="搜索词: homer (stem_identical)">homem <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: masculino (identical)">masculino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: sintético (identical)">sintético <span class="hit-badge">✓ 命中</span></li><li>solado flexível</li><li>treino</li><li class="hit" title="搜索词: tênis leve para caminhada (identical)">tênis leve para caminhada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tênis masculino (identical)">tênis masculino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tênis para academia (identical)">tênis para academia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tênis para correr (identical)">tênis para correr <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tênis para treinar (identical)">tênis para treinar <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tênis preto e branco (identical)">tênis preto e branco <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #9</h3>
+      <p class="title">Calça Capri Fitness Moda Evangélica Com Bolso Caminhada Treinos</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 45.0% | Gemini一致率: 70.4% | KSP F1: 21.7% | 共同: 5 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: calça capri (identical)">Calça Capri <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: corrente (stem_identical)">corridas <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: musculação (identical)">musculação <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: suplex (identical)">suplex <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tecido maleavel (stem_identical)">tecido maleável <span class="hit-badge">✓ 命中</span></li><li>G</li><li>GG</li><li>M</li><li>ajuste a qualquer biótipo</li><li>ajuste ideal</li><li>ajuste ideal a qualquer biótipo</li><li class="hit" title="搜索词: caminha (stem_identical)">caminhadas <span class="hit-badge">✓ 命中</span></li><li>material resistente</li><li>resistente</li><li>short capri para treinos</li><li class="hit" title="搜索词: short evangélico (stem_identical)">short evangélica <span class="hit-badge">✓ 命中</span></li><li>short fitness evangélica</li><li class="hit" title="搜索词: short para caminhada (identical)">short para caminhada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: short para caminhar (stem_identical)">short para caminhadas <span class="hit-badge">✓ 命中</span></li><li>short para musculação</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (27 条)</h4>
+          <ul><li class="match hit" title="搜索词: calça capri (identical)">Calça Capri <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: corrente (stem_identical)">corridas <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: musculação (identical)">musculação <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: suplex (identical)">Suplex <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tecido maleavel (stem_identical)">tecido maleável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: calça capri fitness feminina (identical)">Calça Capri fitness feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caminha (stem_identical)">Caminhada <span class="hit-badge">✓ 命中</span></li><li>Capri</li><li>Com Bolso</li><li class="hit" title="搜索词: fitness (identical)">Fitness <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: moda evangélica (identical)">Moda Evangélica <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saia short (identical)">Saia Short <span class="hit-badge">✓ 命中</span></li><li>Treinos</li><li class="hit" title="搜索词: atividade física (stem_identical)">atividades físicas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: bolso (identical)">bolso <span class="hit-badge">✓ 命中</span></li><li>calça capri com bolso</li><li>feminino evangélico</li><li>mulheres evangélicas</li><li class="hit" title="搜索词: para mulher (stem_identical)">para mulheres <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa de ginástica evangélica (identical)">roupa de ginástica evangélica <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa fitness evangélica (identical)">roupa fitness evangélica <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saia (identical)">saia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: saia short para academia (identical)">saia short para academia <span class="hit-badge">✓ 命中</span></li><li>saia short suplex</li><li>saia-short</li><li class="hit" title="搜索词: tecido resistente (identical)">tecido resistente <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #10</h3>
+      <p class="title">Kit Caderno De Colorir  + 24 Canetinhas Touch</p>
+      <p class="meta">品类: Stationery | 7B一致率: 47.4% | Gemini一致率: 45.5% | KSP F1: 29.3% | 共同: 6 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (19 条)</h4>
+          <ul><li class="match">50 desenhos</li><li class="match">50 páginas</li><li class="match hit" title="搜索词: caderno de colorir (identical)">caderno de colorir <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: capa dura (identical)">capa dura <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: kit de colorir (identical)">kit de colorir <span class="hit-badge">✓ 命中</span></li><li class="match">resistente à água</li><li>21 x 15 cm</li><li class="hit" title="搜索词: caderno para pintar (identical)">caderno para pintar <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caneta ponta dupla touch (stem_identical)">canetinhas ponta dupla touch <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: canetinhas touch (identical)">canetinhas touch <span class="hit-badge">✓ 命中</span></li><li>colorir com canetas touch</li><li>duração prolongada</li><li class="hit" title="搜索词: livro de pintar (identical)">livro de pintar <span class="hit-badge">✓ 命中</span></li><li>material resistente</li><li>pintura de alta qualidade</li><li class="hit" title="搜索词: pintura infantil (identical)">pintura infantil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: portátil (identical)">portátil <span class="hit-badge">✓ 命中</span></li><li>seguro para crianças</li><li>tamanho perfeito</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match">50 desenhos</li><li class="match">50 páginas</li><li class="match hit" title="搜索词: caderno de colorir (identical)">caderno de colorir <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: capa dura (identical)">capa dura <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: kit de colorir (identical)">kit de colorir <span class="hit-badge">✓ 命中</span></li><li class="match">resistente à água</li><li class="hit" title="搜索词: 24 canetinhas (identical)">24 canetinhas <span class="hit-badge">✓ 命中</span></li><li>amantes da arte</li><li>caderno de atividades criativas</li><li>canetinhas sortidas</li><li class="hit" title="搜索词: conjunto de pintura infantil (identical)">conjunto de pintura infantil <span class="hit-badge">✓ 命中</span></li><li>crianças e adultos</li><li class="hit" title="搜索词: folha grossa (identical)">folha grossa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: impressão de alta qualidade (identical)">impressão de alta qualidade <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: kit canetinha ponta dupla (stem_identical)">kit canetinhas ponta dupla <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: kit completo (identical)">kit completo <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: livro de colorir capa dura (identical)">livro de colorir capa dura <span class="hit-badge">✓ 命中</span></li><li>livro de colorir para relaxar</li><li>para criatividade</li><li>para pintar e desenhar</li><li>ponta dupla Touch</li><li>presente educativo infantil</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #11</h3>
+      <p class="title">Capa De Chuva Forrada Amarela Tamanho G EPI/Obras</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 56.5% | Gemini一致率: 61.9% | KSP F1: 18.6% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (23 条)</h4>
+          <ul><li class="match hit" title="搜索词: capa de chuva (identical)">capa de chuva <span class="hit-badge">✓ 命中</span></li><li class="match">muito resistente</li><li class="match">NIKOKIT</li><li class="match hit" title="搜索词: pvc forro (stem_identical)">PVC forrado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pvc (identical)">PVC <span class="hit-badge">✓ 命中</span></li><li>agricultura</li><li class="hit" title="搜索词: amarelo (stem_identical)">amarela <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pvc (identical)">capa de chuva PVC <span class="hit-badge">✓ 命中</span></li><li>capa de chuva agricultura</li><li class="hit" title="搜索词: capa de chuva construção civil (identical)">capa de chuva construção civil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para trabalho externo (stem_identical)">capa de chuva para trabalhos externos <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pesca (identical)">capa de chuva pesca <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva resistente (identical)">capa de chuva resistente <span class="hit-badge">✓ 命中</span></li><li>construção civil</li><li class="hit" title="搜索词: duramo (stem_identical)">dura <span class="hit-badge">✓ 命中</span></li><li>duração</li><li>obras</li><li class="hit" title="搜索词: pesca (identical)">pesca <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: proteção contra chuva (identical)">proteção contra chuva <span class="hit-badge">✓ 命中</span></li><li>resistente</li><li class="hit" title="搜索词: tamanho g (identical)">tamanho G <span class="hit-badge">✓ 命中</span></li><li>trabalhos externos</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (21 条)</h4>
+          <ul><li class="match hit" title="搜索词: capa de chuva (identical)">capa de chuva <span class="hit-badge">✓ 命中</span></li><li class="match">muito resistente</li><li class="match">NIKOKIT</li><li class="match hit" title="搜索词: pvc forro (stem_identical)">PVC forrado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: epi (identical)">EPI <span class="hit-badge">✓ 命中</span></li><li>PVC resistente</li><li>barras e juntas soldadas</li><li class="hit" title="搜索词: capa de chuva g (identical)">capa de chuva G <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pvc forrada (identical)">capa de chuva PVC forrada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva amarela (identical)">capa de chuva amarela <span class="hit-badge">✓ 命中</span></li><li>capa de chuva externa</li><li class="hit" title="搜索词: capa de chuva para obra (stem_identical)">capa de chuva para obras <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para trabalho (identical)">capa de chuva para trabalho <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva profissional (identical)">capa de chuva profissional <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: equipamento de proteção individual (identical)">equipamento de proteção individual <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: lev (stem_identical)">leve <span class="hit-badge">✓ 命中</span></li><li>material flexível</li><li>para agricultura</li><li>para construção civil</li><li class="hit" title="搜索词: para pesca (identical)">para pesca <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #12</h3>
+      <p class="title">Capa De Chuva Pvc Forrada Azul Tam G</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 64.7% | Gemini一致率: 75.0% | KSP F1: 43.2% | 共同: 8 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match hit" title="搜索词: capa de chuva (identical)">capa de chuva <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: capa de chuva profissional (identical)">capa de chuva profissional <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: flexível (identical)">flexível <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: lev (stem_identical)">leve <span class="hit-badge">✓ 命中</span></li><li class="match">muito resistente</li><li class="match">NIKOKIT</li><li class="match hit" title="搜索词: proteção contra chuva (identical)">proteção contra chuva <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: pvc forro (stem_identical)">PVC forrado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pvc (identical)">PVC <span class="hit-badge">✓ 命中</span></li><li>capa de chuva NIKOKIT</li><li>capa de chuva agricultura</li><li class="hit" title="搜索词: capa de chuva construção civil (identical)">capa de chuva construção civil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pesca (identical)">capa de chuva pesca <span class="hit-badge">✓ 命中</span></li><li>capa de chuva trabalhos externos</li><li class="hit" title="搜索词: confortável (identical)">confortável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: forro (stem_identical)">forrado <span class="hit-badge">✓ 命中</span></li><li>resistente à água</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: capa de chuva (identical)">capa de chuva <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: capa de chuva profissional (identical)">capa de chuva profissional <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: flexível (identical)">flexível <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: lev (stem_identical)">leve <span class="hit-badge">✓ 命中</span></li><li class="match">muito resistente</li><li class="match">NIKOKIT</li><li class="match hit" title="搜索词: proteção contra chuva (identical)">proteção contra chuva <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: pvc forro (stem_identical)">PVC forrado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pvc (identical)">capa de chuva PVC <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva azul (identical)">capa de chuva azul <span class="hit-badge">✓ 命中</span></li><li>capa de chuva para agricultura</li><li class="hit" title="搜索词: capa de chuva para construção civil (identical)">capa de chuva para construção civil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para pesca (identical)">capa de chuva para pesca <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para trabalho externo (stem_identical)">capa de chuva para trabalhos externos <span class="hit-badge">✓ 命中</span></li><li>capa de chuva para uso profissional</li><li class="hit" title="搜索词: capa de chuva tamanho g (identical)">capa de chuva tamanho G <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: equipamento de proteção individual (identical)">equipamento de proteção individual <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: impermeável (identical)">impermeável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: material pvc (identical)">material PVC <span class="hit-badge">✓ 命中</span></li><li>resistente</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #13</h3>
+      <p class="title">conjunto academia feminino short mais top | CJ001</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 44.8% | Gemini一致率: 45.5% | KSP F1: 15.7% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (29 条)</h4>
+          <ul><li class="match hit" title="搜索词: alta compressão (identical)">alta compressão <span class="hit-badge">✓ 命中</span></li><li class="match">não desbota</li><li class="match">não desfia</li><li class="match">resistente</li><li>G</li><li>GG</li><li>M</li><li class="hit" title="搜索词: academia (identical)">academia <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: caminha (stem_identical)">caminhadas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: colorido (identical)">colorido <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto academia feminino (identical)">conjunto academia feminino <span class="hit-badge">✓ 命中</span></li><li>detalhe em 4 alças</li><li>detalhe em tela</li><li class="hit" title="搜索词: duramo (stem_identical)">dura <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: elastano (identical)">elastano <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: elástico (identical)">elástico <span class="hit-badge">✓ 命中</span></li><li>esportes</li><li class="hit" title="搜索词: flexível (identical)">flexível <span class="hit-badge">✓ 命中</span></li><li>lazer</li><li>macio</li><li class="hit" title="搜索词: poliéster (identical)">poliéster <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa para academia (identical)">roupa para academia <span class="hit-badge">✓ 命中</span></li><li>roupas fitness para verão</li><li class="hit" title="搜索词: tecido (identical)">tecido <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tela (identical)">tela <span class="hit-badge">✓ 命中</span></li><li>top e short para academia</li><li>vestuário de academia</li><li>vestuário fitness feminino</li><li>vestuário para exercícios</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match hit" title="搜索词: alta compressão (identical)">alta compressão <span class="hit-badge">✓ 命中</span></li><li class="match">não desbota</li><li class="match">não desfia</li><li class="match">resistente</li><li class="hit" title="搜索词: conjunto de treino feminino (identical)">conjunto de treino feminino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto fitness feminino (identical)">conjunto fitness feminino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto para caminhada (identical)">conjunto para caminhada <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto short e top (identical)">conjunto short e top <span class="hit-badge">✓ 命中</span></li><li>detalhe de tela</li><li>durável</li><li>fácil vestimenta</li><li>look fitness verão</li><li>moda fitness com tela</li><li>não cria bolinhas</li><li>não transparente</li><li class="hit" title="搜索词: poliéster e elastano (identical)">poliéster e elastano <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa de academia feminina (identical)">roupa de academia feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa esportiva feminina (identical)">roupa esportiva feminina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: short cos elastico (stem_identical)">short cós elástico <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: suplex (identical)">suplex <span class="hit-badge">✓ 命中</span></li><li>tecido flexível e macio</li><li>top com alças cruzadas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #14</h3>
+      <p class="title">Pincel Leque Longo Cerda Natural 818 - Tigre</p>
+      <p class="meta">品类: Stationery | 7B一致率: 70.6% | Gemini一致率: 36.8% | KSP F1: 16.7% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match">cabo longo</li><li class="match hit" title="搜索词: pincel leque (identical)">pincel leque <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tigre (identical)">Tigre <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de polipropileno (identical)">cabo de polipropileno <span class="hit-badge">✓ 命中</span></li><li>filamento natural</li><li class="hit" title="搜索词: pincel de cerdas naturais (identical)">pincel de cerdas naturais <span class="hit-badge">✓ 命中</span></li><li>pincel de leque natural</li><li class="hit" title="搜索词: pincel de madeira (identical)">pincel de madeira <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pincel leque para pintura (identical)">pincel leque para pintura <span class="hit-badge">✓ 命中</span></li><li>pincel longo para pintura</li><li class="hit" title="搜索词: pincel para tela (identical)">pincel para tela <span class="hit-badge">✓ 命中</span></li><li>pintura de longa e média distância</li><li class="hit" title="搜索词: pintura em ceramica (stem_identical)">pintura em cerâmica <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pintura em madeira (identical)">pintura em madeira <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pintura em tela (identical)">pintura em tela <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tinta acrílica (identical)">tinta acrílica <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: tinta óleo (identical)">tinta óleo <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match">cabo longo</li><li class="match hit" title="搜索词: pincel leque (identical)">Pincel Leque <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tigre (identical)">Tigre <span class="hit-badge">✓ 命中</span></li><li>cerda natural</li><li>cerdas naturais</li><li>formato leque</li><li>para cerâmica</li><li>para fazer folhagem</li><li class="hit" title="搜索词: para madeira (identical)">para madeira <span class="hit-badge">✓ 命中</span></li><li>para tela</li><li>para tinta acrílica</li><li>para tinta óleo</li><li class="hit" title="搜索词: pincel cabo longo (identical)">pincel cabo longo <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pincel cerda natural (identical)">pincel cerda natural <span class="hit-badge">✓ 命中</span></li><li>pincel leque para artesanato</li><li>pincel para folhagem</li><li class="hit" title="搜索词: pincel para pintura tela (identical)">pincel para pintura tela <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pincel para tinta a oleo (stem_identical)">pincel para tinta a óleo <span class="hit-badge">✓ 命中</span></li><li>virola alumínio</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #15</h3>
+      <p class="title">Bola de futebol homem aranha de capotão n5</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 47.1% | Gemini一致率: 66.7% | KSP F1: 17.6% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match hit" title="搜索词: bola de futebol (identical)">bola de futebol <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: homem aranha (identical)">Homem aranha <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tamanho g (identical)">tamanho G <span class="hit-badge">✓ 命中</span></li><li>amante futebol bola</li><li>amantes de futebol</li><li>aracne</li><li>aracne bola grande</li><li class="hit" title="搜索词: bola de futebol homem aranha (identical)">bola de futebol homem aranha <span class="hit-badge">✓ 命中</span></li><li>bola de futebol murcha</li><li class="hit" title="搜索词: bola grande (identical)">bola grande <span class="hit-badge">✓ 命中</span></li><li>bola grande para futebol</li><li>bola murcha</li><li>colecionador bola de futebol</li><li>colecionadores</li><li class="hit" title="搜索词: jogar futebol (identical)">jogar futebol <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: spiderman (identical)">spiderman <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (18 条)</h4>
+          <ul><li class="match hit" title="搜索词: bola de futebol (identical)">bola de futebol <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: homem aranha (identical)">homem aranha <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: tamanho g (identical)">tamanho G <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: aranha (identical)">aranha <span class="hit-badge">✓ 命中</span></li><li>bola de aranha infantil</li><li class="hit" title="搜索词: bola de capotão (identical)">bola de capotão <span class="hit-badge">✓ 命中</span></li><li>bola de futebol homem aranha capotão</li><li class="hit" title="搜索词: bola de futebol para crianças (identical)">bola de futebol para crianças <span class="hit-badge">✓ 命中</span></li><li>bola de futebol tamanho G</li><li class="hit" title="搜索词: bolo homem aranha infantil (stem_identical)">bola homem aranha infantil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: bola n5 (identical)">bola n5 <span class="hit-badge">✓ 命中</span></li><li>bola n5 homem aranha</li><li>bola tamanho grande</li><li class="hit" title="搜索词: capotão (identical)">capotão <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: crianças (identical)">crianças <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: infantil (identical)">infantil <span class="hit-badge">✓ 命中</span></li><li>menino</li><li class="hit" title="搜索词: tema homem aranha (identical)">tema homem aranha <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #16</h3>
+      <p class="title">Capa de Chuva Masculina Impermeável PVC Gola Alta</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 55.0% | Gemini一致率: 63.2% | KSP F1: 20.5% | 共同: 4 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (20 条)</h4>
+          <ul><li class="match hit" title="搜索词: gola alta (identical)">gola alta <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: impermeável (identical)">impermeável <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: pvc (identical)">PVC <span class="hit-badge">✓ 命中</span></li><li class="match">RM Racing</li><li class="hit" title="搜索词: bicicleta (identical)">bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva (identical)">capa de chuva <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva ciclista (identical)">capa de chuva ciclista <span class="hit-badge">✓ 命中</span></li><li>capa de chuva gola alta</li><li class="hit" title="搜索词: capa de chuva para bicicleta (identical)">capa de chuva para bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva pvc (identical)">capa de chuva pvc <span class="hit-badge">✓ 命中</span></li><li>duas rodas</li><li>durável</li><li>esportes ao ar livre</li><li class="hit" title="搜索词: jaqueta impermeável (identical)">jaqueta impermeável <span class="hit-badge">✓ 命中</span></li><li>jaqueta impermeável para ciclista</li><li class="hit" title="搜索词: material impermeável (identical)">material impermeável <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: proteção contra chuva (identical)">proteção contra chuva <span class="hit-badge">✓ 命中</span></li><li>resistente</li><li>resistente à água</li><li>tamanho</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (19 条)</h4>
+          <ul><li class="match hit" title="搜索词: gola alta (identical)">gola alta <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: impermeável (identical)">impermeável <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: pvc (identical)">PVC <span class="hit-badge">✓ 命中</span></li><li class="match">RM Racing</li><li class="hit" title="搜索词: bolsa frontal (stem_identical)">bolso frontal <span class="hit-badge">✓ 命中</span></li><li>capa de chuva PVC gola alta</li><li class="hit" title="搜索词: capa de chuva masculina (identical)">capa de chuva masculina <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: capa de chuva para motoqueiro (identical)">capa de chuva para motoqueiro <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto de chuva (identical)">conjunto de chuva <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: conjunto impermeável masculino (identical)">conjunto impermeável masculino <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: jaqueta e calça impermeável (identical)">jaqueta e calça impermeável <span class="hit-badge">✓ 命中</span></li><li>material resistente</li><li class="hit" title="搜索词: para ciclista (identical)">para ciclista <span class="hit-badge">✓ 命中</span></li><li>para motociclista</li><li>refletivo nas costas</li><li>regulador nos punhos</li><li class="hit" title="搜索词: roupa de chuva para bicicleta (identical)">roupa de chuva para bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: roupa de chuva para moto (identical)">roupa de chuva para moto <span class="hit-badge">✓ 命中</span></li><li>à prova d'água</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #17</h3>
+      <p class="title">PROMOÇÃO Cabo De Aço Freio Dianteiro Traseiro 1.5 x 1.8 Metros Longo Bicicleta B</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 62.5% | Gemini一致率: 55.6% | KSP F1: 17.6% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (16 条)</h4>
+          <ul><li class="match hit" title="搜索词: aço carbono (identical)">aço carbono <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: bicicleta (identical)">bicicleta <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: mtb (identical)">MTB <span class="hit-badge">✓ 命中</span></li><li>1,8m</li><li>1.8m</li><li>1800mm</li><li>aço</li><li class="hit" title="搜索词: bike (identical)">bike <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de aço para bicicleta (identical)">cabo de aço para bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de freio (identical)">cabo de freio <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de freio bicicleta (identical)">cabo de freio bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de freio bike (identical)">cabo de freio bike <span class="hit-badge">✓ 命中</span></li><li>cabo de freio para MTB</li><li>cabo de freio para mountain bike</li><li class="hit" title="搜索词: freio para bicicleta (identical)">freio para bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: mountain bike (identical)">mountain bike <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (18 条)</h4>
+          <ul><li class="match hit" title="搜索词: aço carbono (identical)">Aço Carbono <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: bicicleta (identical)">Bicicleta <span class="hit-badge">✓ 命中</span></li><li class="match hit" title="搜索词: mtb (identical)">MTB <span class="hit-badge">✓ 命中</span></li><li>1.5 MM espessura</li><li>1.8 Metros</li><li class="hit" title="搜索词: bike speed (identical)">Bike Speed <span class="hit-badge">✓ 命中</span></li><li>Cabo Longo</li><li>Cabo de Aço Resistente</li><li class="hit" title="搜索词: cabo de freio de bicicleta (identical)">Cabo de Freio de Bicicleta <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: freio dianteiro (identical)">Freio Dianteiro <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: freio traseiro (identical)">Freio Traseiro <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: reparo de freio (identical)">Reparo de Freio <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cabo de aço bike (identical)">cabo de aço bike <span class="hit-badge">✓ 命中</span></li><li>cabo de freio longo</li><li>cabo freio 1800mm</li><li>cabo freio MTB</li><li class="hit" title="搜索词: cabo freio bicicleta (identical)">cabo freio bicicleta <span class="hit-badge">✓ 命中</span></li><li>cabo freio speed</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #18</h3>
+      <p class="title">Kit com 35 nomes em acrílico 5cm x 1,2cm 2mm</p>
+      <p class="meta">品类: Stationery | 7B一致率: 50.0% | Gemini一致率: 45.5% | KSP F1: 14.3% | 共同: 3 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (20 条)</h4>
+          <ul><li class="match">35 unidades</li><li class="match">5cm x 1,2cm</li><li class="match hit" title="搜索词: artesanato (identical)">artesanato <span class="hit-badge">✓ 命中</span></li><li>35 nomes</li><li>35 unidades de acrílico</li><li>5 centímetros x 1,2 centímetros</li><li class="hit" title="搜索词: acrílico (identical)">acrílico <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: acrílico dourado (identical)">acrílico dourado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: acrílico para artesanato (identical)">acrílico para artesanato <span class="hit-badge">✓ 命中</span></li><li>acrílico para decoração</li><li class="hit" title="搜索词: art supplies (identical)">art supplies <span class="hit-badge">✓ 命中</span></li><li>artes</li><li class="hit" title="搜索词: brilhante (identical)">brilhante <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: decoração (identical)">decoração <span class="hit-badge">✓ 命中</span></li><li>dourado espelhado</li><li class="hit" title="搜索词: metalizado (identical)">metalizado <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: nome acrilico (stem_identical)">nomes acrílico <span class="hit-badge">✓ 命中</span></li><li>nomes artesanais</li><li class="hit" title="搜索词: nome de acrílico (stem_identical)">nomes de acrílico <span class="hit-badge">✓ 命中</span></li><li>tamanho</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (22 条)</h4>
+          <ul><li class="match">35 unidades</li><li class="match">5cm x 1,2cm</li><li class="match hit" title="搜索词: artesanato (identical)">artesanato <span class="hit-badge">✓ 命中</span></li><li>2mm de espessura</li><li class="hit" title="搜索词: acrílico dourado espelhado (identical)">acrílico dourado espelhado <span class="hit-badge">✓ 命中</span></li><li>acrílico personalizado 2mm</li><li>conjunto de 35</li><li>decoração com nomes acrílico</li><li class="hit" title="搜索词: decoração de festa (identical)">decoração de festa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: dourado (identical)">dourado <span class="hit-badge">✓ 命中</span></li><li>efeito espelhado</li><li>identificação acrílica personalizada</li><li>kit com 35 nomes</li><li>kit nomes acrílico</li><li class="hit" title="搜索词: lembrancinha (identical)">lembrancinha <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: letra de acrilico dourada (stem_identical)">letras de acrílico douradas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: letras personalizadas (identical)">letras personalizadas <span class="hit-badge">✓ 命中</span></li><li>nomes de acrílico para festa</li><li class="hit" title="搜索词: nomes em acrílico (identical)">nomes em acrílico <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: nomes personalizados (identical)">nomes personalizados <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: personalizado (identical)">personalizado <span class="hit-badge">✓ 命中</span></li><li>tamanho ideal</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #19</h3>
+      <p class="title">Etiquetas Adesivas para Temperos, Mantimentos e Despensa com 56 Adesivos 14x25cm</p>
+      <p class="meta">品类: Stationery | 7B一致率: 58.8% | Gemini一致率: 64.7% | KSP F1: 11.8% | 共同: 2 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (17 条)</h4>
+          <ul><li class="match">56 adesivos</li><li class="match hit" title="搜索词: etiquetas adesivas (identical)">etiquetas adesivas <span class="hit-badge">✓ 命中</span></li><li>56 etiquetas</li><li class="hit" title="搜索词: adesivos (identical)">adesivos <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivos adesivos (identical)">adesivos adesivos <span class="hit-badge">✓ 命中</span></li><li>adesivos para despensa</li><li class="hit" title="搜索词: adesivos personalizados (identical)">adesivos personalizados <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: cozinha (identical)">cozinha <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: despensa (identical)">despensa <span class="hit-badge">✓ 命中</span></li><li>etiquetas adesivas cozinha</li><li>etiquetas para armazenamento</li><li class="hit" title="搜索词: etiquetas para mantimentos (identical)">etiquetas para mantimentos <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: etiquetas para temperos (identical)">etiquetas para temperos <span class="hit-badge">✓ 命中</span></li><li>etiquetas resistentes</li><li class="hit" title="搜索词: mantimentos (identical)">mantimentos <span class="hit-badge">✓ 命中</span></li><li>pacote grande</li><li class="hit" title="搜索词: temperos (identical)">temperos <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (17 条)</h4>
+          <ul><li class="match">56 adesivos</li><li class="match hit" title="搜索词: etiquetas adesivas (identical)">etiquetas adesivas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivos de cozinha (identical)">adesivos de cozinha <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: adesivos para organização (identical)">adesivos para organização <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: arrumação de cozinha (identical)">arrumação de cozinha <span class="hit-badge">✓ 命中</span></li><li>conjunto de etiquetas</li><li class="hit" title="搜索词: etiquetas para condimentos (identical)">etiquetas para condimentos <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: etiquetas para potes (identical)">etiquetas para potes <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: kit de etiquetas (identical)">kit de etiquetas <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: organização da despensa (identical)">organização da despensa <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: organização de armário (identical)">organização de armário <span class="hit-badge">✓ 命中</span></li><li>otimização de espaço</li><li class="hit" title="搜索词: para cozinha (identical)">para cozinha <span class="hit-badge">✓ 命中</span></li><li>para despensa</li><li>para mantimentos</li><li>para temperos</li><li class="hit" title="搜索词: rotulo para tempero (stem_identical)">rótulos para temperos <span class="hit-badge">✓ 命中</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="case">
+      <h3>Good #20</h3>
+      <p class="title">2 Halteres Bola Pintados 1/2kg cada P/Musculação Meio Quilo 500g Cada</p>
+      <p class="meta">品类: Sports &amp; Outdoors | 7B一致率: 50.0% | Gemini一致率: 50.0% | KSP F1: 42.9% | 共同: 9 条</p>
+      <div class="ksp-row">
+        <div class="ksp-col">
+          <h4>7B KSP (22 条)</h4>
+          <ul><li class="match">1/2kg</li><li class="match hit" title="搜索词: 500g (identical)">500g <span class="hit-badge">✓ 命中</span></li><li class="match">condicionamento físico</li><li class="match hit" title="搜索词: ferro fundido (identical)">ferro fundido <span class="hit-badge">✓ 命中</span></li><li class="match">fortalecimento muscular</li><li class="match">fácil higienização</li><li class="match hit" title="搜索词: halteres (identical)">halteres <span class="hit-badge">✓ 命中</span></li><li class="match">meio quilo</li><li class="match hit" title="搜索词: par de halteres (identical)">par de halteres <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: 2 halteres (identical)">2 halteres <span class="hit-badge">✓ 命中</span></li><li>2 halteres 500g</li><li class="hit" title="搜索词: dois halteres (identical)">dois halteres <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: ferro (identical)">ferro <span class="hit-badge">✓ 命中</span></li><li>halteres 1/2kg</li><li class="hit" title="搜索词: halteres de ferro (identical)">halteres de ferro <span class="hit-badge">✓ 命中</span></li><li>halteres para fortalecimento muscular</li><li class="hit" title="搜索词: halteres para treino (identical)">halteres para treino <span class="hit-badge">✓ 命中</span></li><li>halteres pintados</li><li>higienização fácil</li><li class="hit" title="搜索词: limpa fácil (stem_identical)">limpeza fácil <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: metalosa (stem_identical)">metal <span class="hit-badge">✓ 命中</span></li><li>treinos</li></ul>
+        </div>
+        <div class="ksp-col">
+          <h4>Gemini KSP (20 条)</h4>
+          <ul><li class="match">1/2kg</li><li class="match hit" title="搜索词: 500g (identical)">500g <span class="hit-badge">✓ 命中</span></li><li class="match">condicionamento físico</li><li class="match hit" title="搜索词: ferro fundido (identical)">ferro fundido <span class="hit-badge">✓ 命中</span></li><li class="match">fortalecimento muscular</li><li class="match">fácil higienização</li><li class="match hit" title="搜索词: halteres (identical)">halteres <span class="hit-badge">✓ 命中</span></li><li class="match">meio quilo</li><li class="match hit" title="搜索词: par de halteres (identical)">par de halteres <span class="hit-badge">✓ 命中</span></li><li>acessório para treino leve</li><li class="hit" title="搜索词: conforto (identical)">conforto <span class="hit-badge">✓ 命中</span></li><li>encaixe perfeito nas mãos</li><li class="hit" title="搜索词: halteres bola (identical)">halteres bola <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: halteres para iniciantes (identical)">halteres para iniciantes <span class="hit-badge">✓ 命中</span></li><li>halteres pequenos para treino</li><li class="hit" title="搜索词: musculação (identical)">musculação <span class="hit-badge">✓ 命中</span></li><li>pesos de 500g para ginástica</li><li class="hit" title="搜索词: pesos para musculação (identical)">pesos para musculação <span class="hit-badge">✓ 命中</span></li><li class="hit" title="搜索词: pintar (stem_identical)">pintados <span class="hit-badge">✓ 命中</span></li><li>resistente à oxidação</li></ul>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
