@@ -7,43 +7,141 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #24292f;
       margin: 0;
       padding: 2rem;
       line-height: 1.6;
+      min-height: 100vh;
     }
-    .container { max-width: 1200px; margin: 0 auto; }
-    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .subtitle { color: #57606a; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 { 
+      font-size: 2rem; 
+      font-weight: 700; 
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { 
+      color: #57606a; 
+      font-size: 0.95rem; 
+      margin-bottom: 1.5rem; 
+    }
     .metric-desc {
-      background: #f6f8fa;
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #d0d7de;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    .metric-desc h3 { font-size: 0.95rem; margin: 0.75rem 0 0.25rem 0; }
+    .metric-desc h3 { 
+      font-size: 1.1rem; 
+      margin: 0.75rem 0 0.25rem 0;
+      color: #2d3748;
+      font-weight: 600;
+    }
     .metric-desc h3:first-child { margin-top: 0; }
-    .metric-desc p { margin: 0; font-size: 0.85rem; color: #57606a; }
+    .metric-desc p { margin: 0; font-size: 0.9rem; color: #4a5568; }
+    .metric-desc table {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .metric-desc th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: 600;
+    }
+    .metric-desc td {
+      border-color: #e2e8f0;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     th, td {
-      padding: 0.5rem 0.75rem;
+      padding: 0.75rem 1rem;
       text-align: center;
-      border: 1px solid #d0d7de;
+      border: 1px solid #e2e8f0;
     }
-    th { background: #f6f8fa; font-weight: 600; }
-    td:first-child { text-align: left; font-weight: 500; }
+    th { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    td:first-child { 
+      text-align: left; 
+      font-weight: 600;
+      color: #2d3748;
+    }
     td { background: #fff; }
-    tr:nth-child(even) td { background: #f6f8fa; }
-    .rank1 { background: #dafbe1 !important; font-weight: 500; }
-    .rank2 { background: #ddf4ff !important; font-weight: 500; }
-    .rank3 { background: #fff8c5 !important; font-weight: 500; }
+    tr:nth-child(even) td { background: #f7fafc; }
+    tr:hover td { background: #edf2f7; transition: background 0.2s; }
+    .rank1 { 
+      background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%) !important; 
+      font-weight: 600;
+      color: #22543d;
+      box-shadow: inset 0 0 0 1px rgba(34, 84, 61, 0.1);
+    }
+    .rank2 { 
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important; 
+      font-weight: 600;
+      color: #2c5282;
+      box-shadow: inset 0 0 0 1px rgba(44, 82, 130, 0.1);
+    }
+    .rank3 { 
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%) !important; 
+      font-weight: 600;
+      color: #744210;
+      box-shadow: inset 0 0 0 1px rgba(116, 66, 16, 0.1);
+    }
+    .legend {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .legend-1 {
+      background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+      color: #22543d;
+    }
+    .legend-2 {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      color: #2c5282;
+    }
+    .legend-3 {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      color: #744210;
+    }
   </style>
 </head>
 <body>
@@ -109,11 +207,11 @@
       </thead>
       <tbody id="main-table"></tbody>
     </table>
-    <p class="subtitle" style="margin-top: -1rem;">
-      <span style="background:#dafbe1;padding:2px 6px;border-radius:4px;">第1</span>
-      <span style="background:#ddf4ff;padding:2px 6px;border-radius:4px;margin-left:4px;">第2</span>
-      <span style="background:#fff8c5;padding:2px 6px;border-radius:4px;margin-left:4px;">第3</span>
-    </p>
+    <div class="legend">
+      <span class="legend-item legend-1">🥇 第1名</span>
+      <span class="legend-item legend-2">🥈 第2名</span>
+      <span class="legend-item legend-3">🥉 第3名</span>
+    </div>
   </div>
 
   <script>
