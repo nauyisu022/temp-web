@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "ksp-eval-dashboard",
+  "builds": [
+    {
+      "src": "**/*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
