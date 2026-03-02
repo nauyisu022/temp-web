@@ -103,8 +103,10 @@
       border: 1px solid #d6bcfa;
     }
     /* 行头排序 */
-    #main-table td:first-child { cursor: pointer; user-select: none; }
-    #main-table td:first-child:hover { background: #ebf8ff !important; color: #2b6cb0; }
+    #main-table td:first-child,
+    #tw-table td:first-child { cursor: pointer; user-select: none; }
+    #main-table td:first-child:hover,
+    #tw-table td:first-child:hover { background: #ebf8ff !important; color: #2b6cb0; }
     td.sort-asc::after  { content: ' ▲'; font-size: 0.7rem; opacity: 0.8; }
     td.sort-desc::after { content: ' ▼'; font-size: 0.7rem; opacity: 0.8; }
     .legend {
@@ -269,10 +271,11 @@
       <table>
         <thead>
           <tr>
-            <th>指标</th>
-            <th>Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">SFT</small></th>
-            <th>Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">SFT</small></th>
-            <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">API</small></th>
+            <th style="cursor:default;">指标 <small style="font-weight:normal;opacity:0.7;">（点击行名排序）</small></th>
+            <th>Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">SFT</small><br><span class="badge badge-open">开源</span></th>
+            <th>Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">SFT</small><br><span class="badge badge-open">开源</span></th>
+            <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">API</small><br><span class="badge badge-closed">闭源</span></th>
+            <th>Qwen3-8B nothink<br><span class="badge badge-open">开源</span></th>
           </tr>
         </thead>
         <tbody id="tw-table"></tbody>
@@ -285,118 +288,46 @@
           低 → 高
         </span>
         <span class="legend-item" style="background:#fff;color:#2d3748;border-color:#e2e8f0;">🥇🥈🥉 前三名</span>
+        <span style="font-size:0.8rem;color:#718096;">💡 点击<b>指标名</b>可按该指标排序模型列 ▼▲</span>
       </div>
     </div>
   </div>
 
   <script>
-    const counts = [500, 496, 480, 500, 490, 495, 499, 385, 500, 500, 500, 500];
-    const data = {
-      ir:  [35.8, 31.1, 37.9, 33.4, 33.5, 27.6, 30.2, 31.8, 34.4, 23.5, 18.5, 19.3],
-      ph:  [56.3, 57.1, 55.5, 52.3, 50.0, 45.9, 48.1, 51.2, 54.4, 43.5, 33.9, 34.0],
-      fs:  [67.8, 52.3, 58.5, 64.5, 63.2, 64.7, 62.9, 63.6, 64.9, 57.1, 60.7, 61.7],
-      fph:       [24.3, 16.9, 16.8, 17.5, 16.4, 17.7, 18.1, 22.0, 24.9, 12.9, 13.2, 13.1],
-      valid_ksp: [12.5, 15.9,  9.2, 14.5, 11.2, 10.5, 10.4, 10.1, 10.7, 11.0,  7.2,  7.1],
-      exact_ksp: [ 7.9,  8.6,  6.3,  9.3,  7.5,  6.3,  6.6,  6.3,  6.8,  6.0,  3.9,  4.0],
-      l1:  [76.7, 73.7, 73.8, 65.9, 71.0, 70.5, 66.1, 68.3, 71.1, 60.5, 52.5, 54.8],
-      l2:  [32.1, 29.1, 32.8, 29.4, 32.1, 26.9, 30.6, 29.2, 30.2, 24.4, 19.7, 20.1],
-      l3:  [33.3, 27.3, 37.2, 38.6, 28.1, 18.9, 18.2, 25.5, 32.5, 11.1, 7.2,  8.2]
-    };
-    // 综合得分 = 短语部分命中率×40% + L3长尾词×30% + 事实搜索词命中率×20% + 短语完全一致率×10%
-    const score = data.ph.map((_, i) =>
-      +(data.ph[i] * 0.4 + data.l3[i] * 0.3 + data.fph[i] * 0.2 + data.ir[i] * 0.1).toFixed(1)
-    );
-    const rows = [
-      ['综合得分', score, v => v],
-      ['商品数', counts, v => v],
-      ['短语完全一致率', data.ir, v => v + '%'],
-      ['短语部分命中率', data.ph, v => v + '%'],
-      ['FactScore', data.fs, v => v + '%'],
-      ['事实搜索词命中率', data.fph, v => v === null ? 'N/A' : v + '%'],
-      ['命中 KSP 数/商品（短语命中）', data.valid_ksp, v => v],
-      ['精确命中 KSP 数/商品（精确匹配）', data.exact_ksp, v => v],
-      ['L1 品牌品类一致率', data.l1, v => v + '%'],
-      ['L2 USP 一致率', data.l2, v => v + '%'],
-      ['L3 长尾词一致率', data.l3, v => v + '%']
-    ];
+    // ============================================================
+    // 通用渲染引擎 — BR / TW 两个表格共用
+    // ============================================================
 
-    // 颜色插值：t=0 红, t=0.5 黄, t=1 绿
     function heatColor(t) {
       const r0 = [239, 154, 154], r1 = [255, 249, 196], r2 = [102, 187, 106];
-      let c;
-      if (t <= 0.5) {
-        const s = t * 2;
-        c = r0.map((v, i) => Math.round(v + (r1[i] - v) * s));
-      } else {
-        const s = (t - 0.5) * 2;
-        c = r1.map((v, i) => Math.round(v + (r2[i] - v) * s));
-      }
+      const c = t <= 0.5
+        ? r0.map((v, i) => Math.round(v + (r1[i] - v) * t * 2))
+        : r1.map((v, i) => Math.round(v + (r2[i] - v) * (t - 0.5) * 2));
       return `rgb(${c[0]},${c[1]},${c[2]})`;
     }
 
-    // 综合得分行：更强的绿色渐变 (浅灰 → 深绿)
     function scoreColor(t) {
       const r0 = [232, 234, 237], r1 = [165, 214, 167], r2 = [46, 125, 50];
-      let c;
-      if (t <= 0.5) {
-        const s = t * 2;
-        c = r0.map((v, i) => Math.round(v + (r1[i] - v) * s));
-      } else {
-        const s = (t - 0.5) * 2;
-        c = r1.map((v, i) => Math.round(v + (r2[i] - v) * s));
-      }
+      const c = t <= 0.5
+        ? r0.map((v, i) => Math.round(v + (r1[i] - v) * t * 2))
+        : r1.map((v, i) => Math.round(v + (r2[i] - v) * (t - 0.5) * 2));
       return `rgb(${c[0]},${c[1]},${c[2]})`;
     }
 
     function textColor(t) {
       return t > 0.75 ? '#1b5e20' : t < 0.25 ? '#b71c1c' : '#333';
     }
-
     function scoreTextColor(t) {
       return t > 0.7 ? '#fff' : '#1b5e20';
     }
 
     const MEDALS = ['🥇', '🥈', '🥉'];
-
-    function getRanks(values) {
-      const valid = values.filter(v => v !== null && v !== undefined);
-      const top3 = [...new Set(valid)].sort((a, b) => b - a).slice(0, 3);
-      return values.map(v => (v === null || v === undefined) ? -1 : top3.indexOf(v));
-    }
-
     const NO_HEATMAP = new Set(['商品数', '平均 KSP 数/商品']);
 
-    function fillTable(tbodyId, rows) {
-      const tbody = document.getElementById(tbodyId);
-      rows.forEach(([label, values, fmt]) => {
-        const tr = document.createElement('tr');
-        let html = `<td>${label}</td>`;
-        const isScore = label === '综合得分';
-        const skip = NO_HEATMAP.has(label);
-        const valid = values.filter(v => v !== null && v !== undefined);
-        const mn = Math.min(...valid), mx = Math.max(...valid);
-        const range = mx - mn || 1;
-        const ranks = skip ? [] : getRanks(values);
-
-        values.forEach((v, i) => {
-          if (v === null || v === undefined) {
-            html += `<td style="color:#aaa;font-style:italic;">N/A</td>`;
-            return;
-          }
-          if (skip) {
-            html += `<td>${fmt(v)}</td>`;
-            return;
-          }
-          const t = (v - mn) / range;
-          const bg = isScore ? scoreColor(t) : heatColor(t);
-          const fg = isScore ? scoreTextColor(t) : textColor(t);
-          const medal = ranks[i] >= 0 && ranks[i] < 3 ? MEDALS[ranks[i]] + ' ' : '';
-          const weight = isScore ? 'font-weight:700;font-size:1.05em;' : 'font-weight:600;';
-          html += `<td style="background:${bg};color:${fg};${weight}">${medal}${fmt(v)}</td>`;
-        });
-        tr.innerHTML = html;
-        tbody.appendChild(tr);
-      });
+    function getRanks(values) {
+      const valid = values.filter(v => v != null);
+      const top3 = [...new Set(valid)].sort((a, b) => b - a).slice(0, 3);
+      return values.map(v => v == null ? -1 : top3.indexOf(v));
     }
 
     function reorderCols(table, order) {
@@ -409,69 +340,138 @@
       });
     }
 
-    // Part 1: BR
-    fillTable('main-table', rows);
+    function extractNum(cell) {
+      const m = cell.textContent.match(/-?[\d.]+/);
+      return m ? parseFloat(m[0]) : -Infinity;
+    }
 
-    // 默认按综合得分从高到低排序列
-    (function defaultSort() {
-      const table = document.getElementById('main-table').closest('table');
-      const scoreRow = Array.from(table.querySelectorAll('tbody tr'))
-        .find(tr => tr.cells[0]?.textContent.trim() === '综合得分');
-      if (!scoreRow) return;
-      const tds = Array.from(scoreRow.cells).slice(1);
-      const scores = tds.map(cell => {
-        const m = cell.textContent.match(/-?[\d.]+/);
-        return m ? parseFloat(m[0]) : -Infinity;
-      });
-      const order = scores.map((_, i) => i).sort((a, b) => scores[b] - scores[a]);
-      reorderCols(table, order);
-      scoreRow.cells[0].classList.add('sort-desc');
-    })();
+    /**
+     * initTable — 渲染表格 + 热力图 + 奖牌 + 综合得分排序 + 行头点击排序
+     * @param {string} tbodyId - tbody 元素 id
+     * @param {Array}  rows    - [[label, values[], fmt], ...]
+     * @param {Object} opts    - { defaultSortLabel, enableSort }
+     */
+    function initTable(tbodyId, rows, opts = {}) {
+      const { defaultSortLabel = '综合得分', enableSort = true } = opts;
+      const tbody = document.getElementById(tbodyId);
 
-    // 行头点击 → 按该指标对所有模型列从高到低排序
-    let sortRowLabel = null, sortDir = -1;
+      rows.forEach(([label, values, fmt]) => {
+        const tr = document.createElement('tr');
+        const isScore = label === '综合得分';
+        const skip = NO_HEATMAP.has(label);
+        const valid = values.filter(v => v != null);
+        const mn = Math.min(...valid), mx = Math.max(...valid);
+        const range = mx - mn || 1;
+        const ranks = skip ? [] : getRanks(values);
 
-    document.getElementById('main-table').addEventListener('click', e => {
-      const td = e.target.closest('td:first-child');
-      if (!td) return;
-      const tr = td.closest('tr');
-      const label = td.textContent.replace(/[▼▲]/g, '').trim();
-      if (label === '商品数') return;
-
-      if (sortRowLabel === label) sortDir *= -1;
-      else { sortRowLabel = label; sortDir = -1; }
-
-      document.querySelectorAll('#main-table td:first-child').forEach(t => {
-        t.classList.remove('sort-asc', 'sort-desc');
-      });
-      td.classList.add(sortDir === -1 ? 'sort-desc' : 'sort-asc');
-
-      const tds = Array.from(tr.cells).slice(1);
-      const scores = tds.map(cell => {
-        const m = cell.textContent.match(/-?[\d.]+/);
-        return m ? parseFloat(m[0]) : -Infinity;
+        let html = `<td>${label}</td>`;
+        values.forEach((v, i) => {
+          if (v == null) { html += `<td style="color:#aaa;font-style:italic;">N/A</td>`; return; }
+          if (skip) { html += `<td>${fmt(v)}</td>`; return; }
+          const t = (v - mn) / range;
+          const bg = isScore ? scoreColor(t) : heatColor(t);
+          const fg = isScore ? scoreTextColor(t) : textColor(t);
+          const medal = ranks[i] >= 0 && ranks[i] < 3 ? MEDALS[ranks[i]] + ' ' : '';
+          const weight = isScore ? 'font-weight:700;font-size:1.05em;' : 'font-weight:600;';
+          html += `<td style="background:${bg};color:${fg};${weight}">${medal}${fmt(v)}</td>`;
+        });
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
       });
 
-      const order = scores.map((_, i) => i).sort((a, b) => sortDir * (scores[b] - scores[a]));
-      reorderCols(tr.closest('table'), order);
-    });
+      const table = tbody.closest('table');
 
-    // Part 2: TW
-    const twData = {
-      counts: [925, 925, 925],
-      avgKsp: [19.1, 20.2, 27.5],
-      ir:     [15.2, 14.2, 13.4],
-      ph:     [26.9, 25.5, 27.7],
-      fs:     [80.9, 80.7, 62.4],
-      fph:    [49.7, 43.8, 26.6],
-      l1:     [46.2, 45.1, 52.5],
-      l2:     [11.7, 10.6, 11.2],
-      l3:     [8.5, 6.8, 7.9],
-      effPhrase: [5.2, 5.2, 7.6],
-      effExact:  [3.0, 2.8, 3.7],
-      effFact:   [9.7, 8.9, 7.4],
+      // 默认排序
+      if (defaultSortLabel) {
+        const row = Array.from(tbody.querySelectorAll('tr'))
+          .find(tr => tr.cells[0]?.textContent.trim() === defaultSortLabel);
+        if (row) {
+          const vals = Array.from(row.cells).slice(1).map(extractNum);
+          const order = vals.map((_, i) => i).sort((a, b) => vals[b] - vals[a]);
+          reorderCols(table, order);
+          row.cells[0].classList.add('sort-desc');
+        }
+      }
+
+      // 行头点击排序
+      if (enableSort) {
+        let curLabel = defaultSortLabel, curDir = -1;
+        tbody.addEventListener('click', e => {
+          const td = e.target.closest('td:first-child');
+          if (!td) return;
+          const label = td.textContent.replace(/[▼▲]/g, '').trim();
+          if (NO_HEATMAP.has(label)) return;
+
+          if (curLabel === label) curDir *= -1;
+          else { curLabel = label; curDir = -1; }
+
+          tbody.querySelectorAll('td:first-child').forEach(t => t.classList.remove('sort-asc', 'sort-desc'));
+          td.classList.add(curDir === -1 ? 'sort-desc' : 'sort-asc');
+
+          const tr = td.closest('tr');
+          const vals = Array.from(tr.cells).slice(1).map(extractNum);
+          const order = vals.map((_, i) => i).sort((a, b) => curDir * (vals[b] - vals[a]));
+          reorderCols(table, order);
+        });
+      }
+    }
+
+    function compositeScore(ph, l3, fph, ir) {
+      return +(ph * 0.4 + l3 * 0.3 + fph * 0.2 + ir * 0.1).toFixed(1);
+    }
+
+    // ============================================================
+    // Part 1: BR (500 条)
+    // ============================================================
+    const brData = {
+      counts:    [500, 496, 480, 500, 490, 495, 499, 385, 500, 500, 500, 500],
+      ir:        [35.8, 31.1, 37.9, 33.4, 33.5, 27.6, 30.2, 31.8, 34.4, 23.5, 18.5, 19.3],
+      ph:        [56.3, 57.1, 55.5, 52.3, 50.0, 45.9, 48.1, 51.2, 54.4, 43.5, 33.9, 34.0],
+      fs:        [67.8, 52.3, 58.5, 64.5, 63.2, 64.7, 62.9, 63.6, 64.9, 57.1, 60.7, 61.7],
+      fph:       [24.3, 16.9, 16.8, 17.5, 16.4, 17.7, 18.1, 22.0, 24.9, 12.9, 13.2, 13.1],
+      valid_ksp: [12.5, 15.9,  9.2, 14.5, 11.2, 10.5, 10.4, 10.1, 10.7, 11.0,  7.2,  7.1],
+      exact_ksp: [ 7.9,  8.6,  6.3,  9.3,  7.5,  6.3,  6.6,  6.3,  6.8,  6.0,  3.9,  4.0],
+      l1:        [76.7, 73.7, 73.8, 65.9, 71.0, 70.5, 66.1, 68.3, 71.1, 60.5, 52.5, 54.8],
+      l2:        [32.1, 29.1, 32.8, 29.4, 32.1, 26.9, 30.6, 29.2, 30.2, 24.4, 19.7, 20.1],
+      l3:        [33.3, 27.3, 37.2, 38.6, 28.1, 18.9, 18.2, 25.5, 32.5, 11.1, 7.2,  8.2]
     };
-    const twRows = [
+    const brScore = brData.ph.map((_, i) => compositeScore(brData.ph[i], brData.l3[i], brData.fph[i], brData.ir[i]));
+
+    initTable('main-table', [
+      ['综合得分', brScore, v => v],
+      ['商品数', brData.counts, v => v],
+      ['短语完全一致率', brData.ir, v => v + '%'],
+      ['短语部分命中率', brData.ph, v => v + '%'],
+      ['FactScore', brData.fs, v => v + '%'],
+      ['事实搜索词命中率', brData.fph, v => v === null ? 'N/A' : v + '%'],
+      ['命中 KSP 数/商品（短语命中）', brData.valid_ksp, v => v],
+      ['精确命中 KSP 数/商品（精确匹配）', brData.exact_ksp, v => v],
+      ['L1 品牌品类一致率', brData.l1, v => v + '%'],
+      ['L2 USP 一致率', brData.l2, v => v + '%'],
+      ['L3 长尾词一致率', brData.l3, v => v + '%']
+    ]);
+
+    // ============================================================
+    // Part 2: TW (繁体中文)
+    // ============================================================
+    const twData = {
+      counts:    [925, 925, 925, 1000],
+      avgKsp:    [19.1, 20.2, 27.5, 22.3],
+      ir:        [15.2, 14.2, 13.4, 12.1],
+      ph:        [26.9, 25.5, 27.7, 22.6],
+      fs:        [80.9, 80.7, 62.4, 75.0],
+      fph:       [49.7, 43.8, 26.6, 10.6],
+      l1:        [46.2, 45.1, 52.5, 46.5],
+      l2:        [11.7, 10.6, 11.2, 10.0],
+      l3:        [8.5, 6.8, 7.9, 3.6],
+      effPhrase: [5.2, 5.2, 7.6, 5.0],
+      effExact:  [3.0, 2.8, 3.7, 2.7],
+      effFact:   [9.7, 8.9, 7.4, 2.4],
+    };
+    const twScore = twData.ph.map((_, i) => compositeScore(twData.ph[i], twData.l3[i], twData.fph[i], twData.ir[i]));
+
+    initTable('tw-table', [
+      ['综合得分', twScore, v => v],
       ['商品数', twData.counts, v => v],
       ['平均 KSP 数/商品', twData.avgKsp, v => v],
       ['短语完全一致率', twData.ir, v => v + '%'],
@@ -484,8 +484,7 @@
       ['命中 KSP 数（短语命中）', twData.effPhrase, v => v],
       ['精确命中 KSP 数（精确匹配）', twData.effExact, v => v],
       ['命中 KSP 数（来自原文）', twData.effFact, v => v],
-    ];
-    fillTable('tw-table', twRows);
+    ]);
   </script>
 </body>
 </html>
