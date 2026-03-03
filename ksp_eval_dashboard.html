@@ -139,6 +139,20 @@
       border-radius: 2px;
       border: 1px solid rgba(0,0,0,0.1);
     }
+    .toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      color: #4a5568;
+    }
+    .toggle-wrap input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .toggle-wrap label { cursor: pointer; user-select: none; }
   </style>
 </head>
 <body>
@@ -186,6 +200,10 @@
             <td style="text-align: left;">每条商品平均有多少个 KSP 与搜索词完全一致（或词干化后一致）。要求最严格的有效 KSP 绝对数量。</td>
           </tr>
           <tr>
+            <td style="text-align: center; font-weight: 600;">命中 KSP 数/商品<br>(来自原文)</td>
+            <td style="text-align: left;">每条商品平均有多少个 KSP 能在原文 title+description 中找到（子串匹配）。越高越忠实。</td>
+          </tr>
+          <tr>
             <td style="text-align: center; font-weight: 600;">L1 品牌品类一致率</td>
             <td style="text-align: left;">top_attractiveness（brand、product_type、compatibility）层的短语与搜索词完全一致的比例。</td>
           </tr>
@@ -201,16 +219,19 @@
       </table>
     </div>
 
+    <p style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #4a5568;">
+      <strong>综合得分</strong> = 短语部分命中率 × <b>25%</b> + 短语完全一致率 × <b>25%</b> + L3 长尾词一致率 × <b>20%</b> + 事实搜索词命中率 × <b>15%</b> + FactScore × <b>15%</b>
+    </p>
+
     <table>
       <thead>
         <tr>
           <th style="cursor:default;">指标 <small style="font-weight:normal;opacity:0.7;">（点击行名排序）</small></th>
-          <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">Feb14</small><br><span class="badge badge-closed">闭源</span></th>
-          <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">Feb28</small><br><span class="badge badge-closed">闭源</span></th>
-          <th>Gemini 2.5 Pro<br><small style="font-weight:normal;opacity:.8">Feb28</small><br><span class="badge badge-closed">闭源</span></th>
-          <th>GPT-5.2<br><small style="font-weight:normal;opacity:.8">Feb28</small><br><span class="badge badge-closed">闭源</span></th>
-          <th>Claude 4.6 Opus<br><small style="font-weight:normal;opacity:.8">Feb28</small><br><span class="badge badge-closed">闭源</span></th>
-          <th>Claude 4.5 Sonnet<br><small style="font-weight:normal;opacity:.8">Feb28</small><br><span class="badge badge-closed">闭源</span></th>
+          <th>Gemini 2.5 Flash<br><span class="badge badge-closed">闭源</span></th>
+          <th>Gemini 2.5 Pro<br><span class="badge badge-closed">闭源</span></th>
+          <th>GPT-5.2<br><span class="badge badge-closed">闭源</span></th>
+          <th>Claude 4.6 Opus<br><span class="badge badge-closed">闭源</span></th>
+          <th>Claude 4.5 Sonnet<br><span class="badge badge-closed">闭源</span></th>
           <th>Qwen3-8B nothink<br><span class="badge badge-open">开源</span></th>
           <th>Qwen2.5-14B<br><span class="badge badge-open">开源</span></th>
           <th>Qwen2.5-7B<br><span class="badge badge-open">开源</span></th>
@@ -238,7 +259,7 @@
     <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e2e8f0;">
       <h1>Part 2: Taiwan (TW) 繁体中文评测</h1>
       <p class="subtitle">数据源：preprocessed_TW_first1000.csv（同商品子集 925 条） · 搜索词库：TW_search_terms.parquet (458,692 条)</p>
-      <p class="subtitle" style="margin-top: -1rem;">注：7B / 14B 为 SFT 微调模型，Gemini 2.5 Flash 为 API 推理；所有指标为商品级 macro average（每条商品等权）</p>
+      <p class="subtitle" style="margin-top: -1rem;">注：前四列使用 prompt v2，后两列使用 prompt v2.1；所有指标为商品级 macro average（每条商品等权）</p>
 
       <div class="metric-desc">
         <h3 style="margin-bottom: 0.75rem;">TW 评测说明</h3>
@@ -268,14 +289,21 @@
         </table>
       </div>
 
-      <table>
+      <div class="toggle-wrap">
+        <input type="checkbox" id="toggle-v21">
+        <label for="toggle-v21">显示 prompt v2.1 模型</label>
+      </div>
+
+      <table id="tw-table-wrap">
         <thead>
           <tr>
             <th style="cursor:default;">指标 <small style="font-weight:normal;opacity:0.7;">（点击行名排序）</small></th>
-            <th>Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">SFT</small><br><span class="badge badge-open">开源</span></th>
-            <th>Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">SFT</small><br><span class="badge badge-open">开源</span></th>
-            <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">API</small><br><span class="badge badge-closed">闭源</span></th>
-            <th>Qwen3-8B nothink<br><span class="badge badge-open">开源</span></th>
+            <th>Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
+            <th>Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
+            <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">API · prompt v2</small><br><span class="badge badge-closed">闭源</span></th>
+            <th>Qwen3-8B nothink<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
+            <th class="tw-v21">Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">prompt v2.1</small><br><span class="badge badge-open">开源</span></th>
+            <th class="tw-v21">Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">prompt v2.1</small><br><span class="badge badge-open">开源</span></th>
           </tr>
         </thead>
         <tbody id="tw-table"></tbody>
@@ -352,8 +380,9 @@
      * @param {Object} opts    - { defaultSortLabel, enableSort }
      */
     function initTable(tbodyId, rows, opts = {}) {
-      const { defaultSortLabel = '综合得分', enableSort = true } = opts;
+      const { defaultSortLabel = '综合得分', enableSort = true, hiddenCols = [] } = opts;
       const tbody = document.getElementById(tbodyId);
+      const hiddenSet = new Set(hiddenCols);
 
       rows.forEach(([label, values, fmt]) => {
         const tr = document.createElement('tr');
@@ -366,14 +395,15 @@
 
         let html = `<td>${label}</td>`;
         values.forEach((v, i) => {
-          if (v == null) { html += `<td style="color:#aaa;font-style:italic;">N/A</td>`; return; }
-          if (skip) { html += `<td>${fmt(v)}</td>`; return; }
+          const cls = hiddenSet.has(i) ? ' class="tw-v21"' : '';
+          if (v == null) { html += `<td${cls} style="color:#aaa;font-style:italic;">N/A</td>`; return; }
+          if (skip) { html += `<td${cls}>${fmt(v)}</td>`; return; }
           const t = (v - mn) / range;
           const bg = isScore ? scoreColor(t) : heatColor(t);
           const fg = isScore ? scoreTextColor(t) : textColor(t);
           const medal = ranks[i] >= 0 && ranks[i] < 3 ? MEDALS[ranks[i]] + ' ' : '';
           const weight = isScore ? 'font-weight:700;font-size:1.05em;' : 'font-weight:600;';
-          html += `<td style="background:${bg};color:${fg};${weight}">${medal}${fmt(v)}</td>`;
+          html += `<td${cls} style="background:${bg};color:${fg};${weight}">${medal}${fmt(v)}</td>`;
         });
         tr.innerHTML = html;
         tbody.appendChild(tr);
@@ -416,36 +446,40 @@
       }
     }
 
-    function compositeScore(ph, l3, fph, ir) {
-      return +(ph * 0.4 + l3 * 0.3 + fph * 0.2 + ir * 0.1).toFixed(1);
+    function compositeScore(ph, ir, l3, fph, fs) {
+      return +(ph * 0.25 + ir * 0.25 + l3 * 0.2 + fph * 0.15 + fs * 0.15).toFixed(1);
     }
 
     // ============================================================
     // Part 1: BR (500 条)
     // ============================================================
     const brData = {
-      counts:    [500, 496, 480, 500, 490, 495, 499, 385, 500, 500, 500, 500],
-      ir:        [35.8, 31.1, 37.9, 33.4, 33.5, 27.6, 30.2, 31.8, 34.4, 23.5, 18.5, 19.3],
-      ph:        [56.3, 57.1, 55.5, 52.3, 50.0, 45.9, 48.1, 51.2, 54.4, 43.5, 33.9, 34.0],
-      fs:        [67.8, 52.3, 58.5, 64.5, 63.2, 64.7, 62.9, 63.6, 64.9, 57.1, 60.7, 61.7],
-      fph:       [24.3, 16.9, 16.8, 17.5, 16.4, 17.7, 18.1, 22.0, 24.9, 12.9, 13.2, 13.1],
-      valid_ksp: [12.5, 15.9,  9.2, 14.5, 11.2, 10.5, 10.4, 10.1, 10.7, 11.0,  7.2,  7.1],
-      exact_ksp: [ 7.9,  8.6,  6.3,  9.3,  7.5,  6.3,  6.6,  6.3,  6.8,  6.0,  3.9,  4.0],
-      l1:        [76.7, 73.7, 73.8, 65.9, 71.0, 70.5, 66.1, 68.3, 71.1, 60.5, 52.5, 54.8],
-      l2:        [32.1, 29.1, 32.8, 29.4, 32.1, 26.9, 30.6, 29.2, 30.2, 24.4, 19.7, 20.1],
-      l3:        [33.3, 27.3, 37.2, 38.6, 28.1, 18.9, 18.2, 25.5, 32.5, 11.1, 7.2,  8.2]
+      counts:    [500, 480, 500, 490, 495, 499, 385, 500, 500, 500, 500],
+      avgKsp:    [22.2, 16.6, 27.8, 22.4, 22.8, 21.7, 19.8, 19.6, 25.4, 21.3, 20.9],
+      ir:        [35.8, 37.9, 33.4, 33.5, 27.6, 30.2, 31.8, 34.4, 23.5, 18.5, 19.3],
+      ph:        [56.3, 55.5, 52.3, 50.0, 45.9, 48.1, 51.2, 54.4, 43.5, 33.9, 34.0],
+      fs:        [67.8, 58.5, 64.5, 63.2, 64.7, 62.9, 63.6, 64.9, 57.1, 60.7, 61.7],
+      fph:       [24.3, 16.8, 17.5, 16.4, 17.7, 18.1, 22.0, 24.9, 12.9, 13.2, 13.1],
+      valid_ksp: [12.5,  9.2, 14.5, 11.2, 10.5, 10.4, 10.1, 10.7, 11.0,  7.2,  7.1],
+      exact_ksp: [ 7.9,  6.3,  9.3,  7.5,  6.3,  6.6,  6.3,  6.8,  6.0,  3.9,  4.0],
+      effFact:   [ 8.1,  3.8,  8.0,  5.7,  6.4,  5.7,  6.5,  7.2,  5.2,  4.7,  4.8],
+      l1:        [76.7, 73.8, 65.9, 71.0, 70.5, 66.1, 68.3, 71.1, 60.5, 52.5, 54.8],
+      l2:        [32.1, 32.8, 29.4, 32.1, 26.9, 30.6, 29.2, 30.2, 24.4, 19.7, 20.1],
+      l3:        [33.3, 37.2, 38.6, 28.1, 18.9, 18.2, 25.5, 32.5, 11.1, 7.2,  8.2]
     };
-    const brScore = brData.ph.map((_, i) => compositeScore(brData.ph[i], brData.l3[i], brData.fph[i], brData.ir[i]));
+    const brScore = brData.ph.map((_, i) => compositeScore(brData.ph[i], brData.ir[i], brData.l3[i], brData.fph[i], brData.fs[i]));
 
     initTable('main-table', [
       ['综合得分', brScore, v => v],
       ['商品数', brData.counts, v => v],
+      ['平均 KSP 数/商品', brData.avgKsp, v => v],
       ['短语完全一致率', brData.ir, v => v + '%'],
       ['短语部分命中率', brData.ph, v => v + '%'],
       ['FactScore', brData.fs, v => v + '%'],
       ['事实搜索词命中率', brData.fph, v => v === null ? 'N/A' : v + '%'],
       ['命中 KSP 数/商品（短语命中）', brData.valid_ksp, v => v],
       ['精确命中 KSP 数/商品（精确匹配）', brData.exact_ksp, v => v],
+      ['命中 KSP 数/商品（来自原文）', brData.effFact, v => v],
       ['L1 品牌品类一致率', brData.l1, v => v + '%'],
       ['L2 USP 一致率', brData.l2, v => v + '%'],
       ['L3 长尾词一致率', brData.l3, v => v + '%']
@@ -455,20 +489,20 @@
     // Part 2: TW (繁体中文)
     // ============================================================
     const twData = {
-      counts:    [925, 925, 925, 1000],
-      avgKsp:    [19.1, 20.2, 27.5, 22.3],
-      ir:        [15.2, 14.2, 13.4, 12.1],
-      ph:        [26.9, 25.5, 27.7, 22.6],
-      fs:        [80.9, 80.7, 62.4, 75.0],
-      fph:       [49.7, 43.8, 26.6, 10.6],
-      l1:        [46.2, 45.1, 52.5, 46.5],
-      l2:        [11.7, 10.6, 11.2, 10.0],
-      l3:        [8.5, 6.8, 7.9, 3.6],
-      effPhrase: [5.2, 5.2, 7.6, 5.0],
-      effExact:  [3.0, 2.8, 3.7, 2.7],
-      effFact:   [9.7, 8.9, 7.4, 2.4],
+      counts:    [925, 925, 925, 1000, 935, 1000],
+      avgKsp:    [19.1, 20.2, 27.5, 22.3, 21.6, 23.4],
+      ir:        [15.2, 14.2, 13.4, 12.1, 15.3, 13.1],
+      ph:        [26.9, 25.5, 27.7, 22.6, 25.9, 21.3],
+      fs:        [80.9, 80.7, 62.4, 75.0, 74.9, 75.9],
+      fph:       [15.2, 14.5, 10.3, 10.6, 13.1, 10.7],
+      l1:        [46.2, 45.1, 52.5, 46.5, 45.7, 45.1],
+      l2:        [11.7, 10.6, 11.2, 10.0, 11.4, 9.1],
+      l3:        [8.5, 6.8, 7.9, 3.6, 10.2, 9.8],
+      effPhrase: [5.2, 5.2, 7.6, 5.0, 5.6, 5.0],
+      effExact:  [3.0, 2.8, 3.7, 2.7, 3.3, 3.1],
+      effFact:   [9.7, 8.9, 7.4, 2.4, 9.1, 8.3],
     };
-    const twScore = twData.ph.map((_, i) => compositeScore(twData.ph[i], twData.l3[i], twData.fph[i], twData.ir[i]));
+    const twScore = twData.ph.map((_, i) => compositeScore(twData.ph[i], twData.ir[i], twData.l3[i], twData.fph[i], twData.fs[i]));
 
     initTable('tw-table', [
       ['综合得分', twScore, v => v],
@@ -478,13 +512,21 @@
       ['短语部分命中率', twData.ph, v => v + '%'],
       ['FactScore', twData.fs, v => v + '%'],
       ['事实搜索词命中率', twData.fph, v => v + '%'],
+      ['命中 KSP 数/商品（短语命中）', twData.effPhrase, v => v],
+      ['精确命中 KSP 数/商品（精确匹配）', twData.effExact, v => v],
+      ['命中 KSP 数/商品（来自原文）', twData.effFact, v => v],
       ['L1 品牌品类一致率', twData.l1, v => v + '%'],
       ['L2 USP 一致率', twData.l2, v => v + '%'],
       ['L3 长尾词一致率', twData.l3, v => v + '%'],
-      ['命中 KSP 数（短语命中）', twData.effPhrase, v => v],
-      ['精确命中 KSP 数（精确匹配）', twData.effExact, v => v],
-      ['命中 KSP 数（来自原文）', twData.effFact, v => v],
-    ]);
+    ], { hiddenCols: [4, 5] });
+
+    // v2.1 toggle
+    const v21cells = document.querySelectorAll('.tw-v21');
+    v21cells.forEach(el => el.style.display = 'none');
+    document.getElementById('toggle-v21').addEventListener('change', function() {
+      const show = this.checked;
+      v21cells.forEach(el => el.style.display = show ? '' : 'none');
+    });
   </script>
 </body>
 </html>
