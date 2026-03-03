@@ -261,33 +261,6 @@
       <p class="subtitle">数据源：preprocessed_TW_first1000.csv（同商品子集 925 条） · 搜索词库：TW_search_terms.parquet (458,692 条)</p>
       <p class="subtitle" style="margin-top: -1rem;">注：前四列使用 prompt v2，后两列使用 prompt v2.1；所有指标为商品级 macro average（每条商品等权）</p>
 
-      <div class="metric-desc">
-        <h3 style="margin-bottom: 0.75rem;">TW 评测说明</h3>
-        <p>繁体中文搜索词库中的词已做分词处理（如 "手機 殼"），匹配时去空格后比较。中文无词形变化，不使用词干匹配。</p>
-        <p style="margin-top: 0.5rem;"><strong>命中 KSP 数</strong>：衡量模型生成的 KSP 中有多少命中了搜索词库（绝对数量，不受总生成量稀释）。</p>
-        <table style="margin-top: 0.75rem; margin-bottom: 0;">
-          <thead>
-            <tr>
-              <th style="width: 30%;">指标</th>
-              <th style="text-align: left;">说明</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="text-align: center; font-weight: 600;">有效 KSP（短语命中）</td>
-              <td style="text-align: left;">每个商品平均有多少个 KSP 能在搜索词库中匹配到（子串匹配）。</td>
-            </tr>
-            <tr>
-              <td style="text-align: center; font-weight: 600;">有效 KSP（精确匹配）</td>
-              <td style="text-align: left;">每个商品平均有多少个 KSP 与搜索词完全一致。</td>
-            </tr>
-            <tr>
-              <td style="text-align: center; font-weight: 600;">有效 KSP（来自原文）</td>
-              <td style="text-align: left;">每个商品平均有多少个 KSP 能在原文 title+description 中找到。越高越忠实。</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
       <div class="toggle-wrap">
         <input type="checkbox" id="toggle-v21">
