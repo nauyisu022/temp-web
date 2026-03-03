@@ -158,8 +158,6 @@
 <body>
   <div class="container">
     <h1>KSP 模型评测</h1>
-    <p class="subtitle">数据源：preprocessed_BR_first500.csv（同一批 500 条） · 最后更新：2026-03-02</p>
-    <p class="subtitle" style="margin-top: -1rem;">注：Fact命中率已改为 macro average（每条商品等权）；Qwen3-8B 为 499 条，Gemini Pro 为 480 条，Qwen2.5-14B 为 385 条，其余约 490-500 条</p>
 
     <div class="metric-desc">
       <h3 style="margin-bottom: 0.75rem;">指标说明</h3>
@@ -223,6 +221,11 @@
       <strong>综合得分</strong> = 短语部分命中率 × <b>25%</b> + 短语完全一致率 × <b>25%</b> + L3 长尾词一致率 × <b>20%</b> + 事实搜索词命中率 × <b>15%</b> + FactScore × <b>15%</b>
     </p>
 
+    <h2 style="margin-top: 2rem;">Part 1: Brazil (BR)</h2>
+    <p class="subtitle">数据源：preprocessed_BR_first500.csv（同一批 500 条） · 最后更新：2026-03-02</p>
+    <p class="subtitle" style="margin-top: -1rem;">注：Fact命中率已改为 macro average（每条商品等权）；Qwen3-8B 为 499 条，Gemini Pro 为 480 条，Qwen2.5-14B 为 385 条，其余约 490-500 条</p>
+    <p class="subtitle" style="margin-top: -0.5rem;">📋 <a href="br_case_analysis.html" style="color:#4299e1;">BR Case 对比（Top-6 模型逐条 KSP 展示）</a></p>
+
     <table>
       <thead>
         <tr>
@@ -260,6 +263,7 @@
       <h1>Part 2: Taiwan (TW) 繁体中文评测</h1>
       <p class="subtitle">数据源：preprocessed_TW_first1000.csv（同商品子集 925 条） · 搜索词库：TW_search_terms.parquet (458,692 条)</p>
       <p class="subtitle" style="margin-top: -1rem;">注：前四列使用 prompt v2，后两列使用 prompt v2.1；所有指标为商品级 macro average（每条商品等权）</p>
+      <p class="subtitle" style="margin-top: -0.5rem;">📋 <a href="tw_case_analysis.html" style="color:#4299e1;">TW Case 对比（6 模型逐条 KSP 展示）</a></p>
 
 
       <div class="toggle-wrap">
