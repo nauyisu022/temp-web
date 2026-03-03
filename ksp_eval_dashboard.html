@@ -218,7 +218,7 @@
     </div>
 
     <p style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #4a5568;">
-      <strong>综合得分</strong> = 短语部分命中率 × <b>25%</b> + 短语完全一致率 × <b>25%</b> + L3 长尾词一致率 × <b>20%</b> + 事实搜索词命中率 × <b>15%</b> + FactScore × <b>15%</b>
+        <strong>综合得分</strong> = 短语部分命中率 × <b>25%</b> + 事实搜索词命中率 × <b>25%</b> + 短语完全一致率 × <b>20%</b> + L3 长尾词一致率 × <b>15%</b> + FactScore × <b>15%</b>
     </p>
 
     <h2 style="margin-top: 2rem;">Part 1: Brazil (BR)</h2>
@@ -427,7 +427,7 @@
     }
 
     function compositeScore(ph, ir, l3, fph, fs) {
-      return +(ph * 0.25 + ir * 0.25 + l3 * 0.2 + fph * 0.15 + fs * 0.15).toFixed(1);
+      return +(ph * 0.25 + fph * 0.25 + ir * 0.2 + l3 * 0.15 + fs * 0.15).toFixed(1);
     }
 
     // ============================================================
