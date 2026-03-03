@@ -262,8 +262,8 @@
     <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e2e8f0;">
       <h1>Part 2: Taiwan (TW) 繁体中文评测</h1>
       <p class="subtitle">数据源：preprocessed_TW_first1000.csv（同商品子集 925 条） · 搜索词库：TW_search_terms.parquet (458,692 条)</p>
-      <p class="subtitle" style="margin-top: -1rem;">注：前四列使用 prompt v2，后两列使用 prompt v2.1；所有指标为商品级 macro average（每条商品等权）</p>
-      <p class="subtitle" style="margin-top: -0.5rem;">📋 <a href="tw_case_analysis.html" style="color:#4299e1;">TW Case 对比（6 模型逐条 KSP 展示）</a></p>
+      <p class="subtitle" style="margin-top: -1rem;">注：前五列使用 prompt v2，后两列使用 prompt v2.1；所有指标为商品级 macro average（每条商品等权）</p>
+      <p class="subtitle" style="margin-top: -0.5rem;">📋 <a href="tw_case_analysis.html" style="color:#4299e1;">TW Case 对比（7 模型逐条 KSP 展示）</a></p>
 
 
       <div class="toggle-wrap">
@@ -279,6 +279,7 @@
             <th>Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
             <th>Gemini 2.5 Flash<br><small style="font-weight:normal;opacity:.8">API · prompt v2</small><br><span class="badge badge-closed">闭源</span></th>
             <th>Qwen3-8B nothink<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
+            <th>Qwen2.5-7B LoRA<br><small style="font-weight:normal;opacity:.8">prompt v2</small><br><span class="badge badge-open">开源</span></th>
             <th class="tw-v21">Qwen2.5-7B<br><small style="font-weight:normal;opacity:.8">prompt v2.1</small><br><span class="badge badge-open">开源</span></th>
             <th class="tw-v21">Qwen2.5-14B<br><small style="font-weight:normal;opacity:.8">prompt v2.1</small><br><span class="badge badge-open">开源</span></th>
           </tr>
@@ -469,18 +470,18 @@
     // Part 2: TW (繁体中文)
     // ============================================================
     const twData = {
-      counts:    [925, 925, 925, 1000, 935, 1000],
-      avgKsp:    [19.1, 20.2, 27.5, 22.3, 21.6, 23.4],
-      ir:        [15.2, 14.2, 13.4, 12.1, 15.3, 13.1],
-      ph:        [26.9, 25.5, 27.7, 22.6, 25.9, 21.3],
-      fs:        [80.9, 80.7, 62.4, 75.0, 74.9, 75.9],
-      fph:       [15.2, 14.5, 10.3, 10.6, 13.1, 10.7],
-      l1:        [46.2, 45.1, 52.5, 46.5, 45.7, 45.1],
-      l2:        [11.7, 10.6, 11.2, 10.0, 11.4, 9.1],
-      l3:        [8.5, 6.8, 7.9, 3.6, 10.2, 9.8],
-      effPhrase: [5.2, 5.2, 7.6, 5.0, 5.6, 5.0],
-      effExact:  [3.0, 2.8, 3.7, 2.7, 3.3, 3.1],
-      effFact:   [9.7, 8.9, 7.4, 2.4, 9.1, 8.3],
+      counts:    [925, 925, 925, 1000, 995, 935, 1000],
+      avgKsp:    [19.1, 20.2, 27.5, 22.3, 19.5, 21.6, 23.4],
+      ir:        [15.2, 14.2, 13.4, 12.1, 2.5, 15.3, 13.1],
+      ph:        [26.9, 25.5, 27.7, 22.6, 8.0, 25.9, 21.3],
+      fs:        [80.9, 80.7, 62.4, 75.0, 66.5, 74.9, 75.9],
+      fph:       [15.2, 14.5, 10.3, 10.6, 1.9, 13.1, 10.7],
+      l1:        [46.2, 45.1, 52.5, 46.5, 11.7, 45.7, 45.1],
+      l2:        [11.7, 10.6, 11.2, 10.0, 2.6, 11.4, 9.1],
+      l3:        [8.5, 6.8, 7.9, 3.6, 0.1, 10.2, 9.8],
+      effPhrase: [5.2, 5.2, 7.6, 5.0, 1.6, 5.6, 5.0],
+      effExact:  [3.0, 2.8, 3.7, 2.7, 0.5, 3.3, 3.1],
+      effFact:   [9.7, 8.9, 7.4, 2.4, 2.4, 9.1, 8.3],
     };
     const twScore = twData.ph.map((_, i) => compositeScore(twData.ph[i], twData.ir[i], twData.l3[i], twData.fph[i], twData.fs[i]));
 
@@ -498,7 +499,7 @@
       ['L1 品牌品类一致率', twData.l1, v => v + '%'],
       ['L2 USP 一致率', twData.l2, v => v + '%'],
       ['L3 长尾词一致率', twData.l3, v => v + '%'],
-    ], { hiddenCols: [4, 5] });
+    ], { hiddenCols: [5, 6] });
 
     // v2.1 toggle
     const v21cells = document.querySelectorAll('.tw-v21');
