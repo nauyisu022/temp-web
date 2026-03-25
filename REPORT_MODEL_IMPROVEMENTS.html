@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reranker 改进汇报</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #17212b;
+      --muted: #5c6773;
+      --line: #d8e0ea;
+      --accent: #0f5cc0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #f6f8fb 0%, #eef3f8 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 24px 56px;
+    }
+    .report {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 40px 44px;
+      box-shadow: 0 14px 44px rgba(19, 34, 53, 0.08);
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+      margin-top: 1.5em;
+      margin-bottom: 0.6em;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 2.2rem;
+      color: #0d2747;
+    }
+    h2 {
+      font-size: 1.45rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.35em;
+    }
+    h3 { font-size: 1.1rem; color: #183b67; }
+    p, li {
+      line-height: 1.7;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    ul, ol {
+      padding-left: 1.35rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 24px;
+      font-size: 0.96rem;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f1f6fb;
+    }
+    code {
+      padding: 0.14rem 0.35rem;
+      border-radius: 6px;
+      background: #eef4fb;
+      font-size: 0.92em;
+    }
+    img {
+      display: block;
+      width: 100%;
+      max-width: 980px;
+      margin: 16px auto 28px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 10px 28px rgba(17, 31, 51, 0.08);
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid var(--line);
+      margin: 32px 0;
+    }
+    @media (max-width: 860px) {
+      .wrap { padding: 20px 12px 36px; }
+      .report { padding: 24px 18px; border-radius: 14px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <article class="report">
+      <h1>Reranker 改进汇报</h1>
+<h2>1. 一页结论</h2>
+<ul>
+<li>这轮工作的核心不是单纯调参，而是先修复了<strong>评估不可信</strong>的问题，再建立了<strong>可复现 baseline</strong>，最后在<strong>新数据</strong>上拿到了更强的模型。</li>
+<li>在老数据上，采用 <strong>新 item 划分 + 统一训练/评估口径</strong> 后，正式 baseline 的 <code>ROC-AUC</code> 从 <code>0.7667</code> 提升到 <code>0.8509</code>。</li>
+<li>在新数据 <code>QC3511</code> 上，同一套 test 集对比显示：</li>
+<li><code>Base</code>: <code>ROC-AUC 0.7518 / PR-AUC 0.4972 / F1 0.5444</code></li>
+<li><code>Old Model</code>: <code>ROC-AUC 0.8233 / PR-AUC 0.6282 / F1 0.6134</code></li>
+<li><code>New Model</code>: <code>ROC-AUC 0.8801 / PR-AUC 0.7549 / F1 0.6897</code></li>
+<li>当前结论明确：<strong>New Model &gt; Old Model &gt; Base</strong>。</li>
+</ul>
+<h2>2. 起点问题</h2>
+<p>最早版本的问题不是模型太弱，而是评估口径不可靠。</p>
+<ul>
+<li>旧版按样本随机划分，同一商品会同时出现在 <code>train/val/test</code>，存在严重数据泄漏。</li>
+<li>在修复为 <strong>按 item 划分</strong> 后，最早一版实验结果明显下滑，暴露出真实泛化能力不足。</li>
+<li>这说明此前的高分很大程度上来自数据泄漏，而不是模型真正学到了 query-document 匹配能力。</li>
+</ul>
+<p>参考：</p>
+<ul>
+<li><a href="/home/work/opa_common_mx/wsy/reranker/reranker_v2_swift/EXPERIMENT_SUMMARY.md">EXPERIMENT_SUMMARY.md</a></li>
+</ul>
+<h2>3. 改进一：修复评估口径，建立老数据正式 baseline</h2>
+<p>我先固定了一套正式可复现 baseline：</p>
+<ul>
+<li>仍然使用老数据</li>
+<li>划分方式改成 <strong>按 item 划分</strong></li>
+<li>训练统一为 pointwise prompt-BCE</li>
+<li>评估统一为 <strong>val 扫阈值 -&gt; test 固定阈值</strong></li>
+</ul>
+<p>正式结果：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td style="text-align: right;">0.6619</td>
+<td style="text-align: right;">0.5344</td>
+<td style="text-align: right;">0.8205</td>
+<td style="text-align: right;">0.6473</td>
+<td style="text-align: right;">0.7667</td>
+</tr>
+<tr>
+<td>Fine-tuned V4</td>
+<td style="text-align: right;">0.7765</td>
+<td style="text-align: right;">0.6849</td>
+<td style="text-align: right;">0.7576</td>
+<td style="text-align: right;">0.7194</td>
+<td style="text-align: right;">0.8509</td>
+</tr>
+</tbody>
+</table>
+<p>提升：</p>
+<ul>
+<li><code>F1 +0.0721</code></li>
+<li><code>ROC-AUC +0.0842</code></li>
+</ul>
+<p>这一步的价值是先建立一个<strong>可信的旧数据对照组</strong>，后续所有新实验都能基于它比较。</p>
+<p>参考：</p>
+<ul>
+<li><a href="/home/work/opa_common_mx/wsy/reranker/reranker_v2_swift/BASELINE_OLD_DATA_NEW_ITEM_SPLIT.md">BASELINE_OLD_DATA_NEW_ITEM_SPLIT.md</a></li>
+</ul>
+<h2>4. 改进二：先优化召回输入，再做 reranker</h2>
+<p>在直接优化模型之前，我先分析了召回 TopK 配置，回答“应该给 reranker 什么候选集”这个问题。</p>
+<p>结论：</p>
+<ul>
+<li><code>50/50</code> 最省钱，但召回能力偏保守</li>
+<li><code>100/100</code> 召回最多，但后半段质量下降明显，性价比一般</li>
+<li><code>100/30</code> 是更平衡的方案：比 <code>50/50</code> 明显多拿高分词和核心词，但成本只小幅增加</li>
+<li>单路分析表明，如果继续放宽，应优先扩 <code>dense</code>，而不是更深地扩 <code>sparse</code></li>
+</ul>
+<h3>TopK 对比图</h3>
+<p><img alt="TopK 整体对比" src="../data/docs/figures/2026-03-25-topk-config-compare.png"></p>
+<p><img alt="TopK 分桶和累计覆盖" src="../data/docs/figures/2026-03-25-topk-fusion-buckets.png"></p>
+<p><img alt="单路分桶质量" src="../data/docs/figures/2026-03-25-topk-route-buckets.png"></p>
+<p>参考：</p>
+<ul>
+<li><a href="/home/work/opa_common_mx/wsy/reranker/data/docs/2026-03-25-topk-analysis-combined.md">2026-03-25-topk-analysis-combined.md</a></li>
+</ul>
+<h2>5. 改进三：在新数据 QC3511 上建立新 baseline</h2>
+<p>在新数据上，我重新构建了训练集：</p>
+<ul>
+<li>总 item：<code>3511</code></li>
+<li>原始 pair：<code>421,569</code></li>
+<li>标签定义：<code>final_score &gt;= 2</code> 为正类</li>
+<li>item 内负采样：<code>1:3</code></li>
+<li>最终样本总数：<code>224,424</code></li>
+</ul>
+<p>训练后得到 <code>new_model</code>，并和 <code>base</code>、<code>old_model</code> 放到<strong>同一套 QC3511 test</strong> 上做正面对照。</p>
+<h3>同一套 QC3511 test 结果</h3>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">Threshold</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">F1</th>
+<th style="text-align: right;">ROC-AUC</th>
+<th style="text-align: right;">PR-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: right;">0.6791</td>
+<td style="text-align: right;">0.4419</td>
+<td style="text-align: right;">0.7091</td>
+<td style="text-align: right;">0.5444</td>
+<td style="text-align: right;">0.7518</td>
+<td style="text-align: right;">0.4972</td>
+</tr>
+<tr>
+<td>Old Model</td>
+<td style="text-align: right;">0.728</td>
+<td style="text-align: right;">0.7567</td>
+<td style="text-align: right;">0.5378</td>
+<td style="text-align: right;">0.7137</td>
+<td style="text-align: right;">0.6134</td>
+<td style="text-align: right;">0.8233</td>
+<td style="text-align: right;">0.6282</td>
+</tr>
+<tr>
+<td>New Model</td>
+<td style="text-align: right;">0.325</td>
+<td style="text-align: right;">0.8201</td>
+<td style="text-align: right;">0.6463</td>
+<td style="text-align: right;">0.7392</td>
+<td style="text-align: right;">0.6897</td>
+<td style="text-align: right;">0.8801</td>
+<td style="text-align: right;">0.7549</td>
+</tr>
+</tbody>
+</table>
+<h3>图表</h3>
+<p><img alt="Metrics Comparison" src="output/cross_eval_qc3511_same_test/comparison_metrics.png"></p>
+<p><img alt="Threshold Comparison" src="output/cross_eval_qc3511_same_test/comparison_thresholds.png"></p>
+<p><img alt="ROC Curves" src="output/cross_eval_qc3511_same_test/comparison_roc_curves.png"></p>
+<p><img alt="PR Curves" src="output/cross_eval_qc3511_same_test/comparison_pr_curves.png"></p>
+<p>参考：</p>
+<ul>
+<li><a href="/home/work/opa_common_mx/wsy/reranker/reranker_v2_swift/output/cross_eval_qc3511_same_test/qc3511_test_comparison.md">qc3511_test_comparison.md</a></li>
+</ul>
+<h2>6. 最终结论</h2>
+<p>把这几部分串起来，这轮工作的改进可以概括为三步：</p>
+<ol>
+<li>先修复数据泄漏和评估口径问题，让结果变得可信。</li>
+<li>再通过 TopK 分析优化召回候选分布，让 reranker 的输入更合理。</li>
+<li>最后在新数据 <code>QC3511</code> 上构建新 baseline，并证明新模型在同一套 test 上稳定优于基础模型和旧模型。</li>
+</ol>
+<p>因此，这轮工作的核心贡献不是“把一个旧模型调高一点”，而是建立了一条从<strong>可信评估</strong>到<strong>合理召回</strong>再到<strong>新数据更强模型</strong>的完整改进链路。</p>
+    </article>
+  </div>
+</body>
+</html>
