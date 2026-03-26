@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Title Optimization 8x20 总览</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --panel: #fffdf8;
+      --ink: #1d1b18;
+      --muted: #6a645b;
+      --line: #d9cfbf;
+      --accent: #154c79;
+      --accent-soft: #dbeaf5;
+      --good: #1f6b44;
+      --good-soft: #d9f0e2;
+      --bad: #8a2f2f;
+      --bad-soft: #f8dcdc;
+      --mid: #8b6a1c;
+      --mid-soft: #f4e7bf;
+      --shadow: 0 20px 40px rgba(34, 28, 20, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Source Serif 4", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, #fff8eb 0, transparent 36%),
+        linear-gradient(180deg, #f4efe4 0%, #f1eadf 100%);
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .shell { max-width: 1380px; margin: 0 auto; padding: 28px 24px 52px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px; background: rgba(255,253,248,0.84);
+      border: 1px solid rgba(217, 207, 191, 0.85); border-radius: 18px;
+      backdrop-filter: blur(14px); box-shadow: var(--shadow);
+    }
+    .brand { font-size: 0.93rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .nav { display: flex; gap: 12px; font-size: 0.95rem; }
+    .hero { margin: 28px 0 22px; padding: 28px; border-radius: 28px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .hero h1 { margin: 0 0 12px; font-size: 2.4rem; line-height: 1.05; }
+    .hero p { margin: 0; max-width: 960px; color: var(--muted); font-size: 1.03rem; line-height: 1.65; }
+    .summary-grid, .region-grid { display: grid; gap: 16px; }
+    .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 22px; }
+    .region-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 22px; }
+    .card, .panel, .table-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow);
+    }
+    .card { padding: 22px; }
+    .panel, .table-card { padding: 24px; margin-bottom: 22px; }
+    .eyebrow { font-size: 0.84rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+    .big-number { font-size: 2.4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+    .small-note, .helper { color: var(--muted); font-size: 0.94rem; line-height: 1.6; }
+    .section-title { margin: 0 0 10px; font-size: 1.5rem; }
+    .toolbar { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+      border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+    input, select {
+      border: 1px solid var(--line); background: white; border-radius: 12px; color: var(--ink);
+      padding: 10px 14px; min-height: 42px; font: inherit;
+    }
+    input[type="search"] { min-width: 280px; }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .case-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .case-card {
+      background: white; border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .case-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .case-head h3 { margin: 0; font-size: 1.08rem; line-height: 1.45; }
+    .meta { color: var(--muted); font-size: 0.85rem; }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      display: inline-flex; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .tag.good { background: var(--good-soft); color: var(--good); }
+    .tag.bad { background: var(--bad-soft); color: var(--bad); }
+    .tag.mid { background: var(--mid-soft); color: var(--mid); }
+    .compare-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .compare-box {
+      padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: #fcfaf4;
+    }
+    .compare-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px; }
+    .compare-text { font-size: 0.98rem; line-height: 1.55; }
+    .term-box { padding: 14px; border-radius: 16px; background: #faf7f1; border: 1px dashed var(--line); }
+    .term-list { display: flex; flex-direction: column; gap: 8px; }
+    .term-item {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.84rem; line-height: 1.5;
+      padding: 8px 10px; border-radius: 10px; background: white; border: 1px solid var(--line);
+      word-break: break-word;
+    }
+    .desc { color: var(--muted); font-size: 0.92rem; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 12px; }
+    .empty-state { padding: 28px; text-align: center; color: var(--muted); background: #fcfaf4; border: 1px dashed var(--line); border-radius: 18px; }
+    @media (max-width: 1100px) {
+      .summary-grid, .region-grid, .case-grid, .compare-grid { grid-template-columns: 1fr; }
+      .toolbar { flex-direction: column; }
+    }
+    </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Title Optimization / 8x20 / New Reranker + GPT-5-mini</div>
+      <nav class="nav">
+        <a href="index.html">总览</a>
+        <a href="cases.html">Case 详情</a>
+        <a href="improved_cases.html">改好 Case</a>
+      </nav>
+    </div>
+
+    <section class="hero">
+      <h1>8x20 新旧链路对比</h1>
+      <p>这份页面只看一件事：新 reranker 接到完整 title-optimization 链路后，和旧链路相比到底是变好、变差，还是基本持平。默认结论先看人工 review，再下钻到具体 case。</p>
+    </section>
+
+    <section class="summary-grid">
+      <article class="card">
+        <div class="eyebrow">人工 Review</div>
+        <div class="big-number">0</div>
+        <p class="small-note">`new_better`，对应 `old_better=0`，`similar=0`</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">Keep Rate</div>
+        <div class="big-number">0.597</div>
+        <p class="small-note">旧链路 0.577，差值 +0.019</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">Term Jaccard</div>
+        <div class="big-number">0.525</div>
+        <p class="small-note">与旧链路 kept terms 的平均重合度</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">Title Exact Match</div>
+        <div class="big-number">1.9%</div>
+        <p class="small-note">标题完全一致率；`both_changed=80.0%`</p>
+      </article>
+    </section>
+
+    <section class="region-grid">
+      <article class="card">
+        <div class="eyebrow">结论</div>
+        <p class="small-note">当前不是净回退。`new_better` 数量高于 `old_better`，但 keep-rate 仍略低于旧链路，所以是“略偏正向”，不是“全面替换”。</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">优先区域</div>
+        <p class="small-note">人工 review 净胜最明显的是 `TW / SG / BR`。`MY / PH` 仍然需要继续修。</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">主要残余问题</div>
+        <p class="small-note">剩余 regressions 里，很多不是纯召回崩掉，而是标题生成层没有把词用好，或保留了少量跨品类噪声。</p>
+      </article>
+    </section>
+
+    <section class="table-card">
+      <h2 class="section-title">按地区看</h2>
+      <p class="helper">`net = new_better - old_better`。正数越大，说明该地区更适合先放量。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>地区</th>
+              <th>样本数</th>
+              <th>new_better</th>
+              <th>old_better</th>
+              <th>similar</th>
+              <th>net</th>
+              <th>new keep-rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BR</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.638</td>
+            </tr>
+            
+            <tr>
+              <td>ID</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.491</td>
+            </tr>
+            
+            <tr>
+              <td>MY</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.554</td>
+            </tr>
+            
+            <tr>
+              <td>PH</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.565</td>
+            </tr>
+            
+            <tr>
+              <td>SG</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.673</td>
+            </tr>
+            
+            <tr>
+              <td>TH</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.721</td>
+            </tr>
+            
+            <tr>
+              <td>TW</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.699</td>
+            </tr>
+            
+            <tr>
+              <td>VN</td>
+              <td>20</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>+0</td>
+              <td>0.460</td>
+            </tr>
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title">下一步</h2>
+          <p class="helper">默认建议先去看 `cases.html` 里的 `old_better`，以及 `improved_cases.html` 里的明确改好样本，两头一起看最容易判断该保留什么、该修什么。</p>
+        </div>
+        <div class="tag-row">
+          <a class="pill" href="cases.html">去看 Case 详情</a>
+          <a class="pill" href="improved_cases.html">去看改好 Case</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

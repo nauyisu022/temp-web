@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>明确改好的 Case</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --panel: #fffdf8;
+      --ink: #1d1b18;
+      --muted: #6a645b;
+      --line: #d9cfbf;
+      --accent: #154c79;
+      --accent-soft: #dbeaf5;
+      --good: #1f6b44;
+      --good-soft: #d9f0e2;
+      --bad: #8a2f2f;
+      --bad-soft: #f8dcdc;
+      --mid: #8b6a1c;
+      --mid-soft: #f4e7bf;
+      --shadow: 0 20px 40px rgba(34, 28, 20, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Source Serif 4", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, #fff8eb 0, transparent 36%),
+        linear-gradient(180deg, #f4efe4 0%, #f1eadf 100%);
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .shell { max-width: 1380px; margin: 0 auto; padding: 28px 24px 52px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px; background: rgba(255,253,248,0.84);
+      border: 1px solid rgba(217, 207, 191, 0.85); border-radius: 18px;
+      backdrop-filter: blur(14px); box-shadow: var(--shadow);
+    }
+    .brand { font-size: 0.93rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .nav { display: flex; gap: 12px; font-size: 0.95rem; }
+    .hero { margin: 28px 0 22px; padding: 28px; border-radius: 28px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .hero h1 { margin: 0 0 12px; font-size: 2.4rem; line-height: 1.05; }
+    .hero p { margin: 0; max-width: 960px; color: var(--muted); font-size: 1.03rem; line-height: 1.65; }
+    .summary-grid, .region-grid { display: grid; gap: 16px; }
+    .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 22px; }
+    .region-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 22px; }
+    .card, .panel, .table-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow);
+    }
+    .card { padding: 22px; }
+    .panel, .table-card { padding: 24px; margin-bottom: 22px; }
+    .eyebrow { font-size: 0.84rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+    .big-number { font-size: 2.4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+    .small-note, .helper { color: var(--muted); font-size: 0.94rem; line-height: 1.6; }
+    .section-title { margin: 0 0 10px; font-size: 1.5rem; }
+    .toolbar { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+      border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+    input, select {
+      border: 1px solid var(--line); background: white; border-radius: 12px; color: var(--ink);
+      padding: 10px 14px; min-height: 42px; font: inherit;
+    }
+    input[type="search"] { min-width: 280px; }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .case-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .case-card {
+      background: white; border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .case-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .case-head h3 { margin: 0; font-size: 1.08rem; line-height: 1.45; }
+    .meta { color: var(--muted); font-size: 0.85rem; }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      display: inline-flex; padding: 6px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .tag.good { background: var(--good-soft); color: var(--good); }
+    .tag.bad { background: var(--bad-soft); color: var(--bad); }
+    .tag.mid { background: var(--mid-soft); color: var(--mid); }
+    .compare-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .compare-box {
+      padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: #fcfaf4;
+    }
+    .compare-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px; }
+    .compare-text { font-size: 0.98rem; line-height: 1.55; }
+    .term-box { padding: 14px; border-radius: 16px; background: #faf7f1; border: 1px dashed var(--line); }
+    .term-list { display: flex; flex-direction: column; gap: 8px; }
+    .term-item {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.84rem; line-height: 1.5;
+      padding: 8px 10px; border-radius: 10px; background: white; border: 1px solid var(--line);
+      word-break: break-word;
+    }
+    .desc { color: var(--muted); font-size: 0.92rem; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 12px; }
+    .empty-state { padding: 28px; text-align: center; color: var(--muted); background: #fcfaf4; border: 1px dashed var(--line); border-radius: 18px; }
+    @media (max-width: 1100px) {
+      .summary-grid, .region-grid, .case-grid, .compare-grid { grid-template-columns: 1fr; }
+      .toolbar { flex-direction: column; }
+    }
+    </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Title Optimization / Improved Cases</div>
+      <nav class="nav">
+        <a href="index.html">总览</a>
+        <a href="cases.html">Case 详情</a>
+        <a href="improved_cases.html">改好 Case</a>
+      </nav>
+    </div>
+
+    <section class="hero">
+      <h1>明确改好的 Case</h1>
+      <p>这里不看所有样本，只看已经明确确认“新 reranker 带来了实质改进”的 case。判断标准同时包含词和标题两个角度，不只是分数变化。</p>
+    </section>
+
+    <section class="panel">
+      <div class="filters">
+        <select id="improved-region-filter">
+          <option value="">全部地区</option>
+        </select>
+        <input id="improved-search" type="search" placeholder="搜 item_id、原标题、old/new 标题、reason">
+      </div>
+      <div class="helper" id="improved-count"></div>
+    </section>
+
+    <section class="panel">
+      <div id="improved-grid" class="case-grid"></div>
+      <div id="improved-empty" class="empty-state" style="display:none;">没有匹配到明确改好的 case。</div>
+    </section>
+  </div>
+
+  <script>
+    const IMPROVED_CASES = [{"region": "BR", "item_id": "21299604391", "verdict": "improved_case", "reason": "Old chain leaned toward generic question-like cleaning queries. New reranker shifts to product-facing wheel and motor cleaner terms, and the title is more aligned with the cleaner itself.", "original_title": "VEXUS 500ML - VONIXX", "description_preview": "Descrição Geral VEXUS é um limpador de alta performance, desenvolvido especialmente para limpeza de rodas e motores. O produto age na remoção da sujeira sem agredir as rodas e as partes do motor, seja plástico, pintura, borracha ou metal. MODO DE USO: 1. Pulv…", "old_title": "Shampoo Automotivo VEXUS VONIXX 500ml remoção de sujeira e proteção para motores e rodas", "new_title": "limpador de rodas VEXUS VONIXX 500ml remoção de sujeira proteção contra agressões", "old_terms": ["vexus limpa motor", "qual produto da vonixx limpa motor de moto", "produto da vonixx para limpar motor de moto", "vonix para limpar motor"], "new_terms": ["vonixx limpeza de rodas", "limpador de rodas e motores vexus vonixx", "vexus limpa motor", "vonixx limpador de motor"], "bl_terms": ["vonixx limpeza de rodas", "limpador de rodas e motores vexus vonixx", "vexus limpa motor", "vonixx limpador de motor", "vonixx limpa rodas", "produto vonixx para limpeza de motor", "vonixx limpa roda", "vonixx limpa motor", "produto vonixx para limpar rodas", "limpador de roda vonixx", "produto da vonixx para limpar motor de moto", "produto vonixx limpa motor"], "llm_terms_jaccard": 0.1428571428571428, "old_term_count": 4, "new_term_count": 4, "title_len_delta": -7, "title_exact_match": false, "llm_terms_exact_match": false}, {"region": "BR", "item_id": "22198319161", "verdict": "improved_case", "reason": "Old chain kept tutorial-style and query-like tank-sticker terms. New reranker keeps product-facing CB300F Twister sticker terms and the generated title stays focused on the actual product.", "original_title": "Adesivo Tanque Bocal Personalizado Compatível CB300F Twister", "description_preview": "Este produto é personalizado e de fabricação própria, mas possui as medidas e o formato ideais para a aplicação em CB300F Twister 2023 em diante Adesivo Protetor de Tanque e Bocal CB300F Twister Laminado – Não risca nem desbota Feito para suportar sol e chuva…", "old_title": "Adesivo protetor de tanque compatível com CB300F Twister resistente ao sol e chuva aplicação suave", "new_title": "Adesivo protetor de tanque CB300F Twister personalizado resistente ao sol e à chuva aplicação suave e segura", "old_terms": ["como colocar adesivo protetor de tanque", "adesivos para cb 300f", "adesivo para cb 300f twister", "adesivo protetor de tanque cb 300f", "adesivo personalizado cb 300", "protetor de tanque cb300f", "adesivo vinílico personalizado", "como tirar cola de adesivo"], "new_terms": ["adesivo protetor de tanque cb 300f", "adesivo cb twister personalizado", "adesivo tanque twister", "adesivo para cb 300f twister"], "bl_terms": ["adesivo protetor de tanque cb 300f", "adesivo cb twister personalizado", "adesivo tanque twister", "adesivo para cb 300f twister", "adesivo personalizado cb 300", "protetor de tanque cb300f", "protetor de tanque cb 300f twister", "adesivos para cb 300f", "adesivo para cb 300", "adesivo vinílico personalizado", "proteção de tanque da cb 300", "como colocar adesivo protetor de tanque"], "llm_terms_jaccard": 0.2, "old_term_count": 8, "new_term_count": 4, "title_len_delta": 10, "title_exact_match": false, "llm_terms_exact_match": false}, {"region": "ID", "item_id": "28234798965", "verdict": "improved_case", "reason": "Old chain kept broader storefront and business-intent terms. New reranker moves toward wedang uwuh, herbal, rempah, and Jogja-specific terms that better match the real product identity and the final title.", "original_title": "50 Pcs Paket Angkringan Wedang Uwuh Menyehatkan Khas Jogja Minuman Herbal Alami Rempah-rempah Lengkap Gula Batu Rimpang JSR Tea Daun Teh Sehat Manis", "description_preview": "Paket Angkringan 50 Pcs lebih hemat Njamu Cuy! SETIAP ADA EVENT, ORDERAN PADA TOKO KAMI OVERLOAD. MOHON BERSABAR, ORDERAN YANG MASUK PASTI KAMI KIRIM, HAPPY SHOPPING :D Agen Wedang Uwuh Kualitas Premium dengan racikan khas Jogja dipadukan dengan kombinasi rem…", "old_title": "JSR Tea wedang uwuh 50 pcs racikan khas Jogja rempah-rempah menyehatkan ramuan", "new_title": "JSR Tea Wedang Uwuh 50 pcs Rempah-rempah Alami Menyehatkan Khas Jogja", "old_terms": ["teh uwuh", "minuman uwuh", "paket usaha angkringan", "ramuan wedang uwuh"], "new_terms": ["wedang uwuh khas jogja", "wedang herbal jsr", "rempah wedang uwuh", "gula batu jogja"], "bl_terms": ["wedang uwuh khas jogja", "wedang herbal jsr", "rempah wedang uwuh", "gula batu jogja", "ramuan wedang uwuh", "rimpang jsr", "minuman wedang uwuh", "jamu wedang uwuh", "wedang uwu", "teh uwuh", "wedang rempah2", "racikan wedang uwuh"], "llm_terms_jaccard": 0.0, "old_term_count": 4, "new_term_count": 4, "title_len_delta": -9, "title_exact_match": false, "llm_terms_exact_match": false}];
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('\"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function termsToHtml(terms) {
+      if (!terms || !terms.length) return '<span class="helper">空</span>';
+      return `<div class="term-list">${terms.map(term => `<div class="term-item">${escapeHtml(term)}</div>`).join('')}</div>`;
+    }
+
+    function fillImprovedRegionSelect() {
+      const select = document.getElementById('improved-region-filter');
+      const regions = [...new Set(IMPROVED_CASES.map(row => row.region))].sort();
+      for (const region of regions) {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        select.appendChild(option);
+      }
+    }
+
+    function buildImprovedCard(row) {
+      return `
+        <article class="case-card">
+          <div class="case-head">
+            <div>
+              <div class="meta">${escapeHtml(row.region)} / ${escapeHtml(row.item_id)}</div>
+              <h3>${escapeHtml(row.original_title)}</h3>
+            </div>
+            <div class="tag-row">
+              <span class="tag good">improved</span>
+              <span class="tag mid">Jaccard ${Number(row.llm_terms_jaccard).toFixed(3)}</span>
+            </div>
+          </div>
+          <div class="compare-grid">
+            <div class="compare-box">
+              <div class="compare-label">Old Title</div>
+              <div class="compare-text">${escapeHtml(row.old_title)}</div>
+            </div>
+            <div class="compare-box">
+              <div class="compare-label">New Title</div>
+              <div class="compare-text">${escapeHtml(row.new_title)}</div>
+            </div>
+          </div>
+          <div class="compare-grid">
+            <div class="term-box">
+              <div class="compare-label">Old Kept Terms</div>
+              ${termsToHtml(row.old_terms)}
+            </div>
+            <div class="term-box">
+              <div class="compare-label">New Kept Terms</div>
+              ${termsToHtml(row.new_terms)}
+            </div>
+          </div>
+          <div class="compare-box">
+            <div class="compare-label">Why This Is Better</div>
+            <div class="compare-text">${escapeHtml(row.reason || '')}</div>
+          </div>
+          <div class="desc">${escapeHtml(row.description_preview)}</div>
+        </article>
+      `;
+    }
+
+    function matchImprovedText(row, keyword) {
+      if (!keyword) return true;
+      const hay = [
+        row.item_id,
+        row.original_title,
+        row.old_title,
+        row.new_title,
+        row.reason,
+        ...(row.old_terms || []),
+        ...(row.new_terms || []),
+      ].join(' ').toLowerCase();
+      return hay.includes(keyword.toLowerCase());
+    }
+
+    function renderImprovedCases() {
+      const region = document.getElementById('improved-region-filter').value;
+      const keyword = document.getElementById('improved-search').value.trim();
+      const rows = IMPROVED_CASES.filter(row =>
+        (!region || row.region === region) &&
+        matchImprovedText(row, keyword)
+      );
+      const grid = document.getElementById('improved-grid');
+      const empty = document.getElementById('improved-empty');
+      document.getElementById('improved-count').textContent = `当前显示 ${rows.length} 条明确改好的 case。`;
+      if (!rows.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      grid.innerHTML = rows.map(buildImprovedCard).join('');
+    }
+
+    fillImprovedRegionSelect();
+    for (const id of ['improved-region-filter', 'improved-search']) {
+      document.getElementById(id).addEventListener('input', renderImprovedCases);
+      document.getElementById(id).addEventListener('change', renderImprovedCases);
+    }
+    renderImprovedCases();
+  </script>
+</body>
+</html>
