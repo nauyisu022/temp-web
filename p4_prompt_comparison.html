@@ -2,763 +2,313 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>P4 Prompt 架构对比：v8 vs v9</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
-  :root {
-    --bg: #f6f8fa;
-    --bg2: #ffffff;
-    --bg3: #f0f2f5;
-    --border: #d0d7de;
-    --border-light: #e8eaed;
-    --text: #1f2328;
-    --text-dim: #656d76;
-    --v8: #cf222e;
-    --v8-bg: #fff0f0;
-    --v8-border: #ffc1c1;
-    --v9: #1a7f37;
-    --v9-bg: #f0fdf4;
-    --v9-border: #a8e6bd;
-    --warn: #9a6700;
-    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
+:root {
+  --bg: #f6f8fa; --bg2: #fff; --bg3: #f0f2f5;
+  --border: #d0d7de; --border2: #e8eaed;
+  --text: #1f2328; --dim: #656d76;
+  --v8: #cf222e; --v8bg: #fff0f0; --v8bd: #ffc1c1;
+  --v9: #1a7f37; --v9bg: #f0fdf4; --v9bd: #a8e6bd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.6}
+.page{max-width:1560px;margin:0 auto;padding:32px 24px}
 
-  .page { max-width: 1540px; margin: 0 auto; padding: 36px 28px; }
+/* header */
+.hd{text-align:center;margin-bottom:32px}
+.hd h1{font-size:22px;font-weight:600;margin-bottom:6px}
+.hd p{color:var(--dim);font-size:13px}
 
-  /* header */
-  .page-header { text-align: center; margin-bottom: 36px; }
-  .page-header h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-  .page-header p { color: var(--text-dim); font-size: 13px; }
+/* arch card */
+.arch{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin-bottom:28px}
+.arch-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:14px}
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.arch-col{padding:14px 16px;border-radius:6px;background:var(--bg3)}
+.arch-col.v8{border-left:3px solid var(--v8)}
+.arch-col.v9{border-left:3px solid var(--v9)}
+.arch-col h3{font-size:13px;font-weight:600;margin-bottom:10px}
+.arch-col.v8 h3{color:var(--v8)}.arch-col.v9 h3{color:var(--v9)}
+.arch-row{display:flex;gap:8px;margin-bottom:7px;font-size:12.5px}
+.arch-tag{font-size:10px;border:1px solid var(--border);border-radius:3px;padding:1px 6px;color:var(--dim);white-space:nowrap;align-self:flex-start;margin-top:2px}
 
-  /* arch summary */
-  .arch-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
-  .arch-card h2 { font-size: 11px; font-weight: 600; margin-bottom: 16px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; }
-  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .arch-col { background: var(--bg3); border-radius: 6px; padding: 16px 18px; }
-  .arch-col.v8 { border-left: 3px solid var(--v8); }
-  .arch-col.v9 { border-left: 3px solid var(--v9); }
-  .arch-col h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
-  .arch-col.v8 h3 { color: var(--v8); }
-  .arch-col.v9 h3 { color: var(--v9); }
-  .arch-row { display: flex; gap: 10px; margin-bottom: 9px; align-items: flex-start; }
-  .arch-label { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 8px; font-size: 11px; color: var(--text-dim); white-space: nowrap; min-width: 56px; text-align: center; margin-top: 2px; }
-  .arch-desc { font-size: 13px; color: var(--text); }
+/* case card */
+.case{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:28px;overflow:hidden}
+.case-hd{background:var(--bg3);border-bottom:1px solid var(--border);padding:14px 20px}
+.case-hd h2{font-size:14px;font-weight:600;margin-bottom:4px}
+.case-meta{display:flex;gap:18px;font-size:12px;color:var(--dim);margin-top:4px}
+.orig{margin-top:8px;font-size:12px;font-family:monospace;background:#f0f4ff;color:#0550ae;padding:5px 10px;border-radius:4px;border-left:2px solid #0969da;word-break:break-all}
 
-  /* case card */
-  .case-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 32px; overflow: hidden; box-shadow: var(--shadow); }
-  .case-header { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 16px 24px; }
-  .case-header h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .case-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 6px; }
-  .meta-item { display: flex; gap: 5px; align-items: baseline; }
-  .meta-key { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
-  .meta-val { font-size: 13px; color: var(--text); }
-  .orig-title { margin-top: 10px; font-size: 12.5px; color: #0550ae; font-family: 'SF Mono','Fira Code',monospace; background: #f0f4ff; padding: 6px 10px; border-radius: 4px; border-left: 2px solid #0969da; word-break: break-all; }
+/* compare grid */
+.cmp{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.col{padding:20px}
+.col.v8{border-right:1px solid var(--border)}
+.col-hd{display:inline-block;font-size:12px;font-weight:600;padding:4px 10px;border-radius:4px;margin-bottom:16px}
+.col-hd.v8{background:var(--v8bg);color:var(--v8);border:1px solid var(--v8bd)}
+.col-hd.v9{background:var(--v9bg);color:var(--v9);border:1px solid var(--v9bd)}
 
-  /* side by side */
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
-  .compare-col { padding: 22px 24px; }
-  .compare-col.v8 { border-right: 1px solid var(--border); }
-  .compare-col.v9 { }
-  .col-header { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 5px; margin-bottom: 18px; display: inline-block; }
-  .col-header.v8 { background: var(--v8-bg); color: var(--v8); border: 1px solid var(--v8-border); }
-  .col-header.v9 { background: var(--v9-bg); color: var(--v9); border: 1px solid var(--v9-border); }
+/* section */
+.sec{margin-bottom:18px}
+.sec-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:6px}
 
-  /* call section */
-  .call-section { margin-bottom: 22px; }
-  .call-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-dim); margin-bottom: 8px; }
+/* diff badges */
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:500}
+.badge.bad{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.badge.good{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.badge.note{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.badge.neu{background:var(--bg3);color:var(--dim);border:1px solid var(--border)}
 
-  /* collapsible prompt */
-  details { background: var(--bg3); border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 8px; }
-  details summary { padding: 9px 13px; cursor: pointer; font-size: 12.5px; color: var(--text-dim); user-select: none; display: flex; align-items: center; gap: 7px; list-style: none; }
-  details summary::-webkit-details-marker { display: none; }
-  details summary::before { content: '▶'; font-size: 9px; transition: transform .15s; color: var(--text-dim); }
-  details[open] summary::before { transform: rotate(90deg); }
-  details summary:hover { color: var(--text); }
-  .prompt-body { padding: 14px 16px; border-top: 1px solid var(--border-light); background: #fff; border-radius: 0 0 6px 6px; }
-  .prompt-section { margin-bottom: 14px; }
-  .prompt-section:last-child { margin-bottom: 0; }
-  .prompt-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dim); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
-  .prompt-text { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: #24292f; white-space: pre-wrap; word-break: break-word; line-height: 1.55; background: var(--bg3); padding: 8px 10px; border-radius: 4px; }
+/* collapsible */
+details{border:1px solid var(--border2);border-radius:6px;margin-bottom:8px;background:var(--bg3)}
+details summary{padding:8px 12px;cursor:pointer;font-size:12.5px;color:var(--dim);list-style:none;display:flex;align-items:center;gap:6px;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:'▶';font-size:9px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+details summary:hover{color:var(--text)}
+.prompt-wrap{border-top:1px solid var(--border2);background:#fff;border-radius:0 0 6px 6px;overflow:hidden}
+.prompt-pre{margin:0;padding:14px 16px;font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#24292f;max-height:480px;overflow-y:auto}
 
-  /* response box */
-  .response-box { background: #fff; border: 1px solid var(--border-light); border-radius: 6px; overflow: hidden; }
-  .response-box pre { margin: 0; font-size: 12px; max-height: 280px; overflow-y: auto; }
-  .response-box pre code { font-size: 12px !important; background: #fff !important; }
+/* response */
+.resp{background:#fff;border:1px solid var(--border2);border-radius:6px;overflow:hidden;margin-bottom:8px}
+.resp pre{margin:0;max-height:260px;overflow-y:auto}
+.resp pre code{font-size:11.5px!important;background:#fff!important}
 
-  /* final title */
-  .final-row { background: var(--bg3); border-top: 1px solid var(--border); padding: 18px 24px; }
-  .final-row h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-dim); margin-bottom: 12px; }
-  .title-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .title-box { padding: 14px 16px; border-radius: 6px; }
-  .title-box.v8 { background: var(--v8-bg); border: 1px solid var(--v8-border); }
-  .title-box.v9 { background: var(--v9-bg); border: 1px solid var(--v9-border); }
-  .title-label { font-size: 11px; font-weight: 600; margin-bottom: 5px; }
-  .title-label.v8 { color: var(--v8); }
-  .title-label.v9 { color: var(--v9); }
-  .title-text { font-size: 15px; font-weight: 600; line-height: 1.4; }
-  .title-text.v8 { color: #9f1239; }
-  .title-text.v9 { color: #14532d; }
+/* annotations */
+.ann{border-radius:5px;padding:8px 11px;margin-bottom:6px;font-size:12px}
+.ann.bad{background:#fef2f2;border-left:3px solid #ef4444;color:#7f1d1d}
+.ann.good{background:#f0fdf4;border-left:3px solid #22c55e;color:#14532d}
+.ann strong{font-weight:600}
 
-  /* badges */
-  .badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 20px; font-size: 11px; font-weight: 500; margin: 2px; }
-  .badge.bad { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-  .badge.good { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-  .badge.neutral { background: #f6f8fa; color: var(--text-dim); border: 1px solid var(--border); }
-  .badge.warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+/* title result */
+.title-result{border-radius:6px;padding:12px 14px;margin-top:8px}
+.title-result.v8{background:var(--v8bg);border:1px solid var(--v8bd)}
+.title-result.v9{background:var(--v9bg);border:1px solid var(--v9bd)}
+.tr-label{font-size:11px;font-weight:600;margin-bottom:4px}
+.tr-label.v8{color:var(--v8)}.tr-label.v9{color:var(--v9)}
+.tr-text{font-size:14px;font-weight:600;font-family:monospace;line-height:1.4}
+.tr-text.v8{color:#9f1239}.tr-text.v9{color:#14532d}
 
-  /* diff annotations */
-  .diff-block { border-radius: 5px; padding: 9px 12px; margin-bottom: 7px; }
-  .diff-block.added { background: #f0fdf4; border-left: 3px solid #22c55e; }
-  .diff-block.removed { background: #fef2f2; border-left: 3px solid #ef4444; }
-  .diff-title { font-size: 11px; font-weight: 600; margin-bottom: 3px; }
-  .diff-title.added { color: #15803d; }
-  .diff-title.removed { color: #b91c1c; }
-  .diff-body { font-size: 12px; color: #57606a; }
+/* final row */
+.final{background:var(--bg3);border-top:1px solid var(--border);padding:16px 20px}
+.final h3{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:12px}
+.final-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.final-box{padding:13px 15px;border-radius:6px}
+.final-box.v8{background:var(--v8bg);border:1px solid var(--v8bd)}
+.final-box.v9{background:var(--v9bg);border:1px solid var(--v9bd)}
+.fb-label{font-size:11px;font-weight:600;margin-bottom:5px}
+.fb-label.v8{color:var(--v8)}.fb-label.v9{color:var(--v9)}
+.fb-title{font-size:15px;font-weight:600;line-height:1.4}
+.fb-title.v8{color:#9f1239}.fb-title.v9{color:#14532d}
 
-  .highlight-bad { background: #fef2f2; border-radius: 3px; padding: 1px 4px; color: #b91c1c; font-family: monospace; font-size: 12px; }
-  .highlight-good { background: #f0fdf4; border-radius: 3px; padding: 1px 4px; color: #15803d; font-family: monospace; font-size: 12px; }
+/* footer */
+.ft{text-align:center;color:var(--dim);font-size:12px;padding:24px 0 32px}
 
-  .schema-box { background: var(--bg3); border-radius: 5px; padding: 10px 12px; font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: #24292f; line-height: 1.6; }
-
-  .input-diff { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
-  .input-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 5px; font-size: 12px; }
-  .input-item.present { background: #fef2f2; border: 1px solid #fecaca; }
-  .input-item.absent { background: #f0fdf4; border: 1px solid #bbf7d0; }
-  .input-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .input-item.present .dot { background: #ef4444; }
-  .input-item.absent .dot { background: #22c55e; }
-  .input-item-text { flex: 1; }
-  .input-item-label { font-size: 10px; text-transform: uppercase; font-weight: 600; margin-bottom: 1px; }
-  .input-item.present .input-item-label { color: #b91c1c; }
-  .input-item.absent .input-item-label { color: #15803d; }
-
-  /* title result box inside col */
-  .title-result { border-radius: 6px; padding: 12px 14px; }
-  .title-result.v8 { background: var(--v8-bg); border: 1px solid var(--v8-border); }
-  .title-result.v9 { background: var(--v9-bg); border: 1px solid var(--v9-border); }
-  .title-result-label { font-size: 11px; font-weight: 600; margin-bottom: 5px; }
-  .title-result-label.v8 { color: var(--v8); }
-  .title-result-label.v9 { color: var(--v9); }
-  .title-result-text { font-size: 14px; font-weight: 500; line-height: 1.4; }
-  .title-result-text.v8 { color: #9f1239; }
-  .title-result-text.v9 { color: #14532d; }
-
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 3px; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#d0d7de;border-radius:3px}
 </style>
 </head>
 <body>
 <div class="page">
 
-<!-- Page Header -->
-<div class="page-header">
+<div class="hd">
   <h1>P4 Prompt 架构对比：v8 vs v9</h1>
-  <p>两个真实商品 Case，展示 Call 1 / Call 2 的输入、输出全流程差异 &nbsp;·&nbsp; gpt-4o-mini &nbsp;·&nbsp; 2026-03-30</p>
+  <p>2 个真实商品 Case，完整展示 Call 1 / Call 2 原始输入 Prompt 与 LLM 输出 &nbsp;·&nbsp; gpt-4o-mini &nbsp;·&nbsp; 2026-03-30</p>
 </div>
 
-<!-- Architecture Summary -->
-<div class="arch-card">
-  <h2>架构差异总览</h2>
+<div class="arch">
+  <div class="arch-label">架构差异总览</div>
   <div class="arch-grid">
     <div class="arch-col v8">
-      <h3>⬅ v8 P4 &nbsp;<span style="font-weight:400;font-size:12px;color:var(--text-dim)">(旧版)</span></h3>
-      <div class="arch-row">
-        <div class="arch-label">Call 1</div>
-        <div class="arch-desc">
-          <strong>输入：</strong>商品信息 + 搜索词 + VC/L3/L2/Default EK<br>
-          <strong>输出：</strong>13 字段（7 item_facts + behavior_facts + 4 policy 字段）<br>
-          <strong>任务：</strong>信息抽取 + Policy 决策 合并在一次调用
-        </div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-label">Call 2</div>
-        <div class="arch-desc">
-          <strong>输入：</strong>Facts + <span class="highlight-bad">Policy（外部指定顺序/frontload/must_keep）</span><br>
-          <strong>任务：</strong>按 Policy 机械组装 title
-        </div>
-      </div>
-      <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:4px;">
-        <span class="badge bad">🔴 搜索词混入 Call 1</span>
-        <span class="badge bad">🔴 EK 混入 Call 1</span>
-        <span class="badge bad">🔴 13 字段 schema</span>
-        <span class="badge bad">🔴 Policy 过早决策</span>
+      <h3>v8 P4（旧）</h3>
+      <div class="arch-row"><span class="arch-tag">Call 1</span><span>输入：商品信息 + <strong>搜索词</strong> + <strong>VC/L3/L2/Default EK</strong><br>输出：13 字段（7 item_facts + behavior_facts + policy）<br>任务：信息抽取 + Policy 决策合并一次</span></div>
+      <div class="arch-row"><span class="arch-tag">Call 2</span><span>输入：Facts + <strong>Policy（外部指定顺序）</strong><br>任务：按 Policy 指令组装标题</span></div>
+      <div class="badges" style="margin-top:8px">
+        <span class="badge bad">搜索词混入 Call 1</span>
+        <span class="badge bad">EK 混入 Call 1</span>
+        <span class="badge bad">13 字段 schema</span>
+        <span class="badge bad">Policy 过早决策</span>
       </div>
     </div>
     <div class="arch-col v9">
-      <h3>➡ v9 P4 &nbsp;<span style="font-weight:400;font-size:12px;color:var(--text-dim)">(新版)</span></h3>
-      <div class="arch-row">
-        <div class="arch-label">Call 1</div>
-        <div class="arch-desc">
-          <strong>输入：</strong>商品信息（原始标题 + KSP + 品类）<span class="highlight-good">无搜索词、无 EK</span><br>
-          <strong>输出：</strong>4 字段（product_type, brand, key_attributes, signals）<br>
-          <strong>任务：</strong>纯信息抽取
-        </div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-label">Call 2</div>
-        <div class="arch-desc">
-          <strong>输入：</strong>Facts + <span class="highlight-good">Expert Knowledge（移入 Call 2）</span> + 搜索词<br>
-          <strong>任务：</strong>LLM 自主决定写作策略（品牌前置、规格权重等）
-        </div>
-      </div>
-      <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:4px;">
-        <span class="badge good">🟢 Call 1 无搜索词</span>
-        <span class="badge good">🟢 Call 1 无 EK</span>
-        <span class="badge good">🟢 仅 4 字段</span>
-        <span class="badge good">🟢 LLM 自主决策</span>
+      <h3>v9 P4（新）</h3>
+      <div class="arch-row"><span class="arch-tag">Call 1</span><span>输入：商品信息（原始标题 + <strong>KSP Points</strong> + 品类）<br>无搜索词、无 EK、无 Policy<br>输出：4 字段（product_type / brand / key_attributes / signals）</span></div>
+      <div class="arch-row"><span class="arch-tag">Call 2</span><span>输入：Facts + <strong>EK（移入此处）</strong> + 搜索词<br>任务：LLM 自主决定写作策略</span></div>
+      <div class="badges" style="margin-top:8px">
+        <span class="badge good">Call 1 无搜索词</span>
+        <span class="badge good">Call 1 无 EK</span>
+        <span class="badge good">仅 4 字段</span>
+        <span class="badge good">LLM 自主决策</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════ CASE 1 ══════════════════════════════════════════════ -->
-<div class="case-card">
-  <div class="case-header">
-    <h2>Case 1 &nbsp;<span style="font-weight:400;font-size:14px;color:var(--text-dim)">BR · item 19598093605 · 汽车滤芯套装</span></h2>
-    <div class="orig-title">Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500</div>
-    <div class="case-meta">
-      <div class="meta-item"><span class="meta-key">Region</span><span class="meta-val">Brazil</span></div>
-      <div class="meta-item"><span class="meta-key">Category</span><span class="meta-val">Spare Parts for Automobiles › Filters</span></div>
-      <div class="meta-item"><span class="meta-key">Brand</span><span class="meta-val">Wega</span></div>
-    </div>
+<div id="cases"></div>
+
+<div class="ft">
+  模型：gpt-4o-mini &nbsp;·&nbsp; Judge：gemini-2.5-pro &nbsp;·&nbsp; 160 items 全集 v8 vs v9 Prompt 对比 Title 胜率 67.5%
+</div>
+
+</div>
+
+<script>
+// ── embedded data ──────────────────────────────────────────────────────────────
+const DATA = {"v8": {"19598093605": {"call1_prompt": "You are an e-commerce title optimization assistant.\n\nTask: Given a product's original title, KSP points, search terms, category context, and multi-level expert knowledge, produce a single JSON with structured facts and an executable title policy.\n\n## Facts extraction rules\n- Do not invent brands, specs, models, or functions\n- Search terms are user behavior facts only, not stronger truth than product facts\n- Use empty arrays when information is absent\n- `brand` must contain only real commercial brand names (e.g. Nike, 3M, Lenovo); geographic origins (Taiwan, Japan), materials (Stainless Steel, Silicone), stock status (In Stock), and generic descriptors are NOT brands\n- `specs` must contain only verifiable numeric/package facts (dimensions, counts, weights, sizes, capacity)\n- Descriptive phrases like `Large Capacity`, `Portable`, `Ready-to-Eat` belong in `core_usp` or `long_tail`, not `specs`\n- Prefer KSP for product facts; use search terms only for `behavior_facts`\n- CRITICAL LANGUAGE RULE: Detect the language of the Original Title first. ALL `item_facts` values MUST be output in that SAME language. KSP values are often in Chinese — if the Original Title is NOT in Chinese, you MUST translate every Chinese value to the Original Title's language. Example: KSP `\"brand\": [\"日本製\"]` → output `\"brand\": [\"Made in Japan\"]` when title is English. NEVER output Chinese text in item_facts when the Original Title is in English, Malay, Thai, Vietnamese, etc.\n- Exclude operational/logistics info from facts: shipping, warranty, delivery time, installation service, store policies, return policy\n- Each array: max 4 elements, keep the most important ones\n\n## Policy selection rules\n- Priority: VC EK > L3 EK > L2 EK > Default EK\n- If a finer-grained EK clearly conflicts with the extracted Facts, downgrade to the next level\n- Do not frontload a field that is absent in Facts\n- If Facts has no real signals, set `signal_position` to `none`\n- `separator` is a weak style hint; default to space\n- Policy must be executable, not a prose summary\n\nInput:\n- Region: `Brazil`\n- Original Title: `Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500`\n- L3 Category: `Spare Parts and Accessories for Vehicles|Spare Parts for Automobiles|Filters`\n- Virtual Category: `None`\n- KSP Points:\n```json\n{\n  \"top_attractiveness\": {\n    \"brand\": [\n      \"Wega\"\n    ],\n    \"brand_en\": [\n      \"Wega\"\n    ],\n    \"product_type\": [\n      \"Filtros de carro\"\n    ],\n    \"product_type_en\": [\n      \"car filters\"\n    ]\n  },\n  \"unique_selling_points\": {\n    \"适配型号\": [\n      \"HILUX 2015 a 2024\",\n      \"HILUX 2016 a 2024\",\n      \"HILUX SW4 2016 a 2024\"\n    ],\n    \"适配型号_en\": [\n      \"HILUX 2015 to 2024\",\n      \"HILUX 2016 to 2024\",\n      \"HILUX SW4 2016 to 2024\"\n    ],\n    \"包装\": [\n      \"kit de filtros\",\n      \"completo\"\n    ],\n    \"包装_en\": [\n      \"filter kit\",\n      \"complete\"\n    ],\n    \"价格优惠\": [\n      \"ofertas\",\n      \"preço acessível\"\n    ],\n    \"价格优惠_en\": [\n      \"offers\",\n      \"affordable price\"\n    ],\n    \"原装正版/原產\": [\n      \"código original\",\n      \"garantia\"\n    ],\n    \"原装正版/原產_en\": [\n      \"original code\",\n      \"warranty\"\n    ]\n  },\n  \"long_tail_keywords\": [\n    \"filtros para HILUX\",\n    \"HILUX 2.8 filtro\",\n    \"filtros de ar HILUX\",\n    \"filtro de óleo HILUX\",\n    \"HILUX SW4 filtro\",\n    \"filtros para HILUX 2024\",\n    \"HILUX 2019 filtro\",\n    \"filtros Wega HILUX\"\n  ],\n  \"long_tail_keywords_en\": [\n    \"HILUX filters\",\n    \"HILUX 2.8 filter\",\n    \"HILUX air filter\",\n    \"HILUX oil filter\",\n    \"HILUX SW4 filter\",\n    \"HILUX 2024 filter\",\n    \"HILUX 2019 filter\",\n    \"Wega HILUX filters\"\n  ]\n}\n```\n- Filtered Search Terms:\n```json\n[\"filtro hilux 2018\", \"kit filtros wega\", \"filtro hilux\", \"filtro da hilux\", \"filtro hilux 2.8\", \"filtros da hilux\", \"akx1967\", \"filtro combustivel hilux 2.8 2017\", \"filtro ar hilux\", \"kit hilux 2024\"]\n```\n- VC EK:\nN/A\n- L3 EK:\n## L3 Expert Knowledge\nGood Patterns:\nFront-load: Product → Model(s) → Engine/Years → Key feature → Brand last. Include concrete features (cabin, activated carbon, air/oil/fuel, hygienizer). Use clear separators and readable order.\n\nBad Patterns to Avoid:\nVague kits, marketing fluff, multiple brands, category mismatches (oils/motorbike/truck), starting with codes, burying fitment; generic adjectives/unsupported claims.\n\nActionable Takeaways:\nTemplate: Product+Model+Engine/Years+Feature+Brand(optional). List kit contents; keep brand secondary; exclude non-filter items.\n- L2 EK:\nN/A\n- Default EK:\n{\"selected_policy_source\": \"DEFAULT\", \"reason\": \"fallback_default_policy\", \"policy\": {\"order\": [\"product_type\", \"specs\", \"brand\", \"core_usp\", \"signals\"], \"frontload\": [\"product_type\", \"specs\"], \"must_keep_types\": [\"product_type\", \"brand\", \"specs\"], \"avoid_patterns\": [\"cross_category_terms\", \"fabricated_specs\"], \"signal_position\": \"tail\", \"separator\": \" \", \"max_len\": 110}}\n\nOutput — return exactly this JSON, nothing else:\n```json\n{\n  \"item_facts\": {\n    \"product_type\": [],\n    \"brand\": [],\n    \"compatibility\": [],\n    \"specs\": [],\n    \"signals\": [],\n    \"core_usp\": [],\n    \"long_tail\": []\n  },\n  \"behavior_facts\": {\n    \"validated_search_terms\": []\n  },\n  \"selected_policy_source\": \"VC|L3|L2|DEFAULT\",\n  \"policy\": {\n    \"order\": [],\n    \"frontload\": [],\n    \"must_keep_types\": [],\n    \"avoid_patterns\": [],\n    \"signal_position\": \"head|tail|none\",\n    \"max_len\": 110\n  }\n}\n```", "call1_response": "```json\n{\n  \"item_facts\": {\n    \"product_type\": [\"Filtros de carro\"],\n    \"brand\": [\"Wega\"],\n    \"compatibility\": [\"HILUX 2015 a 2024\", \"HILUX 2016 a 2024\", \"HILUX SW4 2016 a 2024\"],\n    \"specs\": [\"kit de filtros\", \"completo\"],\n    \"signals\": [],\n    \"core_usp\": [\"ofertas\", \"preço acessível\", \"código original\", \"garantia\"],\n    \"long_tail\": [\"filtros para HILUX\", \"HILUX 2.8 filtro\", \"filtros de ar HILUX\", \"filtro de óleo HILUX\"]\n  },\n  \"behavior_facts\": {\n    \"validated_search_terms\": [\"filtro hilux 2018\", \"kit filtros wega\", \"filtro hilux\", \"filtro da hilux\"]\n  },\n  \"selected_policy_source\": \"L3\",\n  \"policy\": {\n    \"order\": [\"product_type\", \"compatibility\", \"core_usp\", \"brand\"],\n    \"frontload\": [\"product_type\", \"compatibility\"],\n    \"must_keep_types\": [\"product_type\", \"brand\", \"compatibility\"],\n    \"avoid_patterns\": [],\n    \"signal_position\": \"tail\",\n    \"max_len\": 110\n  }\n}\n```", "call2_prompt": "# Google Ads E-commerce Title Generation - Brazil\n\nYou are an expert e-commerce title generator for Google Shopping.\n\nTask:\n- Generate exactly 1 optimized product title from the provided Facts, Policy, and validated search terms\n\nHard constraints (never violate):\n- Do not invent brands, specs, sizes, models, quantities, or functions not present in Facts\n- Do not drift category or product meaning\n- Title length MUST be ≤ 110 characters\n- If Facts.item_facts.brand is not empty, the brand MUST appear in the title\n- NEVER repeat the same word twice in the title, even in different cases (e.g. \"TYRE tubeless TYRE\" is forbidden). Check every word before outputting\n- Do not include prohibited/blacklisted terms\n- The output title MUST be in the SAME language as the Original Title. If the Original Title is in English, the entire output must be in English. NEVER output Chinese characters (中文) unless the Original Title is in Chinese\n- Exclude operational/logistics info: shipping, warranty, installation service, delivery time, store policies\n\nTitle structure rules:\n- Follow Policy `order` for the general arrangement of facts in the title\n- Fields listed in `frontload` should appear in the first 20-30 characters\n- Fields listed in `must_keep_types` must be present in the title\n- If Policy `signal_position` is \"head\", place signals (e.g. Ready Stock) at the beginning; if \"tail\", at the end; if \"none\", omit them\n- Use validated search terms only when they fit naturally and are consistent with the product\n\nStyle rules:\n- Write in a natural Google Shopping title style for the Brazil market\n- Use natural spacing between concepts; do NOT mechanically join with `|` or other rigid separators\n- Hyphens within specs/ranges are fine (e.g. 350g-400g, 2-in-1, 18-55mm) — do not break them\n- Keep the title readable as if written by a human, not assembled by a machine\n\nInput:\n- Original Title: `Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500`\n- Facts:\n```json\n{\"item_facts\": {\"product_type\": [\"Filtros de carro\"], \"brand\": [\"Wega\"], \"compatibility\": [\"HILUX 2015 a 2024\", \"HILUX 2016 a 2024\", \"HILUX SW4 2016 a 2024\"], \"specs\": [], \"signals\": [], \"core_usp\": [\"ofertas\", \"preço acessível\", \"código original\", \"garantia\", \"kit de filtros\", \"completo\"], \"long_tail\": [\"filtros para HILUX\", \"HILUX 2.8 filtro\", \"filtros de ar HILUX\", \"filtro de óleo HILUX\"]}, \"behavior_facts\": {\"validated_search_terms\": [\"filtro hilux 2018\", \"kit filtros wega\", \"filtro hilux\", \"filtro da hilux\"], \"rejected_search_terms\": []}}\n```\n- Policy:\n```json\n{\"selected_policy_source\": \"L3\", \"reason\": \"fallback_default_policy\", \"policy\": {\"order\": [\"product_type\", \"compatibility\", \"core_usp\", \"brand\"], \"frontload\": [\"product_type\", \"compatibility\"], \"must_keep_types\": [\"product_type\", \"brand\", \"compatibility\"], \"avoid_patterns\": [\"cross_category_terms\", \"fabricated_specs\"], \"signal_position\": \"none\", \"separator\": \" \", \"max_len\": 110}}\n```\n- Validated Search Terms:\n```json\n[\"filtro hilux 2018\", \"kit filtros wega\", \"filtro hilux\", \"filtro da hilux\"]\n```\n\nOutput:\n- Return only the final title as one plain-text line", "call2_response": "Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo"}, "22530950318": {"call1_prompt": "You are an e-commerce title optimization assistant.\n\nTask: Given a product's original title, KSP points, search terms, category context, and multi-level expert knowledge, produce a single JSON with structured facts and an executable title policy.\n\n## Facts extraction rules\n- Do not invent brands, specs, models, or functions\n- Search terms are user behavior facts only, not stronger truth than product facts\n- Use empty arrays when information is absent\n- `brand` must contain only real commercial brand names (e.g. Nike, 3M, Lenovo); geographic origins (Taiwan, Japan), materials (Stainless Steel, Silicone), stock status (In Stock), and generic descriptors are NOT brands\n- `specs` must contain only verifiable numeric/package facts (dimensions, counts, weights, sizes, capacity)\n- Descriptive phrases like `Large Capacity`, `Portable`, `Ready-to-Eat` belong in `core_usp` or `long_tail`, not `specs`\n- Prefer KSP for product facts; use search terms only for `behavior_facts`\n- CRITICAL LANGUAGE RULE: Detect the language of the Original Title first. ALL `item_facts` values MUST be output in that SAME language. KSP values are often in Chinese — if the Original Title is NOT in Chinese, you MUST translate every Chinese value to the Original Title's language. Example: KSP `\"brand\": [\"日本製\"]` → output `\"brand\": [\"Made in Japan\"]` when title is English. NEVER output Chinese text in item_facts when the Original Title is in English, Malay, Thai, Vietnamese, etc.\n- Exclude operational/logistics info from facts: shipping, warranty, delivery time, installation service, store policies, return policy\n- Each array: max 4 elements, keep the most important ones\n\n## Policy selection rules\n- Priority: VC EK > L3 EK > L2 EK > Default EK\n- If a finer-grained EK clearly conflicts with the extracted Facts, downgrade to the next level\n- Do not frontload a field that is absent in Facts\n- If Facts has no real signals, set `signal_position` to `none`\n- `separator` is a weak style hint; default to space\n- Policy must be executable, not a prose summary\n\nInput:\n- Region: `Malaysia`\n- Original Title: `MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg`\n- L3 Category: `Motorcycles|Motorcycle Spare Parts|Brake System`\n- Virtual Category: `None`\n- KSP Points:\n```json\n{\n  \"top_attractiveness\": {\n    \"brand\": [\n      \"Yamaha\"\n    ],\n    \"brand_en\": [\n      \"Yamaha\"\n    ],\n    \"product_type\": [\n      \"rear load support bracket\"\n    ]\n  },\n  \"unique_selling_points\": {\n    \"适配型号/品牌\": [\n      \"Yamaha Tracer 9\",\n      \"Yamaha Tracer 9GT\"\n    ],\n    \"适配型号/品牌_en\": [\n      \"Yamaha Tracer 9\",\n      \"Yamaha Tracer 9GT\"\n    ],\n    \"材质\": [\n      \"Aluminum alloy\",\n      \"aluminum alloy\"\n    ],\n    \"材质_en\": [\n      \"Aluminum alloy\",\n      \"aluminum alloy\"\n    ],\n    \"颜色\": [\n      \"Black\",\n      \"black\"\n    ],\n    \"颜色_en\": [\n      \"Black\",\n      \"black\"\n    ],\n    \"安装方式\": [\n      \"rear load support\",\n      \"rear support\",\n      \"load support\"\n    ],\n    \"安装方式_en\": [\n      \"rear load support\",\n      \"rear support\",\n      \"load support\"\n    ],\n    \"用途\": [\n      \"load support\",\n      \"luggage rack\",\n      \"tailg\"\n    ]\n  },\n  \"long_tail_keywords\": [\n    \"Yamaha Tracer 9 rear load support\",\n    \"Tracer 9GT luggage rack\",\n    \"Tracer 9 tailg support\",\n    \"Yamaha motorcycle luggage support\",\n    \"Aluminum alloy motorcycle luggage bracket\",\n    \"Black motorcycle rear support\",\n    \"Yamaha Tracer 9 luggage holder\",\n    \"Tracer 9GT load support bracket\"\n  ],\n  \"long_tail_keywords_en\": [\n    \"Yamaha Tracer 9 rear load support\",\n    \"Tracer 9GT luggage rack\",\n    \"Tracer 9 tailg support\",\n    \"Yamaha motorcycle luggage support\",\n    \"Aluminum alloy motorcycle luggage bracket\",\n    \"Black motorcycle rear support\",\n    \"Yamaha Tracer 9 luggage holder\",\n    \"Tracer 9GT load support bracket\"\n  ]\n}\n```\n- Filtered Search Terms:\n```json\n[\"yamaha 9 gt tracer\", \"tracer 9 gt\", \"yamaha tracer 9 gt\", \"yamaha tracer 9\", \"yamaha tracer gt\", \"yamaha tracer\", \"box belakang motosikal\", \"tracer 9 gt v4\", \"tracer\", \"aluminum bracket\"]\n```\n- VC EK:\nN/A\n- L3 EK:\n## L3 Expert Knowledge\nGood Patterns:\n- Front-load model/fitment, then part type and position.\n- Include key spec (mm) and one material/feature.\n- Use clear separators; one product per title; include factory brand only if genuine guarantee.\n\nBad Patterns to Avoid:\n- Mixing unrelated parts/models or off‑category items.\n- Leading with marketing tags, emojis, flags, or long codes.\n- Vague adjectives without specs.\n\nActionable Takeaways:\n- Use: model → part → position → spec → one feature/brand-if-guaranteed.\n- Remove emojis, long codes, and multi-product listings.\n- L2 EK:\nN/A\n- Default EK:\n{\"selected_policy_source\": \"DEFAULT\", \"reason\": \"fallback_default_policy\", \"policy\": {\"order\": [\"product_type\", \"specs\", \"brand\", \"core_usp\", \"signals\"], \"frontload\": [\"product_type\", \"specs\"], \"must_keep_types\": [\"product_type\", \"brand\", \"specs\"], \"avoid_patterns\": [\"cross_category_terms\", \"fabricated_specs\"], \"signal_position\": \"tail\", \"separator\": \" \", \"max_len\": 110}}\n\nOutput — return exactly this JSON, nothing else:\n```json\n{\n  \"item_facts\": {\n    \"product_type\": [],\n    \"brand\": [],\n    \"compatibility\": [],\n    \"specs\": [],\n    \"signals\": [],\n    \"core_usp\": [],\n    \"long_tail\": []\n  },\n  \"behavior_facts\": {\n    \"validated_search_terms\": []\n  },\n  \"selected_policy_source\": \"VC|L3|L2|DEFAULT\",\n  \"policy\": {\n    \"order\": [],\n    \"frontload\": [],\n    \"must_keep_types\": [],\n    \"avoid_patterns\": [],\n    \"signal_position\": \"head|tail|none\",\n    \"max_len\": 110\n  }\n}\n```", "call1_response": "```json\n{\n  \"item_facts\": {\n    \"product_type\": [\"rear load support bracket\"],\n    \"brand\": [\"Yamaha\"],\n    \"compatibility\": [\"Yamaha Tracer 9\", \"Yamaha Tracer 9GT\"],\n    \"specs\": [\"Aluminum alloy\", \"Black\"],\n    \"signals\": [],\n    \"core_usp\": [\"load support\", \"luggage rack\", \"tailg\"],\n    \"long_tail\": [\"Yamaha Tracer 9 rear load support\", \"Tracer 9GT luggage rack\", \"Tracer 9 tailg support\", \"Yamaha motorcycle luggage support\"]\n  },\n  \"behavior_facts\": {\n    \"validated_search_terms\": [\"yamaha 9 gt tracer\", \"tracer 9 gt\", \"yamaha tracer 9 gt\", \"yamaha tracer 9\", \"yamaha tracer gt\", \"yamaha tracer\", \"box belakang motosikal\", \"tracer 9 gt v4\", \"tracer\", \"aluminum bracket\"]\n  },\n  \"selected_policy_source\": \"L3\",\n  \"policy\": {\n    \"order\": [\"product_type\", \"specs\", \"brand\", \"core_usp\", \"signals\"],\n    \"frontload\": [\"compatibility\", \"product_type\"],\n    \"must_keep_types\": [\"product_type\", \"brand\", \"specs\"],\n    \"avoid_patterns\": [],\n    \"signal_position\": \"none\",\n    \"max_len\": 110\n  }\n}\n```", "call2_prompt": "# Google Ads E-commerce Title Generation - Malaysia\n\nYou are an expert e-commerce title generator for Google Shopping.\n\nTask:\n- Generate exactly 1 optimized product title from the provided Facts, Policy, and validated search terms\n\nHard constraints (never violate):\n- Do not invent brands, specs, sizes, models, quantities, or functions not present in Facts\n- Do not drift category or product meaning\n- Title length MUST be ≤ 110 characters\n- If Facts.item_facts.brand is not empty, the brand MUST appear in the title\n- NEVER repeat the same word twice in the title, even in different cases (e.g. \"TYRE tubeless TYRE\" is forbidden). Check every word before outputting\n- Do not include prohibited/blacklisted terms\n- The output title MUST be in the SAME language as the Original Title. If the Original Title is in English, the entire output must be in English. NEVER output Chinese characters (中文) unless the Original Title is in Chinese\n- Exclude operational/logistics info: shipping, warranty, installation service, delivery time, store policies\n\nTitle structure rules:\n- Follow Policy `order` for the general arrangement of facts in the title\n- Fields listed in `frontload` should appear in the first 20-30 characters\n- Fields listed in `must_keep_types` must be present in the title\n- If Policy `signal_position` is \"head\", place signals (e.g. Ready Stock) at the beginning; if \"tail\", at the end; if \"none\", omit them\n- Use validated search terms only when they fit naturally and are consistent with the product\n\nStyle rules:\n- Write in a natural Google Shopping title style for the Malaysia market\n- Use natural spacing between concepts; do NOT mechanically join with `|` or other rigid separators\n- Hyphens within specs/ranges are fine (e.g. 350g-400g, 2-in-1, 18-55mm) — do not break them\n- Keep the title readable as if written by a human, not assembled by a machine\n\nInput:\n- Original Title: `MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg`\n- Facts:\n```json\n{\"item_facts\": {\"product_type\": [\"rear load support bracket\"], \"brand\": [\"Yamaha\"], \"compatibility\": [\"Yamaha Tracer 9\", \"Yamaha Tracer 9GT\"], \"specs\": [], \"signals\": [], \"core_usp\": [\"load support\", \"luggage rack\", \"tailg\", \"Aluminum alloy\", \"Black\"], \"long_tail\": [\"Yamaha Tracer 9 rear load support\", \"Tracer 9GT luggage rack\", \"Tracer 9 tailg support\", \"Yamaha motorcycle luggage support\"]}, \"behavior_facts\": {\"validated_search_terms\": [\"yamaha 9 gt tracer\", \"tracer 9 gt\", \"yamaha tracer 9 gt\", \"yamaha tracer 9\", \"yamaha tracer gt\", \"yamaha tracer\", \"box belakang motosikal\", \"tracer 9 gt v4\", \"tracer\", \"aluminum bracket\"], \"rejected_search_terms\": []}}\n```\n- Policy:\n```json\n{\"selected_policy_source\": \"L3\", \"reason\": \"fallback_default_policy\", \"policy\": {\"order\": [\"product_type\", \"brand\", \"core_usp\"], \"frontload\": [\"compatibility\", \"product_type\"], \"must_keep_types\": [\"product_type\", \"brand\"], \"avoid_patterns\": [\"cross_category_terms\", \"fabricated_specs\"], \"signal_position\": \"none\", \"separator\": \" \", \"max_len\": 110}}\n```\n- Validated Search Terms:\n```json\n[\"yamaha 9 gt tracer\", \"tracer 9 gt\", \"yamaha tracer 9 gt\", \"yamaha tracer 9\", \"yamaha tracer gt\", \"yamaha tracer\", \"box belakang motosikal\", \"tracer 9 gt v4\", \"tracer\", \"aluminum bracket\"]\n```\n\nOutput:\n- Return only the final title as one plain-text line", "call2_response": "Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT"}}, "v9": {"19598093605": {"call1_prompt": "You are an e-commerce product fact extractor.\n\nTask: Extract structured product facts from the given product information. Output ONLY a JSON object.\n\n## Rules\n- Extract facts ONLY from Original Title, KSP Points, and Category. Do NOT use search terms\n- Do not invent brands, specs, models, or functions not present in the source\n- Use empty arrays when information is absent\n- `product_type`: the core product category (1-3 items max)\n- `brand`: real commercial brand names only (Nike, 3M, Lenovo). Geographic origins, materials, stock status are NOT brands\n- `key_attributes`: all verifiable product facts — dimensions, weight, capacity, material, composition, color, model number, quantity, compatibility info, unique selling points, long-tail descriptors\n- `signals`: stock/promotion signals from original title only (Ready Stock, Free Shipping, etc.); if absent, return `[]`\n- Exclude seller info: seller location, store name, delivery time, warranty, return policy\n- CRITICAL LANGUAGE RULE: Detect the language of the Original Title first. ALL output values MUST be in that SAME language. KSP values are often in Chinese — if the Original Title is NOT in Chinese, you MUST translate every Chinese value to the Original Title's language. NEVER output Chinese text when the Original Title is in English, Malay, Thai, Vietnamese, etc.\n- Each array: max 6 elements, keep the most important ones\n\nInput:\n- Region: `Brazil`\n- Original Title: `Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500`\n- L3 Category: `Spare Parts and Accessories for Vehicles|Spare Parts for Automobiles|Filters`\n- Virtual Category: `None`\n- KSP Points:\n```json\n{\n  \"top_attractiveness\": {\n    \"brand\": [\n      \"Wega\"\n    ],\n    \"brand_en\": [\n      \"Wega\"\n    ],\n    \"product_type\": [\n      \"Filtros de carro\"\n    ],\n    \"product_type_en\": [\n      \"car filters\"\n    ]\n  },\n  \"unique_selling_points\": {\n    \"适配型号\": [\n      \"HILUX 2015 a 2024\",\n      \"HILUX 2016 a 2024\",\n      \"HILUX SW4 2016 a 2024\"\n    ],\n    \"适配型号_en\": [\n      \"HILUX 2015 to 2024\",\n      \"HILUX 2016 to 2024\",\n      \"HILUX SW4 2016 to 2024\"\n    ],\n    \"包装\": [\n      \"kit de filtros\",\n      \"completo\"\n    ],\n    \"包装_en\": [\n      \"filter kit\",\n      \"complete\"\n    ],\n    \"价格优惠\": [\n      \"ofertas\",\n      \"preço acessível\"\n    ],\n    \"价格优惠_en\": [\n      \"offers\",\n      \"affordable price\"\n    ],\n    \"原装正版/原產\": [\n      \"código original\",\n      \"garantia\"\n    ],\n    \"原装正版/原產_en\": [\n      \"original code\",\n      \"warranty\"\n    ]\n  },\n  \"long_tail_keywords\": [\n    \"filtros para HILUX\",\n    \"HILUX 2.8 filtro\",\n    \"filtros de ar HILUX\",\n    \"filtro de óleo HILUX\",\n    \"HILUX SW4 filtro\",\n    \"filtros para HILUX 2024\",\n    \"HILUX 2019 filtro\",\n    \"filtros Wega HILUX\"\n  ],\n  \"long_tail_keywords_en\": [\n    \"HILUX filters\",\n    \"HILUX 2.8 filter\",\n    \"HILUX air filter\",\n    \"HILUX oil filter\",\n    \"HILUX SW4 filter\",\n    \"HILUX 2024 filter\",\n    \"HILUX 2019 filter\",\n    \"Wega HILUX filters\"\n  ]\n}\n```\n\nOutput — return exactly this JSON, nothing else:\n```json\n{\n  \"product_type\": [],\n  \"brand\": [],\n  \"key_attributes\": [],\n  \"signals\": []\n}\n```", "call1_response": "```json\n{\n  \"product_type\": [\n    \"Filtros de carro\"\n  ],\n  \"brand\": [\n    \"Wega\"\n  ],\n  \"key_attributes\": [\n    \"HILUX 2015 a 2024\",\n    \"HILUX 2016 a 2024\",\n    \"HILUX SW4 2016 a 2024\",\n    \"kit de filtros\",\n    \"completo\",\n    \"preço acessível\"\n  ],\n  \"signals\": []\n}\n```", "call2_prompt": "# Google Ads E-commerce Title Generation - Brazil\n\nYou are an expert e-commerce title generator for Google Shopping.\n\nTask:\n- Generate exactly 1 optimized product title from the provided Facts, expert knowledge, and validated search terms\n\nHard constraints (never violate):\n- Facts are the source of truth. Expert knowledge and search terms are soft guidance only; if they conflict with Facts, ignore them\n- Do not invent brands, specs, sizes, models, quantities, or functions not supported by Facts\n- Do not drift category or product meaning\n- Title length MUST be ≤ 110 characters\n- If Facts.brand is not empty, the brand MUST appear in the title\n- NEVER repeat the same word twice in the title, even in different cases (e.g. \"TYRE tubeless TYRE\" is forbidden). Check every word before outputting\n- Do not include prohibited/blacklisted terms\n- The output title MUST be in the SAME language as the Original Title. If the Original Title is in English, the entire output must be in English. NEVER output Chinese characters (中文) unless the Original Title is in Chinese\n- Exclude operational/logistics info: shipping, warranty, installation service, delivery time, store policies\n\nTitle strategy rules:\n- Decide the title structure internally from Facts, region, and expert knowledge; do not output planning text\n- For MY, SG, BR, ID, VN, and PH, prefer brand near the front when Facts.brand exists\n- Start from the strongest product_type, then weave in the most useful key_attributes naturally\n- Use signals only when they are real and helpful; place them where they sound natural, usually near the tail\n- Use validated search terms only when they fit naturally and are consistent with the product\n- Never stuff keywords or force every fact into the title\n\nStyle rules:\n- Write in a natural Google Shopping title style for the Brazil market\n- Use natural spacing between concepts; do NOT mechanically join with `|` or other rigid separators\n- Hyphens within specs/ranges are fine (e.g. 350g-400g, 2-in-1, 18-55mm) — do not break them\n- Keep the title readable as if written by a human, not assembled by a machine\n\nInput:\n- Original Title: `Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500`\n- Facts:\n```json\n{\"product_type\": [\"Filtros de carro\"], \"brand\": [\"Wega\"], \"key_attributes\": [\"HILUX 2015 a 2024\", \"HILUX 2016 a 2024\", \"HILUX SW4 2016 a 2024\", \"kit de filtros\", \"completo\", \"preço acessível\"], \"signals\": []}\n```\n- Expert Knowledge:\n## L3 EK\n## L3 Expert Knowledge\nGood Patterns:\nFront-load: Product → Model(s) → Engine/Years → Key feature → Brand last. Include concrete features (cabin, activated carbon, air/oil/fuel, hygienizer). Use clear separators and readable order.\n\nBad Patterns to Avoid:\nVague kits, marketing fluff, multiple brands, category mismatches (oils/motorbike/truck), starting with codes, burying fitment; generic adjectives/unsupported claims.\n\nActionable Takeaways:\nTemplate: Product+Model+Engine/Years+Feature+Brand(optional). List kit contents; keep brand secondary; exclude non-filter items.\n- Validated Search Terms:\n```json\n[\"filtro hilux 2018\", \"kit filtros wega\", \"filtro hilux\", \"filtro da hilux\", \"filtro hilux 2.8\", \"filtros da hilux\", \"akx1967\", \"filtro combustivel hilux 2.8 2017\"]\n```\n\nOutput:\n- Return only the final title as one plain-text line", "call2_response": "Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega"}, "22530950318": {"call1_prompt": "You are an e-commerce product fact extractor.\n\nTask: Extract structured product facts from the given product information. Output ONLY a JSON object.\n\n## Rules\n- Extract facts ONLY from Original Title, KSP Points, and Category. Do NOT use search terms\n- Do not invent brands, specs, models, or functions not present in the source\n- Use empty arrays when information is absent\n- `product_type`: the core product category (1-3 items max)\n- `brand`: real commercial brand names only (Nike, 3M, Lenovo). Geographic origins, materials, stock status are NOT brands\n- `key_attributes`: all verifiable product facts — dimensions, weight, capacity, material, composition, color, model number, quantity, compatibility info, unique selling points, long-tail descriptors\n- `signals`: stock/promotion signals from original title only (Ready Stock, Free Shipping, etc.); if absent, return `[]`\n- Exclude seller info: seller location, store name, delivery time, warranty, return policy\n- CRITICAL LANGUAGE RULE: Detect the language of the Original Title first. ALL output values MUST be in that SAME language. KSP values are often in Chinese — if the Original Title is NOT in Chinese, you MUST translate every Chinese value to the Original Title's language. NEVER output Chinese text when the Original Title is in English, Malay, Thai, Vietnamese, etc.\n- Each array: max 6 elements, keep the most important ones\n\nInput:\n- Region: `Malaysia`\n- Original Title: `MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg`\n- L3 Category: `Motorcycles|Motorcycle Spare Parts|Brake System`\n- Virtual Category: `None`\n- KSP Points:\n```json\n{\n  \"top_attractiveness\": {\n    \"brand\": [\n      \"Yamaha\"\n    ],\n    \"brand_en\": [\n      \"Yamaha\"\n    ],\n    \"product_type\": [\n      \"rear load support bracket\"\n    ]\n  },\n  \"unique_selling_points\": {\n    \"适配型号/品牌\": [\n      \"Yamaha Tracer 9\",\n      \"Yamaha Tracer 9GT\"\n    ],\n    \"适配型号/品牌_en\": [\n      \"Yamaha Tracer 9\",\n      \"Yamaha Tracer 9GT\"\n    ],\n    \"材质\": [\n      \"Aluminum alloy\",\n      \"aluminum alloy\"\n    ],\n    \"材质_en\": [\n      \"Aluminum alloy\",\n      \"aluminum alloy\"\n    ],\n    \"颜色\": [\n      \"Black\",\n      \"black\"\n    ],\n    \"颜色_en\": [\n      \"Black\",\n      \"black\"\n    ],\n    \"安装方式\": [\n      \"rear load support\",\n      \"rear support\",\n      \"load support\"\n    ],\n    \"安装方式_en\": [\n      \"rear load support\",\n      \"rear support\",\n      \"load support\"\n    ],\n    \"用途\": [\n      \"load support\",\n      \"luggage rack\",\n      \"tailg\"\n    ]\n  },\n  \"long_tail_keywords\": [\n    \"Yamaha Tracer 9 rear load support\",\n    \"Tracer 9GT luggage rack\",\n    \"Tracer 9 tailg support\",\n    \"Yamaha motorcycle luggage support\",\n    \"Aluminum alloy motorcycle luggage bracket\",\n    \"Black motorcycle rear support\",\n    \"Yamaha Tracer 9 luggage holder\",\n    \"Tracer 9GT load support bracket\"\n  ],\n  \"long_tail_keywords_en\": [\n    \"Yamaha Tracer 9 rear load support\",\n    \"Tracer 9GT luggage rack\",\n    \"Tracer 9 tailg support\",\n    \"Yamaha motorcycle luggage support\",\n    \"Aluminum alloy motorcycle luggage bracket\",\n    \"Black motorcycle rear support\",\n    \"Yamaha Tracer 9 luggage holder\",\n    \"Tracer 9GT load support bracket\"\n  ]\n}\n```\n\nOutput — return exactly this JSON, nothing else:\n```json\n{\n  \"product_type\": [],\n  \"brand\": [],\n  \"key_attributes\": [],\n  \"signals\": []\n}\n```", "call1_response": "```json\n{\n  \"product_type\": [\n    \"rear load support bracket\"\n  ],\n  \"brand\": [\n    \"Yamaha\"\n  ],\n  \"key_attributes\": [\n    \"Yamaha Tracer 9\",\n    \"Yamaha Tracer 9GT\",\n    \"Aluminum alloy\",\n    \"Black\",\n    \"rear load support\",\n    \"luggage rack\"\n  ],\n  \"signals\": []\n}\n```", "call2_prompt": "# Google Ads E-commerce Title Generation - Malaysia\n\nYou are an expert e-commerce title generator for Google Shopping.\n\nTask:\n- Generate exactly 1 optimized product title from the provided Facts, expert knowledge, and validated search terms\n\nHard constraints (never violate):\n- Facts are the source of truth. Expert knowledge and search terms are soft guidance only; if they conflict with Facts, ignore them\n- Do not invent brands, specs, sizes, models, quantities, or functions not supported by Facts\n- Do not drift category or product meaning\n- Title length MUST be ≤ 110 characters\n- If Facts.brand is not empty, the brand MUST appear in the title\n- NEVER repeat the same word twice in the title, even in different cases (e.g. \"TYRE tubeless TYRE\" is forbidden). Check every word before outputting\n- Do not include prohibited/blacklisted terms\n- The output title MUST be in the SAME language as the Original Title. If the Original Title is in English, the entire output must be in English. NEVER output Chinese characters (中文) unless the Original Title is in Chinese\n- Exclude operational/logistics info: shipping, warranty, installation service, delivery time, store policies\n\nTitle strategy rules:\n- Decide the title structure internally from Facts, region, and expert knowledge; do not output planning text\n- For MY, SG, BR, ID, VN, and PH, prefer brand near the front when Facts.brand exists\n- Start from the strongest product_type, then weave in the most useful key_attributes naturally\n- Use signals only when they are real and helpful; place them where they sound natural, usually near the tail\n- Use validated search terms only when they fit naturally and are consistent with the product\n- Never stuff keywords or force every fact into the title\n\nStyle rules:\n- Write in a natural Google Shopping title style for the Malaysia market\n- Use natural spacing between concepts; do NOT mechanically join with `|` or other rigid separators\n- Hyphens within specs/ranges are fine (e.g. 350g-400g, 2-in-1, 18-55mm) — do not break them\n- Keep the title readable as if written by a human, not assembled by a machine\n\nInput:\n- Original Title: `MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg`\n- Facts:\n```json\n{\"product_type\": [\"rear load support bracket\"], \"brand\": [\"Yamaha\"], \"key_attributes\": [\"Yamaha Tracer 9\", \"Yamaha Tracer 9GT\", \"Aluminum alloy\", \"Black\", \"rear load support\", \"luggage rack\"], \"signals\": []}\n```\n- Expert Knowledge:\n## L3 EK\n## L3 Expert Knowledge\nGood Patterns:\n- Front-load model/fitment, then part type and position.\n- Include key spec (mm) and one material/feature.\n- Use clear separators; one product per title; include factory brand only if genuine guarantee.\n\nBad Patterns to Avoid:\n- Mixing unrelated parts/models or off‑category items.\n- Leading with marketing tags, emojis, flags, or long codes.\n- Vague adjectives without specs.\n\nActionable Takeaways:\n- Use: model → part → position → spec → one feature/brand-if-guaranteed.\n- Remove emojis, long codes, and multi-product listings.\n- Validated Search Terms:\n```json\n[\"yamaha 9 gt tracer\", \"tracer 9 gt\", \"yamaha tracer 9 gt\", \"yamaha tracer 9\", \"yamaha tracer gt\", \"yamaha tracer\", \"box belakang motosikal\", \"tracer 9 gt v4\"]\n```\n\nOutput:\n- Return only the final title as one plain-text line", "call2_response": "Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black"}}};
+
+const CASES = [
+  {
+    id: "19598093605", region: "BR",
+    title: "Case 1 — BR · 汽车滤芯套装",
+    orig: "Kit De Filtros Hilux 2015 A 2024 / Hilux Sw4 2016 A 2024 - Wega Wku500",
+    meta: [["Region","Brazil"], ["Category","Spare Parts › Filters"], ["Brand","Wega"]],
+    v8_final: "Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo",
+    v9_final: "Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega",
+    v8_final_badges: ['<span class="badge note">⚠ "Filtros de carro" 冗长前缀</span>','<span class="badge note">⚠ 缺少 ar/óleo 品类词</span>'],
+    v9_final_badges: ['<span class="badge good">✅ Kit 前置，信息密度高</span>','<span class="badge good">✅ SW4 保留，品牌压尾</span>'],
+    v8_c1_badges: ['<span class="badge bad">🔴 含搜索词（10条）</span>','<span class="badge bad">🔴 含 L3 EK</span>','<span class="badge bad">🔴 输出13字段+Policy</span>'],
+    v9_c1_badges: ['<span class="badge good">🟢 无搜索词</span>','<span class="badge good">🟢 无 EK</span>','<span class="badge good">🟢 仅4字段输出</span>'],
+    v8_c1_ann: ['<div class="ann bad"><strong>⚠ specs 错误：</strong>"kit de filtros", "completo" 是包装描述，不是规格</div>','<div class="ann bad"><strong>⚠ 营销词污染：</strong>core_usp 含 "ofertas", "preço acessível"</div>'],
+    v9_c1_ann: ['<div class="ann good"><strong>✅ 扁平化：</strong>compatibility/specs/usp 合并为 key_attributes，无分类歧义</div>'],
+    v8_c2_badges: ['<span class="badge bad">🔴 Policy 驱动（order/frontload/must_keep）</span>'],
+    v9_c2_badges: ['<span class="badge good">🟢 EK 引导，LLM 自主决策策略</span>'],
+    judge: "Title 2→5（v9 胜）",
+  },
+  {
+    id: "22530950318", region: "MY",
+    title: "Case 2 — MY · 摩托车货架",
+    orig: "MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg",
+    meta: [["Region","Malaysia"], ["Category","Motorcycles › Spare Parts"], ["Brand","MTKRACING / Yamaha"]],
+    v8_final: "Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT",
+    v9_final: "Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black",
+    v8_final_badges: ['<span class="badge note">⚠ 缺颜色 "Black"</span>','<span class="badge note">⚠ 年份 "2021" 丢失</span>'],
+    v9_final_badges: ['<span class="badge good">✅ 材质 Aluminum Alloy 完整</span>','<span class="badge good">✅ 颜色 Black 保留</span>','<span class="badge good">✅ 品牌前置（MY 市场）</span>'],
+    v8_c1_badges: ['<span class="badge bad">🔴 含搜索词（含 "box belakang motosikal"）</span>','<span class="badge bad">🔴 含 L3 EK + Default EK</span>','<span class="badge bad">🔴 输出13字段+Policy</span>'],
+    v9_c1_badges: ['<span class="badge good">🟢 无搜索词</span>','<span class="badge good">🟢 无 EK</span>','<span class="badge good">🟢 仅4字段输出</span>'],
+    v8_c1_ann: ['<div class="ann bad"><strong>⚠ MTKRACING 品牌未捕获：</strong>KSP 中只有 Yamaha，制造商品牌丢失</div>','<div class="ann bad"><strong>⚠ Policy order 与 EK 建议冲突：</strong>EK 要求 front-load 型号，但 policy.order 把 product_type 排前</div>'],
+    v9_c1_ann: ['<div class="ann good"><strong>✅ Black + Aluminum alloy 完整进入 key_attributes：</strong>扁平 schema 不会因归类错误丢失属性</div>'],
+    v8_c2_badges: ['<span class="badge bad">🔴 Policy 机械指定排列顺序</span>'],
+    v9_c2_badges: ['<span class="badge good">🟢 EK 指导"brand near front"，LLM 自主执行</span>'],
+    judge: "Title 2→5（v9 胜）",
+  },
+];
+
+// ── helpers ────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function promptBlock(label, text) {
+  return `
+<details>
+  <summary>${label}</summary>
+  <div class="prompt-wrap">
+    <pre class="prompt-pre">${esc(text)}</pre>
+  </div>
+</details>`;
+}
+
+function responseBlock(text) {
+  // detect JSON
+  const trimmed = text.replace(/^```json\s*/,'').replace(/\s*```$/,'');
+  const isJson = trimmed.startsWith('{') || trimmed.startsWith('[');
+  if (isJson) {
+    return `<div class="resp"><pre><code class="language-json">${esc(trimmed)}</code></pre></div>`;
+  }
+  return `<div class="resp"><pre style="padding:12px 14px;font-size:12px;font-family:monospace">${esc(text)}</pre></div>`;
+}
+
+// ── render ─────────────────────────────────────────────────────────────────────
+function renderCase(c) {
+  const d8 = DATA.v8[c.id] || {};
+  const d9 = DATA.v9[c.id] || {};
+
+  const metaHtml = c.meta.map(([k,v]) => `<span><strong>${k}:</strong> ${v}</span>`).join('');
+
+  return `
+<div class="case">
+  <div class="case-hd">
+    <h2>${c.title}</h2>
+    <div class="case-meta">${metaHtml}</div>
+    <div class="orig">${esc(c.orig)}</div>
   </div>
 
-  <div class="compare-grid">
+  <div class="cmp">
     <!-- V8 -->
-    <div class="compare-col v8">
-      <div class="col-header v8">v8 P4（旧）</div>
+    <div class="col v8">
+      <div class="col-hd v8">v8 P4（旧）</div>
 
-      <!-- Call 1 -->
-      <div class="call-section">
-        <div class="call-label">Call 1 — 输入差异</div>
-        <div class="input-diff">
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>Filtered Search Terms（10 条搜索词）</div></div>
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>L3 EK（Expert Knowledge）</div></div>
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>Default EK（JSON policy 模板）</div></div>
-        </div>
-        <details>
-          <summary>展开 Call 1 Prompt（完整）</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">System Role</div>
-              <div class="prompt-text">You are an e-commerce title optimization assistant.
-
-Task: Given a product's original title, KSP points, search terms, category context, and multi-level expert knowledge, produce a single JSON with structured facts and an executable title policy.</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Facts Extraction Rules</div>
-              <div class="prompt-text">- Prefer KSP for product facts; use search terms only for `behavior_facts`
-- `specs` must contain only verifiable numeric/package facts
-- Each array: max 4 elements</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Policy Selection Rules <span class="badge bad">v8 特有</span></div>
-              <div class="prompt-text">- Priority: VC EK > L3 EK > L2 EK > Default EK
-- If a finer-grained EK clearly conflicts with the extracted Facts, downgrade to the next level
-- Policy must be executable, not a prose summary</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Filtered Search Terms <span class="badge bad">v8 特有输入</span></div>
-              <div class="prompt-text">["filtro hilux 2018", "kit filtros wega", "filtro hilux", "filtro da hilux",
- "filtro hilux 2.8", "filtros da hilux", "akx1967",
- "filtro combustivel hilux 2.8 2017", "filtro ar hilux", "kit hilux 2024"]</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: L3 EK <span class="badge bad">v8 特有输入</span></div>
-              <div class="prompt-text">Good Patterns: Front-load: Product → Model(s) → Engine/Years → Key feature → Brand last.
-Bad Patterns: Vague kits, marketing fluff...
-Template: Product+Model+Engine/Years+Feature+Brand(optional).</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Output Schema <span class="badge bad">13 字段</span></div>
-              <div class="schema-box">
-{
-  "item_facts": {
-    "product_type": [],   <span style="color:var(--text-dim)">// ↓ 7 个子字段</span>
-    "brand": [],
-    "compatibility": [],
-    "specs": [],
-    "signals": [],
-    "core_usp": [],
-    "long_tail": []
-  },
-  "behavior_facts": {
-    "validated_search_terms": []  <span style="color:var(--v8);font-style:italic">// 搜索词验证结果</span>
-  },
-  "selected_policy_source": "VC|L3|L2|DEFAULT",
-  "policy": {                     <span style="color:var(--v8);font-style:italic">// ← 4 个 policy 字段</span>
-    "order": [],
-    "frontload": [],
-    "must_keep_types": [],
-    "avoid_patterns": [],
-    "signal_position": "head|tail|none",
-    "max_len": 110
-  }
-}
-              </div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 1 — 输出</div>
-        <div class="response-box">
-          <pre><code class="language-json">{
-  "item_facts": {
-    "product_type": ["Filtros de carro"],
-    "brand": ["Wega"],
-    "compatibility": ["HILUX 2015 a 2024", "HILUX 2016 a 2024", "HILUX SW4 2016 a 2024"],
-    "specs": ["kit de filtros", "completo"],
-    "signals": [],
-    "core_usp": ["ofertas", "preço acessível", "código original", "garantia"],
-    "long_tail": ["filtros para HILUX", "HILUX 2.8 filtro", ...]
-  },
-  "behavior_facts": {
-    "validated_search_terms": ["filtro hilux 2018", "kit filtros wega", ...]
-  },
-  "selected_policy_source": "L3",
-  "policy": {
-    "order": ["product_type", "compatibility", "core_usp", "brand"],
-    "frontload": ["product_type", "compatibility"],
-    "must_keep_types": ["product_type", "brand", "compatibility"],
-    "signal_position": "tail",
-    "max_len": 110
-  }
-}</code></pre>
-        </div>
-        <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-          <div class="diff-block removed">
-            <div class="diff-title removed">⚠ 问题：specs 字段分类错误</div>
-            <div class="diff-body"><code class="highlight-bad">"specs": ["kit de filtros", "completo"]</code> — 这是包装描述，不是规格数据，但被放入了 specs</div>
-          </div>
-          <div class="diff-block removed">
-            <div class="diff-title removed">⚠ 问题：营销词混入 core_usp</div>
-            <div class="diff-body"><code class="highlight-bad">"core_usp": ["ofertas", "preço acessível", ...]</code> — "优惠/实惠价格"属于促销词，污染了 facts</div>
-          </div>
-        </div>
+      <div class="sec">
+        <div class="sec-label">Call 1 — 输入差异</div>
+        <div class="badges">${c.v8_c1_badges.join('')}</div>
+        ${promptBlock('展开 Call 1 完整 Prompt', d8.call1_prompt || '（未找到）')}
+        <div class="sec-label" style="margin-top:12px">Call 1 — LLM 输出</div>
+        ${responseBlock(d8.call1_response || '')}
+        ${c.v8_c1_ann.join('')}
       </div>
 
-      <!-- Call 2 -->
-      <div class="call-section">
-        <div class="call-label">Call 2 — 输入</div>
-        <details>
-          <summary>展开 Call 2 Prompt（完整）</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Title Structure Rules <span class="badge bad">Policy 驱动</span></div>
-              <div class="prompt-text">- Follow Policy `order` for the general arrangement of facts in the title
-- Fields listed in `frontload` should appear in the first 20-30 characters
-- Fields listed in `must_keep_types` must be present in the title
-- If Policy `signal_position` is "head"/"tail"/"none"...</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Policy <span class="badge bad">v8 特有输入</span></div>
-              <div class="prompt-text">{"policy": {"order": ["product_type", "compatibility", "core_usp", "brand"],
-  "frontload": ["product_type", "compatibility"],
-  "must_keep_types": ["product_type", "brand", "compatibility"],
-  "signal_position": "none", "max_len": 110}}</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Facts（含污染数据）</div>
-              <div class="prompt-text">core_usp 中包含 "ofertas", "preço acessível" → 可能渗入标题</div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
-        <div style="background:var(--v8-bg);border:1px solid var(--v8-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#b91c1c;margin-bottom:4px;">V8 生成标题</div>
-          <div style="font-size:16px;color:#9f1239;font-family:monospace;">Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo</div>
-          <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
-            <span class="badge neutral">91 字符</span>
-            <span class="badge warn">⚠ "Filtros de carro" 冗长，占用前段空间</span>
-          </div>
+      <div class="sec">
+        <div class="sec-label">Call 2 — 输入差异</div>
+        <div class="badges">${c.v8_c2_badges.join('')}</div>
+        ${promptBlock('展开 Call 2 完整 Prompt', d8.call2_prompt || '（未找到）')}
+        <div class="sec-label" style="margin-top:12px">Call 2 — LLM 输出</div>
+        <div class="title-result v8">
+          <div class="tr-label v8">V8 生成标题</div>
+          <div class="tr-text v8">${esc(d8.call2_response || c.v8_final)}</div>
         </div>
       </div>
     </div>
 
     <!-- V9 -->
-    <div class="compare-col v9">
-      <div class="col-header v9">v9 P4（新）</div>
+    <div class="col v9">
+      <div class="col-hd v9">v9 P4（新）</div>
 
-      <!-- Call 1 -->
-      <div class="call-section">
-        <div class="call-label">Call 1 — 输入差异</div>
-        <div class="input-diff">
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无搜索词输入（切断反向泄漏）</div></div>
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无 EK 输入（移至 Call 2）</div></div>
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无 Policy 输出（Call 2 自主决策）</div></div>
+      <div class="sec">
+        <div class="sec-label">Call 1 — 输入差异</div>
+        <div class="badges">${c.v9_c1_badges.join('')}</div>
+        ${promptBlock('展开 Call 1 完整 Prompt', d9.call1_prompt || '（未找到）')}
+        <div class="sec-label" style="margin-top:12px">Call 1 — LLM 输出</div>
+        ${responseBlock(d9.call1_response || '')}
+        ${c.v9_c1_ann.join('')}
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">Call 2 — 输入差异</div>
+        <div class="badges">${c.v9_c2_badges.join('')}</div>
+        ${promptBlock('展开 Call 2 完整 Prompt', d9.call2_prompt || '（未找到）')}
+        <div class="sec-label" style="margin-top:12px">Call 2 — LLM 输出</div>
+        <div class="title-result v9">
+          <div class="tr-label v9">V9 生成标题</div>
+          <div class="tr-text v9">${esc(d9.call2_response || c.v9_final)}</div>
         </div>
-        <details>
-          <summary>展开 Call 1 Prompt（完整）</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">System Role <span class="badge good">角色聚焦</span></div>
-              <div class="prompt-text">You are an e-commerce product fact extractor.
+      </div>
+    </div>
+  </div>
 
-Task: Extract structured product facts from the given product information. Output ONLY a JSON object.</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Rules</div>
-              <div class="prompt-text">- Extract facts ONLY from Original Title, KSP Points, and Category.
-  <span class="highlight-good">Do NOT use search terms</span>
-- `key_attributes`: all verifiable product facts — dimensions, weight, capacity,
-  material, composition, color, model number, quantity, compatibility info
-- Each array: max 6 elements</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input（仅商品信息）<span class="badge good">无搜索词、无 EK</span></div>
-              <div class="prompt-text">- Region, Original Title, L3 Category, Virtual Category, KSP Points
-  （不含 Filtered Search Terms，不含 EK）</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Output Schema <span class="badge good">仅 4 字段</span></div>
-              <div class="schema-box">
-{
-  "product_type": [],   <span style="color:var(--v9)">// 品类</span>
-  "brand": [],          <span style="color:var(--v9)">// 品牌</span>
-  "key_attributes": [], <span style="color:var(--v9)">// 所有可验证事实（合并 specs/usp/compatibility）</span>
-  "signals": []         <span style="color:var(--v9)">// 促销信号（仅来自原标题）</span>
+  <!-- final -->
+  <div class="final">
+    <h3>最终标题对比 &nbsp;·&nbsp; ${c.judge}</h3>
+    <div class="final-grid">
+      <div class="final-box v8">
+        <div class="fb-label v8">🔴 V8 生成</div>
+        <div class="fb-title v8">${esc(c.v8_final)}</div>
+        <div class="badges" style="margin-top:8px">${c.v8_final_badges.join('')}</div>
+      </div>
+      <div class="final-box v9">
+        <div class="fb-label v9">🟢 V9 生成</div>
+        <div class="fb-title v9">${esc(c.v9_final)}</div>
+        <div class="badges" style="margin-top:8px">${c.v9_final_badges.join('')}</div>
+      </div>
+    </div>
+  </div>
+</div>`;
 }
-              </div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 1 — 输出</div>
-        <div class="response-box">
-          <pre><code class="language-json">{
-  "product_type": ["Filtros de carro"],
-  "brand": ["Wega"],
-  "key_attributes": [
-    "HILUX 2015 a 2024",
-    "HILUX 2016 a 2024",
-    "HILUX SW4 2016 a 2024",
-    "kit de filtros",
-    "completo",
-    "preço acessível"
-  ],
-  "signals": []
-}</code></pre>
-        </div>
-        <div style="margin-top:8px">
-          <div class="diff-block added">
-            <div class="diff-title added">✅ 改善：schema 扁平化，分类歧义消失</div>
-            <div class="diff-body">compatibility + specs + core_usp 合并为 <code class="highlight-good">key_attributes</code>，LLM 不再需要在模糊边界中做决策</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Call 2 -->
-      <div class="call-section">
-        <div class="call-label">Call 2 — 输入</div>
-        <details>
-          <summary>展开 Call 2 Prompt（完整）</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Title Strategy Rules <span class="badge good">LLM 自主决策</span></div>
-              <div class="prompt-text">- Decide the title structure internally from Facts, region, and expert knowledge
-- For MY, SG, BR, ID, VN, and PH, prefer brand near the front when Facts.brand exists
-- Start from the strongest product_type, then weave in the most useful key_attributes naturally
-- <span class="highlight-good">Never stuff keywords or force every fact into the title</span></div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Expert Knowledge <span class="badge good">从 Call 1 移入此处</span></div>
-              <div class="prompt-text">## L3 Expert Knowledge
-Good Patterns: Front-load: Product → Model(s) → Engine/Years → Key feature → Brand last.
-Bad Patterns: Vague kits, marketing fluff...
-Template: Product+Model+Engine/Years+Feature+Brand(optional).</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Facts（干净的 4 字段）</div>
-              <div class="prompt-text">{"product_type": ["Filtros de carro"], "brand": ["Wega"],
- "key_attributes": ["HILUX 2015 a 2024", "HILUX SW4 2016 a 2024",
-   "kit de filtros", "completo", "preço acessível"],
- "signals": []}</div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
-        <div style="background:var(--v9-bg);border:1px solid var(--v9-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:4px;">V9 生成标题</div>
-          <div style="font-size:16px;color:#14532d;font-family:monospace;">Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega</div>
-          <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
-            <span class="badge neutral">73 字符</span>
-            <span class="badge good">✅ "Kit de Filtros Completo" 前置，信息密度更高</span>
-            <span class="badge good">✅ SW4 保留，Wega 品牌压尾（符合 EK 指导）</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Final Title -->
-  <div class="final-row">
-    <h3>最终标题对比（Judge：V9 Title 分 5 / V8 Title 分 2）</h3>
-    <div class="title-compare">
-      <div class="title-box v8">
-        <div class="title-label v8">🔴 V8 生成</div>
-        <div class="title-text v8">Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo</div>
-        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
-          <span class="badge bad">冗长前缀</span>
-          <span class="badge warn">缺少品类内容词（ar/óleo）</span>
-        </div>
-      </div>
-      <div class="title-box v9">
-        <div class="title-label v9">🟢 V9 生成</div>
-        <div class="title-text v9">Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega</div>
-        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
-          <span class="badge good">信息紧凑</span>
-          <span class="badge good">品牌压尾（EK 指导）</span>
-          <span class="badge good">SW4 兼容性保留</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════ CASE 2 ══════════════════════════════════════════════ -->
-<div class="case-card">
-  <div class="case-header">
-    <h2>Case 2 &nbsp;<span style="font-weight:400;font-size:14px;color:var(--text-dim)">MY · item 22530950318 · 摩托车货架</span></h2>
-    <div class="orig-title">MTKRACING For Yamaha Tracer 9 Tracer 9GT Tracer9 2021 Rear Load Support Bracket Support Luggage Board Luggage Rack Tailg</div>
-    <div class="case-meta">
-      <div class="meta-item"><span class="meta-key">Region</span><span class="meta-val">Malaysia</span></div>
-      <div class="meta-item"><span class="meta-key">Category</span><span class="meta-val">Motorcycles › Spare Parts › Brake System</span></div>
-      <div class="meta-item"><span class="meta-key">Brand</span><span class="meta-val">MTKRACING / Yamaha</span></div>
-    </div>
-  </div>
-
-  <div class="compare-grid">
-    <!-- V8 -->
-    <div class="compare-col v8">
-      <div class="col-header v8">v8 P4（旧）</div>
-
-      <div class="call-section">
-        <div class="call-label">Call 1 — 输入差异</div>
-        <div class="input-diff">
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>Filtered Search Terms（含 "box belakang motosikal", "tracer 9 gt v4" 等）</div></div>
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>L3 EK + Default EK Policy 模板</div></div>
-          <div class="input-item present"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">包含 🔴</div>同时要求输出 13 字段 + Policy</div></div>
-        </div>
-        <details>
-          <summary>展开 Call 1 Prompt</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Filtered Search Terms <span class="badge bad">v8 特有</span></div>
-              <div class="prompt-text">["yamaha 9 gt tracer", "tracer 9 gt", "yamaha tracer 9 gt",
- "yamaha tracer 9", "yamaha tracer gt", "yamaha tracer",
- "box belakang motosikal", "tracer 9 gt v4", "tracer", "aluminum bracket"]</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">L3 EK</div>
-              <div class="prompt-text">Good Patterns: Front-load model/fitment, then part type and position.
-Bad Patterns: Leading with marketing tags, emojis, flags, or long codes.
-Use: model → part → position → spec → one feature/brand-if-guaranteed.</div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 1 — 输出</div>
-        <div class="response-box">
-          <pre><code class="language-json">{
-  "item_facts": {
-    "product_type": ["rear load support bracket"],
-    "brand": ["Yamaha"],
-    "compatibility": ["Yamaha Tracer 9", "Yamaha Tracer 9GT"],
-    "specs": ["Aluminum alloy", "Black"],
-    "signals": [],
-    "core_usp": ["load support", "luggage rack", "tailg"],
-    "long_tail": ["Yamaha Tracer 9 rear load support", ...]
-  },
-  "behavior_facts": {
-    "validated_search_terms": ["yamaha 9 gt tracer", "tracer 9 gt", ...]
-  },
-  "selected_policy_source": "L3",
-  "policy": {
-    "order": ["product_type", "specs", "brand", "core_usp", "signals"],
-    "frontload": ["compatibility", "product_type"],
-    "must_keep_types": ["product_type", "brand", "specs"],
-    "signal_position": "none",
-    "max_len": 110
-  }
-}</code></pre>
-        </div>
-        <div style="margin-top:8px">
-          <div class="diff-block removed">
-            <div class="diff-title removed">⚠ 问题：MTKRACING 品牌未被捕获</div>
-            <div class="diff-body">KSP 中 brand 字段只有 "Yamaha"，MTKRACING 是制造商品牌但未进入 facts，导致后续无法写入标题</div>
-          </div>
-          <div class="diff-block removed">
-            <div class="diff-title removed">⚠ 问题：Policy order 与 EK 建议不一致</div>
-            <div class="diff-body">EK 建议"front-load model/fitment"，但 policy.order 把 <code class="highlight-bad">product_type</code> 排在 compatibility 之前，LLM 需自行裁决</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="call-section">
-        <div class="call-label">Call 2 — 输入</div>
-        <details>
-          <summary>展开 Call 2 Prompt</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Policy（v8 特有）<span class="badge bad">外部指定排列顺序</span></div>
-              <div class="prompt-text">{"policy": {
-  "order": ["product_type", "brand", "core_usp"],
-  "frontload": ["compatibility", "product_type"],
-  "must_keep_types": ["product_type", "brand"],
-  "signal_position": "none", "max_len": 110}}</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Validated Search Terms（来自 behavior_facts）</div>
-              <div class="prompt-text">["yamaha 9 gt tracer", "tracer 9 gt", "yamaha tracer 9 gt",
- "yamaha tracer 9", "yamaha tracer gt", "yamaha tracer",
- "box belakang motosikal", "tracer 9 gt v4", "tracer", "aluminum bracket"]</div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
-        <div style="background:var(--v8-bg);border:1px solid var(--v8-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#b91c1c;margin-bottom:4px;">V8 生成标题</div>
-          <div style="font-size:16px;color:#9f1239;font-family:monospace;">Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT</div>
-          <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
-            <span class="badge neutral">78 字符</span>
-            <span class="badge warn">⚠ 缺少颜色 "Black"</span>
-            <span class="badge warn">⚠ 年份 "2021" 丢失</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- V9 -->
-    <div class="compare-col v9">
-      <div class="col-header v9">v9 P4（新）</div>
-
-      <div class="call-section">
-        <div class="call-label">Call 1 — 输入差异</div>
-        <div class="input-diff">
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无搜索词（防止泄漏）</div></div>
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无 EK（移至 Call 2）</div></div>
-          <div class="input-item absent"><div class="dot"></div><div class="input-item-text"><div class="input-item-label">已移除 🟢</div>无 Policy（LLM 自主）</div></div>
-        </div>
-        <details>
-          <summary>展开 Call 1 Prompt</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input（仅商品信息）<span class="badge good">极简输入</span></div>
-              <div class="prompt-text">- Original Title: `MTKRACING For Yamaha Tracer 9 Tracer 9GT...`
-- L3 Category: `Motorcycles|Motorcycle Spare Parts|Brake System`
-- KSP Points: brand=Yamaha, product_type=rear load support bracket,
-  compatibility=Tracer9/9GT, material=Aluminum alloy, color=Black</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Output Schema <span class="badge good">4 字段</span></div>
-              <div class="schema-box">
-{ "product_type": [], "brand": [], "key_attributes": [], "signals": [] }
-              </div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 1 — 输出</div>
-        <div class="response-box">
-          <pre><code class="language-json">{
-  "product_type": ["rear load support bracket"],
-  "brand": ["Yamaha"],
-  "key_attributes": [
-    "Yamaha Tracer 9",
-    "Yamaha Tracer 9GT",
-    "Aluminum alloy",
-    "Black",
-    "rear load support",
-    "luggage rack"
-  ],
-  "signals": []
-}</code></pre>
-        </div>
-        <div style="margin-top:8px">
-          <div class="diff-block added">
-            <div class="diff-title added">✅ 改善：颜色"Black"和材质"Aluminum alloy"完整保留</div>
-            <div class="diff-body">key_attributes 统一接收所有可验证事实，不需要区分 specs / core_usp，也不会因分类错误丢失</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="call-section">
-        <div class="call-label">Call 2 — 输入</div>
-        <details>
-          <summary>展开 Call 2 Prompt</summary>
-          <div class="prompt-body">
-            <div class="prompt-section">
-              <div class="prompt-section-title">Title Strategy Rules <span class="badge good">LLM 自主决策</span></div>
-              <div class="prompt-text">- Decide the title structure internally from Facts, region, and expert knowledge
-- For MY, SG, BR, ID, VN, and PH, prefer brand near the front
-- Start from the strongest product_type, weave in key_attributes naturally</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Expert Knowledge <span class="badge good">从 Call 1 移入此处</span></div>
-              <div class="prompt-text">## L3 Expert Knowledge
-Good Patterns: Front-load model/fitment, then part type and position.
-Include key spec (mm) and one material/feature.
-Use: model → part → position → spec → one feature/brand-if-guaranteed.</div>
-            </div>
-            <div class="prompt-section">
-              <div class="prompt-section-title">Input: Facts（干净 4 字段）</div>
-              <div class="prompt-text">{"product_type": ["rear load support bracket"],
- "brand": ["Yamaha"],
- "key_attributes": ["Yamaha Tracer 9", "Yamaha Tracer 9GT",
-   "Aluminum alloy", "Black", "rear load support", "luggage rack"],
- "signals": []}</div>
-            </div>
-          </div>
-        </details>
-        <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
-        <div style="background:var(--v9-bg);border:1px solid var(--v9-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:4px;">V9 生成标题</div>
-          <div style="font-size:16px;color:#14532d;font-family:monospace;">Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black</div>
-          <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
-            <span class="badge neutral">75 字符</span>
-            <span class="badge good">✅ 材质 Aluminum Alloy 出现</span>
-            <span class="badge good">✅ 颜色 Black 出现</span>
-            <span class="badge good">✅ 品牌 Yamaha 前置（符合 MY 市场规则）</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Final Title -->
-  <div class="final-row">
-    <h3>最终标题对比（Judge：V9 Title 分 5 / V8 Title 分 2）</h3>
-    <div class="title-compare">
-      <div class="title-box v8">
-        <div class="title-label v8">🔴 V8 生成</div>
-        <div class="title-text v8">Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT</div>
-        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
-          <span class="badge bad">缺 "Black"</span>
-          <span class="badge bad">缺年份 "2021"</span>
-          <span class="badge warn">"for Tracer 9GT" 位置靠后</span>
-        </div>
-      </div>
-      <div class="title-box v9">
-        <div class="title-label v9">🟢 V9 生成</div>
-        <div class="title-text v9">Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black</div>
-        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
-          <span class="badge good">型号前置</span>
-          <span class="badge good">材质完整</span>
-          <span class="badge good">颜色保留</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Footer note -->
-<div style="text-align:center;color:var(--text-dim);font-size:12px;margin-top:8px;padding-bottom:32px;">
-  模型：gpt-4o-mini &nbsp;·&nbsp; Judge：gemini-2.5-pro &nbsp;·&nbsp; 日期：2026-03-30 &nbsp;·&nbsp; 160 items 全集 P4 Prompt 对比（v8 vs v9）Title 胜率 67.5%
-</div>
-
-</div>
-<script>hljs.highlightAll();</script>
+document.getElementById('cases').innerHTML = CASES.map(renderCase).join('');
+hljs.highlightAll();
+</script>
 </body>
 </html>
