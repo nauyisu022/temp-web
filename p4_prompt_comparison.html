@@ -4,144 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>P4 Prompt 架构对比：v8 vs v9</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <style>
   :root {
-    --bg: #0f1117;
-    --bg2: #161b22;
-    --bg3: #1c2330;
-    --border: #30363d;
-    --text: #e6edf3;
-    --text-dim: #8b949e;
-    --v8: #ef4444;
-    --v8-bg: rgba(239,68,68,0.08);
-    --v8-border: rgba(239,68,68,0.3);
-    --v9: #22c55e;
-    --v9-bg: rgba(34,197,94,0.08);
-    --v9-border: rgba(34,197,94,0.3);
-    --warn: #f59e0b;
-    --good: #22c55e;
+    --bg: #f6f8fa;
+    --bg2: #ffffff;
+    --bg3: #f0f2f5;
+    --border: #d0d7de;
+    --border-light: #e8eaed;
+    --text: #1f2328;
+    --text-dim: #656d76;
+    --v8: #cf222e;
+    --v8-bg: #fff0f0;
+    --v8-border: #ffc1c1;
+    --v9: #1a7f37;
+    --v9-bg: #f0fdf4;
+    --v9-border: #a8e6bd;
+    --warn: #9a6700;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
 
-  .page { max-width: 1600px; margin: 0 auto; padding: 32px 24px; }
+  .page { max-width: 1540px; margin: 0 auto; padding: 36px 28px; }
 
   /* header */
-  .page-header { text-align: center; margin-bottom: 40px; }
-  .page-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  .page-header p { color: var(--text-dim); font-size: 15px; }
+  .page-header { text-align: center; margin-bottom: 36px; }
+  .page-header h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .page-header p { color: var(--text-dim); font-size: 13px; }
 
   /* arch summary */
-  .arch-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 40px; }
-  .arch-card h2 { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; }
-  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .arch-col { background: var(--bg3); border-radius: 8px; padding: 20px; }
+  .arch-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .arch-card h2 { font-size: 11px; font-weight: 600; margin-bottom: 16px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; }
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .arch-col { background: var(--bg3); border-radius: 6px; padding: 16px 18px; }
   .arch-col.v8 { border-left: 3px solid var(--v8); }
   .arch-col.v9 { border-left: 3px solid var(--v9); }
-  .arch-col h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .arch-col h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
   .arch-col.v8 h3 { color: var(--v8); }
   .arch-col.v9 h3 { color: var(--v9); }
-  .arch-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
-  .arch-label { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text-dim); white-space: nowrap; min-width: 60px; text-align: center; margin-top: 2px; }
+  .arch-row { display: flex; gap: 10px; margin-bottom: 9px; align-items: flex-start; }
+  .arch-label { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 8px; font-size: 11px; color: var(--text-dim); white-space: nowrap; min-width: 56px; text-align: center; margin-top: 2px; }
   .arch-desc { font-size: 13px; color: var(--text); }
 
   /* case card */
-  .case-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 40px; overflow: hidden; }
-  .case-header { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 18px 24px; }
-  .case-header h2 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-  .case-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
-  .meta-item { display: flex; gap: 6px; align-items: baseline; }
+  .case-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 32px; overflow: hidden; box-shadow: var(--shadow); }
+  .case-header { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+  .case-header h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .case-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 6px; }
+  .meta-item { display: flex; gap: 5px; align-items: baseline; }
   .meta-key { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
   .meta-val { font-size: 13px; color: var(--text); }
-  .orig-title { margin-top: 10px; font-size: 13px; color: #93c5fd; font-family: monospace; background: rgba(147,197,253,0.06); padding: 6px 10px; border-radius: 4px; border-left: 2px solid #3b82f6; }
+  .orig-title { margin-top: 10px; font-size: 12.5px; color: #0550ae; font-family: 'SF Mono','Fira Code',monospace; background: #f0f4ff; padding: 6px 10px; border-radius: 4px; border-left: 2px solid #0969da; word-break: break-all; }
 
   /* side by side */
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
-  .compare-col { padding: 24px; }
-  .compare-col.v8 { border-right: 1px solid var(--border); background: rgba(239,68,68,0.02); }
-  .compare-col.v9 { background: rgba(34,197,94,0.02); }
-  .col-header { font-size: 14px; font-weight: 700; padding: 8px 12px; border-radius: 6px; margin-bottom: 20px; display: inline-block; }
+  .compare-col { padding: 22px 24px; }
+  .compare-col.v8 { border-right: 1px solid var(--border); }
+  .compare-col.v9 { }
+  .col-header { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 5px; margin-bottom: 18px; display: inline-block; }
   .col-header.v8 { background: var(--v8-bg); color: var(--v8); border: 1px solid var(--v8-border); }
   .col-header.v9 { background: var(--v9-bg); color: var(--v9); border: 1px solid var(--v9-border); }
 
   /* call section */
-  .call-section { margin-bottom: 20px; }
-  .call-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 8px; }
+  .call-section { margin-bottom: 22px; }
+  .call-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-dim); margin-bottom: 8px; }
 
   /* collapsible prompt */
-  details { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px; }
-  details summary { padding: 10px 14px; cursor: pointer; font-size: 13px; color: var(--text-dim); user-select: none; display: flex; align-items: center; gap: 8px; list-style: none; }
+  details { background: var(--bg3); border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 8px; }
+  details summary { padding: 9px 13px; cursor: pointer; font-size: 12.5px; color: var(--text-dim); user-select: none; display: flex; align-items: center; gap: 7px; list-style: none; }
   details summary::-webkit-details-marker { display: none; }
-  details summary::before { content: '▶'; font-size: 10px; transition: transform .2s; }
+  details summary::before { content: '▶'; font-size: 9px; transition: transform .15s; color: var(--text-dim); }
   details[open] summary::before { transform: rotate(90deg); }
-  details summary:hover { color: var(--text); background: rgba(255,255,255,0.03); border-radius: 5px 5px 0 0; }
-  .prompt-body { padding: 14px; border-top: 1px solid var(--border); }
+  details summary:hover { color: var(--text); }
+  .prompt-body { padding: 14px 16px; border-top: 1px solid var(--border-light); background: #fff; border-radius: 0 0 6px 6px; }
   .prompt-section { margin-bottom: 14px; }
-  .prompt-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .prompt-text { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #cdd9e5; white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+  .prompt-section:last-child { margin-bottom: 0; }
+  .prompt-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dim); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+  .prompt-text { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: #24292f; white-space: pre-wrap; word-break: break-word; line-height: 1.55; background: var(--bg3); padding: 8px 10px; border-radius: 4px; }
 
   /* response box */
-  .response-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-  .response-box pre { margin: 0; font-size: 12px; max-height: 320px; overflow-y: auto; }
-  .response-box pre code { font-size: 12px !important; }
+  .response-box { background: #fff; border: 1px solid var(--border-light); border-radius: 6px; overflow: hidden; }
+  .response-box pre { margin: 0; font-size: 12px; max-height: 280px; overflow-y: auto; }
+  .response-box pre code { font-size: 12px !important; background: #fff !important; }
 
   /* final title */
-  .final-row { background: var(--bg3); border-top: 1px solid var(--border); padding: 20px 24px; }
-  .final-row h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 14px; }
-  .title-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .title-box { padding: 14px 16px; border-radius: 8px; }
+  .final-row { background: var(--bg3); border-top: 1px solid var(--border); padding: 18px 24px; }
+  .final-row h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-dim); margin-bottom: 12px; }
+  .title-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .title-box { padding: 14px 16px; border-radius: 6px; }
   .title-box.v8 { background: var(--v8-bg); border: 1px solid var(--v8-border); }
   .title-box.v9 { background: var(--v9-bg); border: 1px solid var(--v9-border); }
-  .title-label { font-size: 11px; font-weight: 600; margin-bottom: 6px; }
+  .title-label { font-size: 11px; font-weight: 600; margin-bottom: 5px; }
   .title-label.v8 { color: var(--v8); }
   .title-label.v9 { color: var(--v9); }
   .title-text { font-size: 15px; font-weight: 600; line-height: 1.4; }
-  .title-text.v8 { color: #fca5a5; }
-  .title-text.v9 { color: #86efac; }
+  .title-text.v8 { color: #9f1239; }
+  .title-text.v9 { color: #14532d; }
 
   /* badges */
-  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; margin: 2px; }
-  .badge.bad { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-  .badge.good { background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-  .badge.neutral { background: rgba(139,148,158,0.15); color: var(--text-dim); border: 1px solid rgba(139,148,158,0.3); }
-  .badge.warn { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 20px; font-size: 11px; font-weight: 500; margin: 2px; }
+  .badge.bad { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+  .badge.good { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+  .badge.neutral { background: #f6f8fa; color: var(--text-dim); border: 1px solid var(--border); }
+  .badge.warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
 
   /* diff annotations */
-  .diff-block { background: var(--bg); border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; }
-  .diff-block.added { border-left: 3px solid var(--v9); }
-  .diff-block.removed { border-left: 3px solid var(--v8); }
-  .diff-title { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-  .diff-title.added { color: var(--v9); }
-  .diff-title.removed { color: var(--v8); }
-  .diff-body { font-size: 12px; color: var(--text-dim); }
+  .diff-block { border-radius: 5px; padding: 9px 12px; margin-bottom: 7px; }
+  .diff-block.added { background: #f0fdf4; border-left: 3px solid #22c55e; }
+  .diff-block.removed { background: #fef2f2; border-left: 3px solid #ef4444; }
+  .diff-title { font-size: 11px; font-weight: 600; margin-bottom: 3px; }
+  .diff-title.added { color: #15803d; }
+  .diff-title.removed { color: #b91c1c; }
+  .diff-body { font-size: 12px; color: #57606a; }
 
-  .highlight-bad { background: rgba(239,68,68,0.2); border-radius: 3px; padding: 1px 3px; color: #fca5a5; }
-  .highlight-good { background: rgba(34,197,94,0.2); border-radius: 3px; padding: 1px 3px; color: #86efac; }
+  .highlight-bad { background: #fef2f2; border-radius: 3px; padding: 1px 4px; color: #b91c1c; font-family: monospace; font-size: 12px; }
+  .highlight-good { background: #f0fdf4; border-radius: 3px; padding: 1px 4px; color: #15803d; font-family: monospace; font-size: 12px; }
 
-  .schema-box { background: var(--bg3); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 12px; }
-  .schema-field { padding: 2px 0; }
-  .schema-field.removed { color: #fca5a5; text-decoration: line-through; opacity: 0.6; }
-  .schema-field.kept { color: #86efac; }
-  .schema-field.new { color: #93c5fd; }
+  .schema-box { background: var(--bg3); border-radius: 5px; padding: 10px 12px; font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: #24292f; line-height: 1.6; }
 
-  .input-diff { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-  .input-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 4px; font-size: 12px; }
-  .input-item.present { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
-  .input-item.absent { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); opacity: 0.8; }
-  .input-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .input-item.present .dot { background: var(--v8); }
-  .input-item.absent .dot { background: var(--v9); }
+  .input-diff { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+  .input-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 5px; font-size: 12px; }
+  .input-item.present { background: #fef2f2; border: 1px solid #fecaca; }
+  .input-item.absent { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .input-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .input-item.present .dot { background: #ef4444; }
+  .input-item.absent .dot { background: #22c55e; }
   .input-item-text { flex: 1; }
-  .input-item-label { font-size: 10px; text-transform: uppercase; font-weight: 600; }
-  .input-item.present .input-item-label { color: #fca5a5; }
-  .input-item.absent .input-item-label { color: #86efac; }
+  .input-item-label { font-size: 10px; text-transform: uppercase; font-weight: 600; margin-bottom: 1px; }
+  .input-item.present .input-item-label { color: #b91c1c; }
+  .input-item.absent .input-item-label { color: #15803d; }
+
+  /* title result box inside col */
+  .title-result { border-radius: 6px; padding: 12px 14px; }
+  .title-result.v8 { background: var(--v8-bg); border: 1px solid var(--v8-border); }
+  .title-result.v9 { background: var(--v9-bg); border: 1px solid var(--v9-border); }
+  .title-result-label { font-size: 11px; font-weight: 600; margin-bottom: 5px; }
+  .title-result-label.v8 { color: var(--v8); }
+  .title-result-label.v9 { color: var(--v9); }
+  .title-result-text { font-size: 14px; font-weight: 500; line-height: 1.4; }
+  .title-result-text.v8 { color: #9f1239; }
+  .title-result-text.v9 { color: #14532d; }
 
   /* scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -361,8 +370,8 @@ Template: Product+Model+Engine/Years+Feature+Brand(optional).</div>
         </details>
         <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
         <div style="background:var(--v8-bg);border:1px solid var(--v8-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#fca5a5;margin-bottom:4px;">V8 生成标题</div>
-          <div style="font-size:16px;color:#fde8e8;font-family:monospace;">Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo</div>
+          <div style="font-size:13px;font-weight:700;color:#b91c1c;margin-bottom:4px;">V8 生成标题</div>
+          <div style="font-size:16px;color:#9f1239;font-family:monospace;">Filtros de carro para HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega Kit Completo</div>
           <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
             <span class="badge neutral">91 字符</span>
             <span class="badge warn">⚠ "Filtros de carro" 冗长，占用前段空间</span>
@@ -473,8 +482,8 @@ Template: Product+Model+Engine/Years+Feature+Brand(optional).</div>
         </details>
         <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
         <div style="background:var(--v9-bg);border:1px solid var(--v9-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#86efac;margin-bottom:4px;">V9 生成标题</div>
-          <div style="font-size:16px;color:#dcfce7;font-family:monospace;">Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega</div>
+          <div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:4px;">V9 生成标题</div>
+          <div style="font-size:16px;color:#14532d;font-family:monospace;">Kit de Filtros Completo HILUX 2015 a 2024 e HILUX SW4 2016 a 2024 - Wega</div>
           <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
             <span class="badge neutral">73 字符</span>
             <span class="badge good">✅ "Kit de Filtros Completo" 前置，信息密度更高</span>
@@ -611,8 +620,8 @@ Use: model → part → position → spec → one feature/brand-if-guaranteed.</
         </details>
         <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
         <div style="background:var(--v8-bg);border:1px solid var(--v8-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#fca5a5;margin-bottom:4px;">V8 生成标题</div>
-          <div style="font-size:16px;color:#fde8e8;font-family:monospace;">Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT</div>
+          <div style="font-size:13px;font-weight:700;color:#b91c1c;margin-bottom:4px;">V8 生成标题</div>
+          <div style="font-size:16px;color:#9f1239;font-family:monospace;">Yamaha Tracer 9 Rear Load Support Bracket Aluminum Luggage Rack for Tracer 9GT</div>
           <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
             <span class="badge neutral">78 字符</span>
             <span class="badge warn">⚠ 缺少颜色 "Black"</span>
@@ -705,8 +714,8 @@ Use: model → part → position → spec → one feature/brand-if-guaranteed.</
         </details>
         <div class="call-label" style="margin-top:12px">Call 2 — 输出</div>
         <div style="background:var(--v9-bg);border:1px solid var(--v9-border);border-radius:6px;padding:14px 16px;">
-          <div style="font-size:13px;font-weight:700;color:#86efac;margin-bottom:4px;">V9 生成标题</div>
-          <div style="font-size:16px;color:#dcfce7;font-family:monospace;">Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black</div>
+          <div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:4px;">V9 生成标题</div>
+          <div style="font-size:16px;color:#14532d;font-family:monospace;">Yamaha Tracer 9GT Rear Load Support Bracket Luggage Rack Aluminum Alloy Black</div>
           <div style="margin-top:8px;font-size:12px;color:var(--text-dim);">
             <span class="badge neutral">75 字符</span>
             <span class="badge good">✅ 材质 Aluminum Alloy 出现</span>
