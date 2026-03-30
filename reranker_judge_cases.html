@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reranker Judge Case 分析 — QC8503 v2 vs P8 旧链路</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  }
+  body { font-family: var(--font); background: #f8fafc; color: #1e293b; line-height: 1.6; }
+
+  /* ── Header ── */
+  .header { background: linear-gradient(135deg,#1e40af 0%,#3b82f6 100%); color:#fff; padding:40px 48px 32px; }
+  .header h1 { font-size:26px; font-weight:700; margin-bottom:8px; }
+  .header p  { opacity:.85; font-size:15px; }
+  .stats { display:flex; gap:24px; margin-top:24px; flex-wrap:wrap; }
+  .stat { background:rgba(255,255,255,.15); border-radius:8px; padding:12px 20px; }
+  .stat-num { font-size:28px; font-weight:700; line-height:1; }
+  .stat-lbl { font-size:12px; opacity:.8; margin-top:4px; }
+
+  /* ── Tabs ── */
+  .tabs { display:flex; gap:0; background:#fff; border-bottom:1px solid #e2e8f0;
+           position:sticky; top:0; z-index:100; box-shadow:0 2px 4px rgba(0,0,0,.06); overflow-x:auto; }
+  .tab { padding:14px 20px; cursor:pointer; font-size:14px; font-weight:500;
+          border-bottom:3px solid transparent; white-space:nowrap; color:#64748b;
+          transition:color .15s,border-color .15s; user-select:none; }
+  .tab:hover { color:#1e40af; }
+  .tab.active { color:#1e40af; border-bottom-color:#1e40af; }
+
+  /* ── Content ── */
+  .content { padding:32px 48px; max-width:1400px; margin:0 auto; }
+  .group-panel { display:none; }
+  .group-panel.active { display:block; }
+
+  .group-header { display:flex; align-items:flex-start; gap:16px; padding:20px 24px;
+                   border-radius:var(--radius); margin-bottom:24px; }
+  .group-header .icon { font-size:28px; line-height:1; }
+  .group-header h2 { font-size:18px; font-weight:700; margin-bottom:4px; }
+  .group-header p  { font-size:14px; opacity:.8; }
+
+  /* ── Case Card ── */
+  .case-card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow);
+                margin-bottom:24px; overflow:hidden; border:1px solid #e2e8f0; }
+  .case-head { display:flex; align-items:center; gap:12px; padding:14px 20px;
+                background:#f8fafc; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; }
+  .case-num { font-size:12px; font-weight:600; background:#e2e8f0; padding:2px 8px;
+               border-radius:4px; color:#475569; }
+  .region-badge { font-size:12px; font-weight:600; padding:2px 10px; border-radius:12px;
+                   color:#fff; background:#3b82f6; }
+  .product-name { font-size:14px; font-weight:600; color:#1e293b; flex:1; min-width:200px; }
+  .score-badges { display:flex; gap:8px; flex-wrap:wrap; }
+  .badge { font-size:12px; padding:3px 10px; border-radius:6px; font-weight:500; }
+  .badge-win  { background:#dcfce7; color:#166534; }
+  .badge-lose { background:#fee2e2; color:#991b1b; }
+  .badge-tie  { background:#f1f5f9; color:#475569; }
+
+  /* ── Comparison Grid ── */
+  .compare { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .col { padding:18px 20px; }
+  .col:first-child { border-right:1px solid #e2e8f0; }
+  .col-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .col-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+  .col-score { font-size:12px; padding:2px 8px; border-radius:12px; font-weight:600; }
+  .old-col .col-label { color:#64748b; }
+  .old-col .col-score { background:#f1f5f9; color:#475569; }
+  .new-col .col-label { color:#1d4ed8; }
+  .new-col .col-score { background:#dbeafe; color:#1d4ed8; }
+  .new-col.winner .col-score { background:#dcfce7; color:#166534; }
+  .old-col.winner .col-score { background:#dcfce7; color:#166534; }
+
+  .terms-section { margin-bottom:14px; }
+  .terms-label { font-size:11px; color:#94a3b8; font-weight:600; text-transform:uppercase;
+                  letter-spacing:.06em; margin-bottom:6px; }
+  .terms-wrap { display:flex; flex-wrap:wrap; gap:5px; min-height:28px; }
+  .term { font-size:12px; padding:3px 8px; border-radius:5px; }
+  .old-col .term { background:#f1f5f9; color:#475569; }
+  .new-col .term { background:#eff6ff; color:#1d4ed8; }
+  .term-empty { font-size:12px; color:#ef4444; font-style:italic;
+                 background:#fef2f2; padding:3px 10px; border-radius:5px; }
+
+  .title-section { margin-top:4px; }
+  .title-text { font-size:13px; line-height:1.5; padding:10px 12px; border-radius:6px; }
+  .old-col .title-text { background:#f8fafc; color:#374151; border:1px solid #e2e8f0; }
+  .new-col .title-text { background:#eff6ff; color:#1e3a8a; border:1px solid #bfdbfe; }
+  .new-col.winner .title-text { background:#f0fdf4; color:#14532d; border:1px solid #bbf7d0; }
+  .old-col.winner .title-text { background:#f0fdf4; color:#14532d; border:1px solid #bbf7d0; }
+
+  /* ── Reason + Issues ── */
+  .reason-section { padding:14px 20px; border-top:1px solid #f1f5f9; background:#fafbff; }
+  .reason-label { font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;
+                   letter-spacing:.06em; margin-bottom:6px; }
+  .reason-text { font-size:13px; color:#374151; line-height:1.6; }
+  .issues-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .issue-tag { font-size:11px; padding:2px 9px; border-radius:10px;
+                background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; font-weight:500; }
+
+  /* ── Summary bar ── */
+  .summary-bar { display:flex; gap:16px; background:#fff; border:1px solid #e2e8f0;
+                  border-radius:var(--radius); padding:16px 20px; margin-bottom:24px;
+                  flex-wrap:wrap; align-items:center; }
+  .summary-item { display:flex; align-items:center; gap:8px; }
+  .summary-circle { width:32px; height:32px; border-radius:50%;
+                     display:flex; align-items:center; justify-content:center;
+                     font-size:13px; font-weight:700; }
+
+  @media (max-width:768px) {
+    .content { padding:16px; }
+    .compare { grid-template-columns:1fr; }
+    .col:first-child { border-right:none; border-bottom:1px solid #e2e8f0; }
+    .header { padding:24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔍 Reranker Judge Case 分析报告</h1>
+  <p>QC8503 v2 (checkpoint-240, threshold=0.3002) vs P8 旧链路 · gemini-2.5-pro 评审 · 2026-03-29</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">160</div><div class="stat-lbl">总评估 items</div></div>
+    <div class="stat"><div class="stat-num">87%</div><div class="stat-lbl">Retrieval 胜率</div></div>
+    <div class="stat"><div class="stat-num">51%</div><div class="stat-lbl">综合胜率</div></div>
+    <div class="stat"><div class="stat-num">30</div><div class="stat-lbl">精选 Case 数</div></div>
+    <div class="stat"><div class="stat-num">3.82</div><div class="stat-lbl">新模型 Retrieval 平均分 /5</div></div>
+  </div>
+</div>
+
+<div class="tabs" id="tabBar"></div>
+
+<div class="content" id="mainContent"></div>
+
+<script>
+const GROUP_META = {
+  A: { label:'A · 搜索词+标题双赢', color:'#16a34a', bg:'#f0fdf4', border:'#86efac', icon:'✅', desc:'Retrieval 大幅提升，标题质量同步改善（12个Case）', count:12 },
+  B: { label:'B · 搜索词改善，标题反退', color:'#b45309', bg:'#fffbeb', border:'#fcd34d', icon:'⚠️', desc:'Retrieval 改善，但 LLM 生成了错误/语法问题的 Title（4个Case）', count:4 },
+  C: { label:'C · 搜索词改善，标题持平', color:'#0369a1', bg:'#f0f9ff', border:'#7dd3fc', icon:'➡️', desc:'Retrieval 改善，LLM 未能有效利用改善的词集（3个Case）', count:3 },
+  D: { label:'D · 旧链路搜索词更好', color:'#dc2626', bg:'#fef2f2', border:'#fca5a5', icon:'❌', desc:'新模型引入跨品类噪声词，旧链路更精准（4个Case）', count:4 },
+  E: { label:'E · 搜索词持平，标题差异', color:'#7c3aed', bg:'#faf5ff', border:'#c4b5fd', icon:'🔄', desc:'Retrieval 质量相当，Title 判定出现分歧（3个Case）', count:3 },
+  F: { label:'F · 搜索词改善但综合失败', color:'#9f1239', bg:'#fff1f2', border:'#fda4af', icon:'🔻', desc:'Retrieval 改善，但 Title 关键信息丢失或语言截断（4个Case）', count:4 },
+};
+
+const allCases = [
+  {
+    "group": "A",
+    "region": "BR",
+    "item_id": "20298006652",
+    "product_title": "Slider Protetor Motor Estrela Procton Honda CB600F Hornet 2008 a 2014",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [],
+    "new_terms": [
+      "slider protetor de motor",
+      "slider protetor",
+      "slider de motor",
+      "protetor de motor slider",
+      "protetor slider",
+      "slider para motos",
+      "slider para moto",
+      "sliders para moto",
+      "slider hornet",
+      "slider moto",
+      "slider de moto",
+      "slider na moto",
+      "slider da moto",
+      "protetor de motor hornet",
+      "protetor para motor de moto"
+    ],
+    "old_title": "Slider protetor de motor Honda CB600F Hornet 2008 a 2014 Procton Racing kit alumínio inox pintura anodizada",
+    "new_title": "Slider protetor de motor Honda CB600F Hornet 2008 a 2014 Procton Racing alumínio aeronáutico pintura anodizada",
+    "reason": "The old pipeline failed to generate any search terms, while the new one produced a high-quality, relevant list. The new title is also an improvement, as it removes the potentially misleading term 'kit' (the description states it's for one side only) and uses a more specific material 'alumínio aeronáutico'.",
+    "issues": [
+      "better_product_focus"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "ID",
+    "item_id": "27576060260",
+    "product_title": "Frisian Flag Full Cream Gold 370g SKM",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 5,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "susu kental manis frisian flag berapa gram",
+      "susu frisian flag berapa ml",
+      "frisian flag full cream energo untuk usia berapa",
+      "harga kental manis frisian flag",
+      "harga frisian flag full cream",
+      "susu frisian flag skm",
+      "frisian flag full cream energo",
+      "susu frisian flag kaleng berapa gram",
+      "frisian flag full cream harga",
+      "susu gold frisian flag",
+      "susu frisian flag full cream",
+      "susu kental frisian flag",
+      "susu full cream frisian flag harga",
+      "harga frisian flag full cream bubuk",
+      "susu frisian flag full cream harga",
+      "harga susu frisian flag full cream",
+      "susu full cream frisian flag",
+      "full cream frisian flag"
+    ],
+    "new_terms": [
+      "susu kental manis frisian flag gold",
+      "susu kental manis full cream gold",
+      "susu kental manis frisian flag",
+      "frisian flag full cream gold",
+      "frisian flag susu kental manis",
+      "susu kental manis gold",
+      "susu frisian flag kental manis",
+      "frisian flag kental manis gold",
+      "susu kental manis full cream",
+      "susu kental frisian flag",
+      "susu frisian flag gold",
+      "susu gold frisian flag",
+      "susu frisian flag full cream",
+      "full cream frisian flag",
+      "frisian flag full cream",
+      "susu full cream frisian flag",
+      "susu frisian flag skm",
+      "frisian flag susu full cream"
+    ],
+    "old_title": "Frisian Flag susu kental manis 370g full cream SKM",
+    "new_title": "Frisian Flag susu kental manis 370g Full Cream Gold 3 gram protein",
+    "reason": "The new search terms are vastly superior, having been cleaned of numerous irrelevant, question-style, and cross-category terms (e.g., powdered milk, UHT milk). This upstream improvement leads to a much better final title, which correctly includes the 'Gold' variant and the key '3 gram protein' spec, both of which were missing from the old title.",
+    "issues": [
+      "off_topic_terms",
+      "tutorial_or_query_terms",
+      "missing_core_specs",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "PH",
+    "item_id": "29988650022",
+    "product_title": "BELLOF Universal Ultra Water-Repellent Wiper Blade with U-Hook Design (Various Lengths)",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "silicone wiper blades",
+      "ertiga wiper blade size"
+    ],
+    "new_terms": [
+      "wiper for glass",
+      "silicone wiper blades",
+      "universal wiper",
+      "glass wiper",
+      "wiper blade",
+      "window wiper",
+      "wiper",
+      "wiper blades",
+      "window glass wiper",
+      "windshield wiper blades",
+      "windshield wiper",
+      "wiper glass",
+      "mirror wiper"
+    ],
+    "old_title": "Universal wiper blade BELLOF water-repellent silicone rubber flexible durable 700mm 425mm 400mm 375mm rain",
+    "new_title": "Universal wiper blade Water-repellent silicone U-hook fit BELLOF 700mm 400mm 375mm 350mm",
+    "reason": "The new search terms are vastly superior, providing comprehensive and relevant terms for a wiper blade, while the old terms included a random, specific car model. The new title is also better because it correctly includes the critical 'U-hook fit' specification, which is essential for compatibility and was missing from the old title.",
+    "issues": [
+      "off_topic_terms",
+      "missing_core_specs",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "TH",
+    "item_id": "13719557423",
+    "product_title": "SONY หูฟังไร้สายรุ่น WF-C500 (รับประกันศูนย์ Sony 1 ปี)",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 2,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [],
+    "new_terms": [
+      "หู ฟัง sony wf c500",
+      "wf c500 sony",
+      "sony หู ฟัง ไร้ สาย",
+      "sony bluetooth earbuds",
+      "sony หู ฟัง",
+      "sony wireless earbuds",
+      "sony earbuds",
+      "sony wireless headset",
+      "earbuds sony",
+      "sony wireless headphones",
+      "sony bluetooth headset",
+      "sony true wireless",
+      "sony หู ฟัง บ ลู ทู ธ",
+      "sony bluetooth headphones",
+      "sony headphones",
+      "หู ฟัง sony wf",
+      "sony open earbuds",
+      "sony wf"
+    ],
+    "old_title": "SONY หูฟังไร้สาย True Wireless Earbuds เสียงคมชัด เบสแน่น ใช้งานด้วยข้างเดียว แบต 10 ชม รวมเคส 20 ชม IPX4",
+    "new_title": "SONY หูฟังไร้สาย WF-C500 เสียงคมชัด เบสแน่น แบตเตอรี่หูฟัง 10 ชั่วโมง พกพาสะดวก",
+    "reason": "The new pipeline is vastly superior as it successfully retrieved relevant search terms while the old one failed completely. Critically, the new title includes the model number 'WF-C500', which was missing from the old title, making the new title far more accurate and useful for customers.",
+    "issues": [
+      "missing_model_or_compatibility"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "TH",
+    "item_id": "3346954484",
+    "product_title": "Dog Days อาหารเม็ดพรีเมียมสำหรับสุนัขโต สูตรเนื้อแกะและข้าว 12กิโลกรัม",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "อาหาร สุนัข dog days ดี ไหม",
+      "อาหาร สุนัข รส แกะ",
+      "deserve dog food",
+      "อาหาร สุนัข เนื้อ แกะ ยี่ห้อ ไหน ดี"
+    ],
+    "new_terms": [
+      "dog days อาหาร สุนัข",
+      "อาหาร สุนัข dog days",
+      "อาหาร หมา dog days",
+      "dog day อาหาร สุนัข",
+      "dogday อาหาร สุนัข",
+      "อาหาร สุนัข dog day",
+      "dog day อาหาร",
+      "อาหาร สุนัข เนื้อ แกะ",
+      "dog days",
+      "อาหาร สุนัข รส แกะ",
+      "อาหาร สุนัข ลด คราบ น้ำตา",
+      "อาหาร ลด คราบ น้ำตา สุนัข",
+      "อาหาร หมา ลด คราบ น้ำตา",
+      "เนื้อ แกะ",
+      "อาหาร สุนัข บำรุง ขน และ ผิวหนัง",
+      "อาหาร ลด คราบ น้ำตา",
+      "อาหาร เสริม จาก ออสเตรเลีย",
+      "fish oil สุนัข"
+    ],
+    "old_title": "อาหารเม็ดสุนัข Dog Days สูตรเนื้อแกะและข้าว บำรุงผิวหนังและขน ลดคราบน้ำตา ขับถ่ายเป็นก้อน 12 กิโลกรัม",
+    "new_title": "Dog Days อาหารเม็ดสุนัข สูตรเนื้อแกะและข้าว พรีเมียม บำรุงขนและผิวหนัง ลดคราบน้ำตา 12 กิโลกรัม",
+    "reason": "The old search terms were extremely poor, consisting of questions and a wrong brand. The new search terms are excellent, providing comprehensive coverage of the brand, formula, and key benefits. This upstream improvement resulted in a better-structured new title that correctly includes the 'Premium' keyword and starts with the brand name, which is standard practice.",
+    "issues": [
+      "tutorial_or_query_terms",
+      "wrong_brand_terms",
+      "better_product_focus"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "TW",
+    "item_id": "27775846778",
+    "product_title": "高雄 公司貨 免運 3D卡固踏墊 裕隆 NISSAN Sentra Sylphy Teana Tiida X-Trail",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 4,
+    "t_new": 5,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "汽車 坐墊 套",
+      "汽車 腳 踏 墊 哪裡 買",
+      "3d 卡 固 腳 踏 墊",
+      "camry 腳 踏 墊",
+      "卡 固 立體 汽車 踏 墊",
+      "x trail 配件",
+      "卡 固 腳 踏 墊",
+      "汽車 腳 踏 墊 訂 製",
+      "3d 卡 固 model y",
+      "3d 卡 固",
+      "防水 墊 哪裡 買",
+      "3d 卡 固 缺點",
+      "氣墊 座",
+      "汽車 坐墊 推薦",
+      "卡 固 立體 汽車 後 廂 墊",
+      "福特 腳 踏 墊",
+      "車 用 坐墊 推薦",
+      "汽車 腳 踏 板"
+    ],
+    "new_terms": [
+      "3d 卡 固 腳 踏 墊",
+      "卡 固 立體 汽車 踏 墊",
+      "卡 固 腳 踏 墊",
+      "3d 踏 墊",
+      "汽車 踏 墊",
+      "3d 卡 固",
+      "汽車 腳 踏 墊 固定",
+      "汽車 腳 踏 墊",
+      "車 內 腳 踏 墊",
+      "tiida 腳 踏 墊",
+      "x trail 配件",
+      "卡 固 立體 汽車 後 廂 墊",
+      "汽車 靠墊",
+      "汽車 腳 踏 墊 固定 扣",
+      "汽車 防水 腳 踏 墊",
+      "汽車 腳 踏 墊 訂 製",
+      "汽車 隔音 墊",
+      "3d 腳 踏 墊"
+    ],
+    "old_title": "Nissan Sentra/Sylphy/Teana/Tiida/X‑Trail 3D卡固汽車踏墊 裕隆專車專用 立體全包覆防滑易清洗",
+    "new_title": "Nissan Sentra/Sylphy/Teana/Tiida/X‑Trail 專車專用汽車踏墊 3D卡固設計 TPR XPE 防滑減震 易清洗",
+    "reason": "The old search terms are extremely poor, containing a high volume of off-topic terms (3D printer, face mask), query-style terms, and competitor car models. The new search terms are clean, focused, and highly relevant. The new title is also an improvement, as it incorporates specific material specs (TPR, XPE) from the product description, making it more informative than the old title.",
+    "issues": [
+      "off_topic_terms",
+      "tutorial_or_query_terms",
+      "wrong_brand_terms",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "TW",
+    "item_id": "41357879988",
+    "product_title": "✨臺灣有貨/免運✨磁性文件收納上墻 磁吸亞克力墻麵文件夾放a4單頁插頁透明資料架",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "磁 吸 貼",
+      "文件 盒"
+    ],
+    "new_terms": [
+      "文件 收納",
+      "牆壁 收納 架",
+      "文件 收納 架",
+      "牆 上 收納",
+      "牆壁 收納",
+      "牆 面 收納",
+      "牆 面 置物 架",
+      "壁掛 收納 架",
+      "文件 架 收納",
+      "壁掛 架",
+      "壁掛 收納",
+      "文件 架",
+      "牆壁 掛 架",
+      "磁 吸 架",
+      "文件 櫃",
+      "磁 吸 置物 架",
+      "磁 吸 卡 夾",
+      "壁掛 置物 架"
+    ],
+    "old_title": "磁性文件夾 適合A4上墻 透明磁性文件架 PVC無毒 可放A4單頁 防滑不易刮破輕便便攜",
+    "new_title": "磁性文件夾 透明資料架 適合A4 文件收納 PVC無毒材質 輕便防滑 可上牆多功能收納",
+    "reason": "The new search terms are vastly superior, providing comprehensive coverage of the product's core functions (wall-mounted, magnetic, file storage, rack). The old terms were extremely limited and missed key aspects. The new title is also slightly better structured and more natural-sounding, making it a clear overall improvement.",
+    "issues": [
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "VN",
+    "item_id": "24869758954",
+    "product_title": "Phở Gà GOOD Acecook Gói 68g (10 Gói) - Lạc Lạc Food",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 2,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "phở gà good acecook",
+      "phở gà good",
+      "gói phở gà",
+      "phở gà acecook",
+      "phở gà đóng gói",
+      "gói nấu phở gà",
+      "phở gà gói",
+      "phở acecook",
+      "phở gói",
+      "phở gói ngon",
+      "gói cốt phở",
+      "gói nấu phở",
+      "phở tươi đóng gói",
+      "phở ga",
+      "mì phở gà acecook",
+      "gói gia vị phở gà",
+      "lạc lạc",
+      "các sản phẩm của acecook"
+    ],
+    "new_terms": [
+      "phở gà good acecook",
+      "phở gà acecook",
+      "phở acecook",
+      "phở gà gói",
+      "phở gà good",
+      "phở gà đóng gói",
+      "lạc lạc",
+      "gói phở gà",
+      "phở gà",
+      "phở ga",
+      "pho gà",
+      "mì gà sợi phở acecook",
+      "mì sợi phở acecook",
+      "phở gói",
+      "vị phở gà"
+    ],
+    "old_title": "Phở gà 68g Acecook Thanh ngọt thơm ngon gói nhỏ tiện lợi 10 gà đóng",
+    "new_title": "Phở gà 68g Acecook 10 gói vị thanh ngọt, nấu nhanh tiện lợi cho du lịch",
+    "reason": "The new search terms are vastly superior, having filtered out a huge amount of irrelevant, tutorial-style, and wrong-brand terms. This upstream improvement leads to a much better final title that correctly states the quantity ('10 gói') and avoids the old title's awkward and incorrect phrasing ('10 gà đóng').",
+    "issues": [
+      "off_topic_terms",
+      "tutorial_or_query_terms",
+      "wrong_brand_terms",
+      "awkward_title"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "ID",
+    "item_id": "13660319667",
+    "product_title": "Permen Lazery Yogurt 500gram",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 2,
+    "t_new": 3,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "permen susu thailand halal",
+      "yummy greek yoghurt",
+      "yummy greek yogurt",
+      "es yoghurt",
+      "yogurt biru",
+      "yogurt plain alfamart",
+      "permen thailand halal",
+      "yogurt plain greek",
+      "susu yogurt",
+      "permen susu panda halal",
+      "yagurt",
+      "yogurt greek alfamart",
+      "yoghurt greek"
+    ],
+    "new_terms": [
+      "permen lazery yogurt",
+      "lazery yogurt",
+      "permen lazery",
+      "lazery permen",
+      "lazery",
+      "yogurt 500g",
+      "lazery stick",
+      "permen yogurt",
+      "permen yoghurt",
+      "yogur",
+      "yoghurt",
+      "yogurt",
+      "yogut",
+      "harga permen lazery",
+      "yogourt",
+      "yogurto",
+      "permen permen lagu",
+      "yogurd"
+    ],
+    "old_title": "Permen Lazery Yogurt 500 gram sehat tanpa pengawet 100% alami mudah dimakan",
+    "new_title": "Permen Lazery Yogurt 500 gram snack sehat alami tanpa pengawet",
+    "reason": "The new search terms are vastly superior, correctly identifying the brand \"Lazery\" and core product details, while the old terms were full of irrelevant assumptions and wrong brands. The new title is also a slight improvement, as it is more concise and removes some of the unsubstantiated marketing fluff present in the old title.",
+    "issues": [
+      "better_product_focus",
+      "too_marketing"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "BR",
+    "item_id": "22898696510",
+    "product_title": "Controle com LED para Switch Preto – Estilo, Imersão e Alto Desempenho!",
+    "r_old": 2,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "melhores controles para switch",
+      "nintendo switch ou led",
+      "nintendo switch led",
+      "gamepad nintendo switch",
+      "controle nintendo switch preto",
+      "gamepad para switch",
+      "gamepad switch",
+      "controle ergonomico nintendo switch",
+      "controles nintendo switch",
+      "nintendo switch o led",
+      "controle do nintendo switch",
+      "controles que funcionam no nintendo switch",
+      "controle compatível com nintendo switch",
+      "melhores controles para nintendo switch",
+      "controle para nintendo switch",
+      "controle para celular estilo nintendo switch",
+      "melhor controle para nintendo switch",
+      "controles do nintendo switch"
+    ],
+    "new_terms": [
+      "controle nintendo switch preto",
+      "gamepad nintendo switch",
+      "gamepad para switch",
+      "controle ergonomico nintendo switch",
+      "controle nintendo switch",
+      "controlador nintendo switch",
+      "controles nintendo switch",
+      "controle para nintendo switch",
+      "controle de nintendo switch",
+      "controle do nintendo switch",
+      "controles de nintendo switch",
+      "nintendo switch controle",
+      "controles para nintendo switch",
+      "controles do nintendo switch",
+      "nintendo switch controller",
+      "nintendo switch controles",
+      "gamepad switch",
+      "controle compatível com nintendo switch"
+    ],
+    "old_title": "controle para Nintendo Switch Compatível com OLED ergonômico LED e sensor 6 eixos",
+    "new_title": "Controle para Nintendo Switch Compatível com OLED preto LED ergonômico sensor 6 eixos motor de vibração",
+    "reason": "The new search terms are vastly superior, having been cleaned of numerous tutorial-style, question-style, and irrelevant queries present in the old set. This upstream improvement directly resulted in a better title that includes more key product specifications, such as the color ('preto') and the vibration motor, which were missing from the old title. The new title is more complete and informative.",
+    "issues": [
+      "tutorial_or_query_terms",
+      "missing_core_specs",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "PH",
+    "item_id": "10254059458",
+    "product_title": "Lotus Biscoff Crunchy Spread 380g",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 4,
+    "t_new": 5,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "biscoff spread how much",
+      "lotus cookie butter spread",
+      "lotus spread",
+      "biscoff spread crunchy",
+      "cookie spread biscoff",
+      "biscoff crunchy",
+      "how to make biscoff spread",
+      "lotus biscoff spread",
+      "biscoff lotus spread",
+      "biscoff spread",
+      "alternative for biscoff spread",
+      "cookies lotus biscoff",
+      "lotus biscoff crunchy spread",
+      "biscoff spread grams",
+      "biscoff cookie",
+      "crunchy biscoff spread",
+      "biscoff spread and biscuits",
+      "biscoff crunchy spread"
+    ],
+    "new_terms": [
+      "lotus biscoff crunchy spread",
+      "biscoff crunchy spread",
+      "lotus biscoff spread",
+      "crunchy biscoff spread",
+      "biscoff spread",
+      "biscoff spread crunchy",
+      "biscoff lotus spread",
+      "cookie spread biscoff",
+      "biscoff crunchy 380g",
+      "lotus biscoff sauce",
+      "lotus biscoff",
+      "biscoff 380g",
+      "lotus spread",
+      "lotus biscoff cream",
+      "biscoff crunchy",
+      "biscoff spread 380g price",
+      "biscoff lotus",
+      "lotus cookie butter spread"
+    ],
+    "old_title": "Crunchy Spread 380g Lotus Biscoff Cookie-Flavored for Toast and Snacks",
+    "new_title": "Crunchy Spread 380g Lotus Biscoff cookie-flavored for toast, dip or snack",
+    "reason": "The new search terms are vastly superior, having filtered out a huge amount of tutorial-style queries, cross-category terms, and price-related noise that plagued the old list. This upstream improvement results in a slightly better final title that more accurately captures the product's usage ('dip') and uses more natural capitalization.",
+    "issues": [
+      "tutorial_or_query_terms",
+      "off_topic_terms"
+    ]
+  },
+  {
+    "group": "A",
+    "region": "VN",
+    "item_id": "7093450403",
+    "product_title": "TRANH CANVAS SIÊU ANH HÙNG MARVEL treo tường in theo yêu cầu - VENOM 4",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 2,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [],
+    "new_terms": [
+      "tranh vải canvas",
+      "tranh canvas",
+      "tranh in vải canvas",
+      "tranh vải",
+      "in tranh vải theo yêu cầu",
+      "tranh in canvas",
+      "tranh marvel",
+      "in tranh theo yêu cầu",
+      "in tranh canvas theo yêu cầu",
+      "tranh gắn tường",
+      "tranh in vải",
+      "canvas tranh",
+      "siêu anh hùng marvel",
+      "tranh vải dán tường",
+      "tranh dán tường theo yêu cầu",
+      "in tranh trên vải canvas",
+      "tranh canvas dán tường",
+      "in vải canvas theo yêu cầu"
+    ],
+    "old_title": "tranh treo tường Canvas Xưởng Mia vải chống rách, phai màu, nước khung nhựa Composite in theo yêu cầu",
+    "new_title": "tranh treo tường Canvas Xưởng Mia Marvel in vải theo yêu cầu, chống rách phai nước",
+    "reason": "The new pipeline is significantly better. The old pipeline failed to retrieve any search terms and its title completely missed the core product theme of 'Marvel'. The new pipeline's search terms are rich and relevant, and the new title correctly incorporates 'Marvel', making it far more accurate and useful for a customer, even though it drops the frame material.",
+    "issues": [
+      "better_product_focus",
+      "missing_core_specs"
+    ]
+  },
+  {
+    "group": "B",
+    "region": "MY",
+    "item_id": "5931495974",
+    "product_title": "YAMAHA LC135  CARBURETOR INTAKE RACING 28MM/30MM",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [],
+    "new_terms": [
+      "yamaha lc135 carburetor",
+      "yamaha lc135",
+      "yamaha lc 135",
+      "lc135 carburetor",
+      "lc 135 carburetor",
+      "lc135 yamaha",
+      "carburetor lc135",
+      "intake carburetor lc135",
+      "karburator lc135",
+      "intake lc135",
+      "yamaha 135 lc",
+      "carburetor 135lc",
+      "karburator lc135 v1",
+      "karburetor",
+      "lc carburetor",
+      "carburetor racing",
+      "intake carburetor",
+      "carburetor"
+    ],
+    "old_title": "Carburetor intake YAMAHA LC135 28mm 30mm direct fit 135cc easy installation",
+    "new_title": "Carburetor intake YAMAHA LC135 28mm 30mm direct fit 135cc authentic original part",
+    "reason": "The new pipeline's search term retrieval is vastly superior, as the old pipeline failed to retrieve any terms. However, the new title introduces a potentially misleading claim by describing a 'racing' part as an 'authentic original part'. The old title's marketing fluff ('easy installation') is less problematic, making the old title safer for production.",
+    "issues": [
+      "too_marketing"
+    ]
+  },
+  {
+    "group": "B",
+    "region": "ID",
+    "item_id": "26241945513",
+    "product_title": "Tidur Nyenyak & Redakan Nyeri Otot Magnesium Glycinate Kompleks Kapsul - Suplemen Magnesium/Relaksas",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 5,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "jenis magnesium untuk tidur",
+      "magnesium tidur",
+      "obat tidur magnesium",
+      "magnesium glycinate untuk tidur",
+      "suplemen magnesium untuk tidur",
+      "beli magnesium glycinate",
+      "pil magnesium untuk tidur",
+      "magnesium glycinate murah",
+      "magnesium tidur nyenyak",
+      "magnesium untuk tidur",
+      "magnesium untuk tidur nyenyak",
+      "magnesium glycinate for sleep",
+      "magnesium buat tidur",
+      "magnesium glycinate adalah",
+      "magnesium glycinate apa",
+      "magnesium glycinate alami",
+      "magnesium buat tidur nyenyak",
+      "glycinate magnesium"
+    ],
+    "new_terms": [
+      "magnesium glycinate",
+      "suplemen magnesium glycinate",
+      "suplemen magnesium glisinat",
+      "magnesium glycinate supplement",
+      "supplement magnesium glycinate",
+      "magnesium glycinate untuk tidur",
+      "magnesium glycinate for sleep",
+      "vitamin magnesium glycinate",
+      "glycinate magnesium",
+      "magnesium tidur nyenyak",
+      "magnesium glycinate sleep",
+      "suplemen magnesium untuk tidur",
+      "suplemen untuk tidur nyenyak",
+      "obat magnesium glycinate",
+      "magnesium glycinate australia",
+      "magnesium glycinate malaysia",
+      "magnesium buat tidur nyenyak",
+      "sleep support magnesium glycinate"
+    ],
+    "old_title": "Suplemen magnesium glycinate 90 kapsul untuk tidur nyenyak, relaksasi otot, berkualitas",
+    "new_title": "Suplemen magnesium glycinate 90 kapsul untuk tidur nyenyak relaksasi otot membantu berkualitas",
+    "reason": "The new search terms are vastly superior, having filtered out a huge number of irrelevant brand names, question-style queries, and other noise present in the old terms. However, the new title is grammatically broken and awkward ('...membantu berkualitas'). The old title is perfectly structured and production-ready, making it the clear winner despite the poor quality of its upstream search terms.",
+    "issues": [
+      "awkward_title",
+      "wrong_brand_terms",
+      "tutorial_or_query_terms"
+    ]
+  },
+  {
+    "group": "B",
+    "region": "TH",
+    "item_id": "40204050102",
+    "product_title": "เบรคBrembo F55 แท้ จับจาน /355/380 มิล ** คุยรายละเอียดก่อนสั่งสินค้า **",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 5,
+    "t_new": 3,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "จัด จาน เบรค",
+      "จัด จาน เบรค สวย ๆ",
+      "ชุด เบรค",
+      "จาน จัด เบรค",
+      "ชุด จาน จัด เบรค"
+    ],
+    "new_terms": [
+      "เบรค brembo",
+      "ปั๊ม เบรค brembo",
+      "brembo",
+      "จาน เบรค",
+      "ปั้ ม brembo",
+      "หมุด จาน เบรค",
+      "จาน จัด เบรค",
+      "ปั้ ม เบรค brembo",
+      "ปั๊ม เบรค",
+      "ชุด จาน จัด เบรค",
+      "ปั้ ม ด้วง brembo",
+      "ปั๊ม เบรค brembo มอเตอร์ไซค์",
+      "เซต เบรค"
+    ],
+    "old_title": "ปั๊มเบรค Brembo F55 แท้ ฮับอลู 6061 CNC รองรับจาน 330/355/380 มิล ชุดเบรค",
+    "new_title": "ปั๊มเบรค Brembo ปั๊ม F55 แท้ จับจาน 355/380 มิล",
+    "reason": "The new search terms are a massive improvement, correctly identifying the brand (Brembo) which the old terms missed entirely. However, the new title is a clear regression; it removes key specs like the '6061 CNC aluminum hub' and part of the disc size compatibility, while also having an awkward, repetitive structure. The old title is far more comprehensive and informative for the customer.",
+    "issues": [
+      "missing_core_specs",
+      "awkward_title",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "B",
+    "region": "ID",
+    "item_id": "26190376734",
+    "product_title": "[READY STOK] TEA 100% ORIGINAL CHAGEE",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [],
+    "new_terms": [
+      "chagee tea",
+      "changee tea",
+      "chagee tea bag",
+      "chagee harga",
+      "teh chagee harga",
+      "chagee merchandise",
+      "harga chagee",
+      "harga chagee indonesia",
+      "harga teh chagee"
+    ],
+    "old_title": "CHAGEE TEA 100% original teh berkualitas ready stock",
+    "new_title": "CHAGEE TEA Teh Original 100% kualitas premium dari Medan",
+    "reason": "The new pipeline's retrieval is vastly superior, as the old one failed to generate any terms. However, the new title is significantly worse because it incorrectly adds the seller's location ('dari Medan') as a product attribute, which is misleading. The old title, while clunky, is more factually focused on the product itself.",
+    "issues": [
+      "off_topic_terms",
+      "better_product_focus"
+    ]
+  },
+  {
+    "group": "C",
+    "region": "VN",
+    "item_id": "25274370923",
+    "product_title": "BỘT RAU CỦ TỔNG HỢP DALAHOUSE(20gói x3g)HỮU CƠ SẤY LẠNH TRỌN VỊ RAU TƯƠI",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 3,
+    "t_verdict": "tie",
+    "overall": "new_better",
+    "old_terms": [
+      "bột rau má",
+      "dalahouse bột rau củ",
+      "bột rau má có công dụng gì",
+      "rau má hương",
+      "bột rau má có tác dụng gì",
+      "bột rau củ",
+      "uống bột rau má có tác dụng gì",
+      "bột rau xanh",
+      "bột đậu xanh rau má",
+      "rau má đậu xanh",
+      "bột đậu xanh",
+      "bột đậu xanh rau má có tác dụng gì",
+      "bột rau má đậu xanh",
+      "bột rau má đậu xanh có tác dụng gì",
+      "rau má đậu",
+      "bột đậu xanh có tác dụng gì",
+      "cách làm bột rau má",
+      "rau má dừa"
+    ],
+    "new_terms": [
+      "bột rau má đậu xanh",
+      "bột rau má đậu xanh cốt dừa",
+      "rau má đậu xanh",
+      "rau má đậu",
+      "dalahouse bột rau củ",
+      "bột đậu xanh rau má",
+      "bột rau má",
+      "bột đậu xanh rau má nước cốt dừa",
+      "rau má xay đậu xanh",
+      "bột rau củ",
+      "bột đậu xanh",
+      "bột rau má nguyên chất",
+      "rau má nước dừa",
+      "đậu xanh cốt dừa",
+      "đậu xanh rau má",
+      "bột rau xanh",
+      "rau má dừa",
+      "hạt rau má"
+    ],
+    "old_title": "bột rau củ Dalahouse công thức tự nhiên hữu cơ 20 gói x 3g giữ trọn vị tươi không cần nấu",
+    "new_title": "bột rau củ Dalahouse ăn liền hữu cơ sấy lạnh 20 gói 3 g/gói công thức tự nhiên vitamin và khoáng chất",
+    "reason": "The new search terms are vastly superior, removing a huge amount of junk like question-style queries ('có tác dụng gì'), tutorial terms ('cách làm'), and off-topic products ('hạt giống', 'chè'). Both titles are flawed as they miss the product's key ingredients ('rau má đậu xanh'). However, the massive upstream improvement in retrieval quality makes the new pipeline significantly better overall.",
+    "issues": [
+      "tutorial_or_query_terms",
+      "off_topic_terms",
+      "missing_core_specs"
+    ]
+  },
+  {
+    "group": "C",
+    "region": "TW",
+    "item_id": "19670140388",
+    "product_title": "警示膠帶PVC黑黃斑馬線警戒地標貼地面白紅藍綠彩色劃線地板膠帶",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 1,
+    "t_new": 1,
+    "t_verdict": "tie",
+    "overall": "tie",
+    "old_terms": [],
+    "new_terms": [
+      "警示 膠帶",
+      "貼 地板",
+      "膠帶",
+      "油漆 膠帶",
+      "pvc 地板 貼",
+      "自 黏 地板",
+      "地板 貼",
+      "地 貼",
+      "反光 警示 膠帶",
+      "膠 條"
+    ],
+    "old_title": "警示膠帶 PVC無毒 防水防潮防滑 210x140cm 1.4cm厚 適用施工現場學校工地 地面標示",
+    "new_title": "警示膠帶 PVC無毒防水防潮止滑 210x140cm 1.4公分厚 適用施工現場學校工地 貼地板 地面標示",
+    "reason": "The new search terms are vastly superior, as the old pipeline retrieved nothing. However, both titles are critically flawed by including fabricated and physically impossible dimensions (210x140cm, 1.4cm thick) for what is a roll of tape. Since both titles are equally unusable due to this major error, the overall verdict is a tie.",
+    "issues": [
+      "missing_core_specs"
+    ]
+  },
+  {
+    "group": "C",
+    "region": "ID",
+    "item_id": "20167862536",
+    "product_title": "DURIAN KUPAS BAWOR",
+    "r_old": 1,
+    "r_new": 5,
+    "r_verdict": "new_better",
+    "t_old": 3,
+    "t_new": 3,
+    "t_verdict": "tie",
+    "overall": "new_better",
+    "old_terms": [
+      "durian freeze",
+      "durian kupas frozen",
+      "durian kupas",
+      "durian kupas medan",
+      "beli durian online",
+      "durian kemasan",
+      "beli durian",
+      "durian kupas 500 gram",
+      "durian kupas terdekat",
+      "durian fresh",
+      "ciri ciri durian bawor",
+      "bawor durian",
+      "durian bawor",
+      "durian bawor dari mana",
+      "distributor durian kupas",
+      "freezer durian",
+      "durian indomaret",
+      "durian frozen terdekat"
+    ],
+    "new_terms": [
+      "durian kupas frozen",
+      "durian bawor",
+      "durian kupas 500 gram",
+      "durian kupas",
+      "bawor durian",
+      "durian frozen",
+      "frozen durian",
+      "durian 500 gram",
+      "durian bawer",
+      "bawor",
+      "durian freeze",
+      "durian bawor harga",
+      "harga durian bawor",
+      "cup durian",
+      "jual durian kupas",
+      "beli durian",
+      "durian kemasan",
+      "durian kupas premium"
+    ],
+    "old_title": "Durian Kupas Beku asli Bawor rasa manis kemasan frozen mudah dimakan",
+    "new_title": "Durian Kupas Bawor Beku kemasan frozen, mudah dimakan, rasa manis",
+    "reason": "The new search terms are vastly superior, removing an enormous amount of noise, cross-category terms, and tutorial-style queries present in the old list. While both titles are very similar and both miss the key '500 gram' spec, the massive improvement in upstream retrieval quality makes the new pipeline the clear winner overall as it is far more reliable.",
+    "issues": [
+      "off_topic_terms",
+      "missing_core_specs"
+    ]
+  },
+  {
+    "group": "D",
+    "region": "BR",
+    "item_id": "22197125597",
+    "product_title": "Adesivo Vinil Insulfilm Branco Semi BlackOut Para Janelas Vidro - Pelicula de Janela",
+    "r_old": 4,
+    "r_new": 2,
+    "r_verdict": "old_better",
+    "t_old": 3,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "vinil para vidro",
+      "janela adesivada",
+      "adesivo para janela",
+      "blackout janela adesivo",
+      "janela com pelicula"
+    ],
+    "new_terms": [
+      "adesivo para janelas de vidro",
+      "adesivo de janela de vidro",
+      "adesivo de janela blackout",
+      "adesivo para janela de vidro",
+      "adesivo vinil para janela",
+      "adesivo blackout para janela de vidro",
+      "adesivo vinil branco",
+      "adesivo para janela blackout",
+      "blackout adesivo para janela",
+      "adesivo para janelas",
+      "adesivo vinil para vidro",
+      "adesivo para vidros de janelas",
+      "adesivo blackout para janela",
+      "adesivos para janelas de vidro",
+      "adesivo blackout janela",
+      "adesivo para vidro janela",
+      "adesivo janela blackout",
+      "adesivo vinilico para vidro"
+    ],
+    "old_title": "Adesivo Vinil Insulfilm para janelas e vidros PVC ecológico reduz calor e adiciona privacidade película de",
+    "new_title": "Adesivo Vinil Insulfilm para janelas e vidros reduz calor e adiciona privacidade baixo custo ótima qualidade",
+    "reason": "The new search terms are extremely noisy, including irrelevant category drift ('papel de parede') and completely off-topic terms ('rolo para textura parede'). The new title is worse because it removes the material spec 'PVC' and adds generic marketing fluff ('baixo custo ótima qualidade'), making it less informative. The old title, while grammatically awkward at the end, is superior in both its focused search terms and its more descriptive content.",
+    "issues": [
+      "off_topic_terms",
+      "too_marketing",
+      "awkward_title"
+    ]
+  },
+  {
+    "group": "D",
+    "region": "BR",
+    "item_id": "58200323457",
+    "product_title": "4 PISCA  MODELO ORIG TITAN FAN CBX 250 TWISTER STRADA FALCON CB 300 XRE 300",
+    "r_old": 5,
+    "r_new": 3,
+    "r_verdict": "old_better",
+    "t_old": 5,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "pisca da fan 125 original",
+      "pisca cb twister",
+      "pisca para cb 300",
+      "pisca cb 300 original",
+      "pisca xre 300 original",
+      "pisca da cb 300 original",
+      "pisca cbx 250",
+      "pisca da cb 300",
+      "pisca de moto fan 125",
+      "pisca xre 300",
+      "pisca cb 300",
+      "pisca original cb 300",
+      "pisca da xre 300 original",
+      "pisca pisca amarelo",
+      "pisca original xre 300",
+      "piscas xre 300",
+      "pisca da cb twister",
+      "pisca da xre 300"
+    ],
+    "new_terms": [
+      "pisca original xre 300",
+      "pisca original cb 300",
+      "pisca xre 300 original",
+      "pisca xre 300",
+      "pisca da xre 300 original",
+      "pisca cb 300",
+      "pisca para cb 300",
+      "pisca cb300",
+      "pisca da xre 300",
+      "pisca cbx 250",
+      "pisca cb 300 original",
+      "pisca da cb 300 original",
+      "pisca da cb 300",
+      "piscas xre 300",
+      "pisca de moto fan 125",
+      "pisca da fan 125 original",
+      "pisca da cb twister original",
+      "pisca cb twister"
+    ],
+    "old_title": "Pisca para moto Modelo CB 300 XRE CBX 250 CG Titan CG Fan Kit 4 sem lâmpada",
+    "new_title": "Pisca Modelo para CB 300 XRE CBX 250 CG Titan 125 Fan Kit 4 original sem lâmpada preço vantajoso",
+    "reason": "The new search terms introduce irrelevant and off-topic items like 'pisca sequencial' and a non-existent 'cbx 300 twister' model. The new title is significantly worse, as it drops some compatibility information (e.g., for Titan 150) and adds prohibited marketing fluff ('preço vantajoso'). The old pipeline is superior on both retrieval quality and final title quality.",
+    "issues": [
+      "off_topic_terms",
+      "too_marketing",
+      "missing_model_or_compatibility"
+    ]
+  },
+  {
+    "group": "D",
+    "region": "MY",
+    "item_id": "1469553645",
+    "product_title": "(MR.DIY) Stainless Steel Bathroom Shower Head (8inch)",
+    "r_old": 3,
+    "r_new": 1,
+    "r_verdict": "old_better",
+    "t_old": 3,
+    "t_new": 3,
+    "t_verdict": "new_better",
+    "overall": "old_better",
+    "old_terms": [
+      "diy shower",
+      "shower head diy",
+      "shower mr diy",
+      "diy shower head",
+      "shower stainless steel",
+      "mr diy shower",
+      "mr diy shower head",
+      "pasang shower head",
+      "shower head mr diy",
+      "shower head type",
+      "bathroom head shower",
+      "stainless steel shower head",
+      "shower head",
+      "showerhead",
+      "shower head installation",
+      "jenis kepala paip shower"
+    ],
+    "new_terms": [
+      "mr diy shower head",
+      "shower head mr diy",
+      "mr diy shower",
+      "stainless steel shower head",
+      "shower mr diy",
+      "shower head",
+      "showerhead",
+      "diy shower head",
+      "mr diy shower set",
+      "shower head set",
+      "modern shower head",
+      "shower heads",
+      "bathroom head shower",
+      "hand shower head",
+      "shower head diy",
+      "shower head malaysia",
+      "rain shower head",
+      "shower rain head"
+    ],
+    "old_title": "Stainless Steel Shower Head 8inch durable rust-resistant modern slim design MR.DIY",
+    "new_title": "Stainless Steel Bathroom Shower Head 8inch MR.DIY durable rust-resistant modern slim design",
+    "reason": "The new search terms are significantly worse, introducing completely off-topic terms like \"spray semut mr diy\" (ant spray) and incorrect product types like \"hand held shower head\". While the new title is marginally better for adding \"Bathroom\", this tiny improvement does not justify the severe degradation in retrieval quality, which makes the old pipeline better overall.",
+    "issues": [
+      "off_topic_terms"
+    ]
+  },
+  {
+    "group": "D",
+    "region": "SG",
+    "item_id": "27765787727",
+    "product_title": "[1PCS] QUALITY PVC COMPACT BALL VALVE SOCKET END OR THREADED 1/2'' 3/4'' 1'' 1 1/4'' 1 1/2'' 2'' 3''",
+    "r_old": 5,
+    "r_new": 1,
+    "r_verdict": "old_better",
+    "t_old": 3,
+    "t_new": 4,
+    "t_verdict": "new_better",
+    "overall": "old_better",
+    "old_terms": [
+      "valve socket",
+      "pvc socket",
+      "pvc pipe socket",
+      "valve",
+      "pvc ball valve"
+    ],
+    "new_terms": [
+      "valve socket",
+      "pvc ball valve",
+      "mini ball valve 1 2",
+      "3 way ball valve",
+      "ball valve",
+      "3 4 ball valve",
+      "1 2 mini ball valve",
+      "3 way valve",
+      "1 2 3 way valve",
+      "pvc socket",
+      "mini ball valve",
+      "one way flow control valve",
+      "one way check valve",
+      "two way valve",
+      "pvc fitting",
+      "2 way valve",
+      "pvc fittings",
+      "pvc pipe fittings"
+    ],
+    "old_title": "ball valve 1PCS PVC durable construction 100% pressure tested easy to install socket end threaded 1/2'' 3/4''",
+    "new_title": "Ball valve 1PCS socket end threaded PVC 1/2'' 3/4'' 1'' 1 1/4'' durable 100% pressure tested",
+    "reason": "The new pipeline's search terms are a significant regression, filled with numerous irrelevant, cross-category, and incorrect terms like '3 way valve' and 'pressure cooker valve'. While the new title is marginally better by including more product sizes, this slight improvement does not justify the catastrophic drop in upstream retrieval quality. The old pipeline is more stable and its retrieved terms are far more relevant and reliable.",
+    "issues": [
+      "off_topic_terms",
+      "generic_terms",
+      "missing_core_specs"
+    ]
+  },
+  {
+    "group": "E",
+    "region": "ID",
+    "item_id": "14359268672",
+    "product_title": "Tausi Kecil / Salted Black Bean -50gr",
+    "r_old": 1,
+    "r_new": 1,
+    "r_verdict": "tie",
+    "t_old": 2,
+    "t_new": 1,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [],
+    "new_terms": [
+      "salted bean curd",
+      "black bean kaleng",
+      "toko peralatan dapur",
+      "kacang kupas kecil"
+    ],
+    "old_title": "Tausi Kacang Hitam rasa asin siap disantap rendah lemak tanpa gula tambahan 50gr",
+    "new_title": "Tausi Kecil kacang hitam asin 50gr snack portabel rendah lemak siap saji",
+    "reason": "The new search terms are poor, containing incorrect items like 'salted bean curd' and off-topic terms like 'toko peralatan dapur'. More importantly, the new title fundamentally miscategorizes the product (a cooking ingredient) as a 'snack portabel', which is a major error. The old title, while adding unsubstantiated marketing claims, at least maintains the correct product identity and is therefore less misleading.",
+    "issues": [
+      "off_topic_terms",
+      "too_marketing",
+      "better_product_focus"
+    ]
+  },
+  {
+    "group": "E",
+    "region": "MY",
+    "item_id": "44208545082",
+    "product_title": "[Bundle of 3] Amore Snow Sandwich Cookies Assorted 117g [Best before May 2026]",
+    "r_old": 4,
+    "r_new": 4,
+    "r_verdict": "tie",
+    "t_old": 3,
+    "t_new": 5,
+    "t_verdict": "new_better",
+    "overall": "new_better",
+    "old_terms": [
+      "cookies flavour",
+      "snow cookies",
+      "cookies flavours",
+      "snow sandwich cookies",
+      "cookies strawberry",
+      "chocolate snow cookies",
+      "strawberry cookies",
+      "amoras cookies",
+      "sandwich chocolate",
+      "cookies snow",
+      "snowy chocolate cookies",
+      "snow oat cookies",
+      "amore cookies",
+      "cream cookies",
+      "cheese cookie",
+      "gift pack cookies",
+      "amor cookies",
+      "cream snow"
+    ],
+    "new_terms": [
+      "snow sandwich cookies",
+      "amore cookies",
+      "amore biscuit",
+      "cheese cookies",
+      "cheese cookie",
+      "cookies strawberry",
+      "cheese sandwich",
+      "amour cookies",
+      "amor cookies",
+      "strawberry cookies",
+      "chocolate sandwich",
+      "snow cookies",
+      "cookies snow",
+      "chocolate snow cookies",
+      "snowy chocolate cookies",
+      "sandwich chocolate",
+      "cookies and chocolate",
+      "amoras cookies"
+    ],
+    "old_title": "Amore snow sandwich cookies assorted snow-textured soft 117g bundle of 3",
+    "new_title": "Amore snow sandwich cookies assorted 3 Pack strawberry chocolate cheese 117g",
+    "reason": "The new title is a significant improvement as it explicitly lists the assorted flavors (strawberry, chocolate, cheese), which is critical information missing from the old title. The old title's inclusion of \"snow-textured soft\" was redundant and less valuable. The search terms for both pipelines are of comparable quality.",
+    "issues": [
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "E",
+    "region": "TH",
+    "item_id": "18886304178",
+    "product_title": "Ugreen อะแดปเตอร์ USB C HDMI 4K @ 60Hz Type C เป็น HDMI Thunderbolt 3 USB-C เป็น HDMI สําหรับ MacBoo",
+    "r_old": 2,
+    "r_new": 2,
+    "r_verdict": "tie",
+    "t_old": 3,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "type c to hdmi adapter",
+      "type c hdmi adapter",
+      "hdmi adapter usb c",
+      "adapter type c hdmi",
+      "usb c hdmi",
+      "สาย hdmi ugreen",
+      "ugreen type c to hdmi",
+      "ugreen c to hdmi",
+      "usb c to hdmi adapter",
+      "usb type c hdmi",
+      "hdmi to type c adapter",
+      "สาย usb c to hdmi",
+      "adaptor type c to hdmi",
+      "type c to usb hdmi adapter",
+      "hdmi usb c",
+      "สาย usb type c to hdmi",
+      "adapter type c to hdmi",
+      "adapter type c ugreen"
+    ],
+    "new_terms": [
+      "usb c to hdmi ugreen",
+      "ugreen usb c to hdmi",
+      "usb c to hdmi adapter",
+      "usb to hdmi ugreen",
+      "type c to hdmi ugreen",
+      "ugreen type c to hdmi",
+      "ugreen c to hdmi",
+      "c to hdmi ugreen",
+      "type c to hdmi adapter",
+      "usb c to hdmi converter",
+      "type c hdmi adapter",
+      "ugreen 4k 60hz",
+      "usb type c to hdmi",
+      "อะ แด ป เตอร์ type c to hdmi",
+      "usb c to hdmi",
+      "ugreen usb to hdmi",
+      "type c to usb hdmi adapter",
+      "adaptor type c to hdmi"
+    ],
+    "old_title": "อะแดปเตอร์ USB C เป็น HDMI 60Hz UGreen บางกะทัดรัด เคสอลูมิเนียม สำหรับ MacBook Pro 2020 Samsung DeX",
+    "new_title": "อะแดปเตอร์ USB-C เป็น HDMI 60Hz UGreen บางกะทัดรัด รองรับ Netflix, Prime Video MacBook Pro 2020",
+    "reason": "The old title is better as it includes more specific and valuable product attributes like 'Aluminum Case' and 'Samsung DeX' compatibility. The new title removes this information in favor of generic usage examples ('Supports Netflix'), making it less descriptive. Both retrieval lists are equally poor, containing many off-topic terms for different products from the same brand.",
+    "issues": [
+      "off_topic_terms",
+      "missing_core_specs",
+      "better_spec_coverage"
+    ]
+  },
+  {
+    "group": "F",
+    "region": "TW",
+    "item_id": "25175860041",
+    "product_title": "北港武德宮 文創商品",
+    "r_old": 1,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 4,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "大 創 好物",
+      "北港 勝 和 商行",
+      "the craft crew products",
+      "品 興行",
+      "武 德 宮",
+      "the craft crew products 官網",
+      "北港 花生 酥",
+      "北港 武 德 宮 存 錢 筒",
+      "fractal design north",
+      "北港 武 德 宮 虎 爺",
+      "北港 日 香 珍",
+      "innogoods"
+    ],
+    "new_terms": [
+      "武 德 宮",
+      "禮物",
+      "木頭 玩具"
+    ],
+    "old_title": "文創商品 北港武德宮 PVC無毒材質 在地文化圖案 收藏送禮紀念品",
+    "new_title": "文創商品 北港武德宮 PVC無毒文化元素 收藏送禮紀念品",
+    "reason": "The new search terms are a vast improvement, removing a large number of irrelevant, wrong-brand, and off-topic terms. However, the new title is a clear downgrade, combining 'PVC non-toxic' and 'cultural elements' into an awkward and ungrammatical phrase. The old title correctly separates material from design, making it more logical and professional.",
+    "issues": [
+      "awkward_title",
+      "off_topic_terms"
+    ]
+  },
+  {
+    "group": "F",
+    "region": "SG",
+    "item_id": "29580588873",
+    "product_title": "[in stock] Desktop Organizer Iron Art Pegboard Bookshelf Bedroom Computer Desk Display Rack Home Stu",
+    "r_old": 2,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 4,
+    "t_new": 3,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "desktop shelf organizer",
+      "desk shelf",
+      "desk shelf organizer",
+      "desk storage organizer",
+      "desk with shelf",
+      "computer desk organizer",
+      "pegboard shelves",
+      "pegboard shelf",
+      "study desk storage",
+      "metal rack shelf",
+      "metal rack",
+      "pegboard rack",
+      "desk organizer",
+      "desk with pegboard",
+      "metal shelving",
+      "metal storage rack",
+      "metal shelf",
+      "metal display rack"
+    ],
+    "new_terms": [
+      "metal pegboard",
+      "pegboard rack",
+      "desktop shelf organizer",
+      "pegboard shelf",
+      "countertop organizer",
+      "study desk and shelf",
+      "pegboard display",
+      "study desk storage",
+      "desk shelf",
+      "desk shelf organizer",
+      "metal display rack",
+      "desk organizer",
+      "pegboard shelves",
+      "peg shelves",
+      "computer desk organizer",
+      "book organizer for desk",
+      "metal rack shelf",
+      "desk rack"
+    ],
+    "old_title": "Desktop Organizer Pegboard Shelf 2-Layer Simple Modern Compact Pegboard/Skadis-compatible desk storage",
+    "new_title": "Desktop Organizer Pegboard Shelf Simple Modern 2-Layer for Study Desk",
+    "reason": "The new search terms are significantly cleaner and more focused, with much less irrelevant noise than the old set. However, the new title is a clear regression because it removes the critical 'Skadis-compatible' information, which is a key selling point and compatibility spec. The old title, while slightly clunky, is superior for retaining this important detail.",
+    "issues": [
+      "missing_model_or_compatibility"
+    ]
+  },
+  {
+    "group": "F",
+    "region": "BR",
+    "item_id": "22094480286",
+    "product_title": "Paralama Dianteiro Cg 150 160 Start Original Honda",
+    "r_old": 2,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 4,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "paralama dianteiro fazer 150",
+      "paralama dianteiro da 150",
+      "paralama dianteiro 150",
+      "paralama dianteiro fazer 150 original",
+      "paralama dianteiro start 160",
+      "paralama original start 160",
+      "paralama start 160",
+      "paralama dianteiro da 160",
+      "paralama cg 150",
+      "paralama dianteiro 160",
+      "paralama start 150",
+      "paralama da 160 dianteiro",
+      "cg start 160",
+      "paralama da cg 150",
+      "start cg 160",
+      "paralama da 160 na 150",
+      "paralama 160 dianteiro",
+      "para lama dianteiro 160"
+    ],
+    "new_terms": [
+      "paralama dianteiro da cg 150",
+      "paralama dianteiro cg 150",
+      "paralama dianteiro cg 160 start",
+      "paralama cg 160 original",
+      "paralama dianteiro cg 160",
+      "paralama cg 150",
+      "paralama cg 160",
+      "paralama da cg 150",
+      "paralama da cg 160",
+      "paralama dianteiro 160 original",
+      "paralama dianteiro 160 start",
+      "paralama start 160 original",
+      "paralama dianteiro da start 160",
+      "paralama dianteiro start 160",
+      "paralama da 160 start",
+      "paralama original start 160",
+      "paralama dianteiro 150",
+      "para lama dianteiro 160"
+    ],
+    "old_title": "Paralama Dianteiro CG 150 CG 160 Start Honda Original plástico resistente embalagem individual",
+    "new_title": "Paralama dianteiro CG 150 CG 160 Start Honda plástico de alta qualidade durabilidade",
+    "reason": "The new search terms are a significant improvement, removing incorrect brand/model terms like 'fazer' and 'factor'. However, the new title is a clear regression as it drops the word 'Original', which is a critical spec and selling point for an OEM part. The old title, while slightly clunky, correctly retains this essential information.",
+    "issues": [
+      "missing_core_specs",
+      "wrong_brand_terms"
+    ]
+  },
+  {
+    "group": "F",
+    "region": "BR",
+    "item_id": "21268395913",
+    "product_title": "Válvula Termostática Fiesta Ka 1.5 Focus 1.6 todos motor Sigma 2011 a 2017-116682 VALCLEI",
+    "r_old": 2,
+    "r_new": 4,
+    "r_verdict": "new_better",
+    "t_old": 5,
+    "t_new": 2,
+    "t_verdict": "old_better",
+    "overall": "old_better",
+    "old_terms": [
+      "válvula termostática do ecosport",
+      "válvula termostática da ecosport",
+      "válvula termostática ecosport",
+      "válvula termostática fiesta"
+    ],
+    "new_terms": [
+      "válvula termostática new fiesta 1.6 sigma",
+      "válvula termostática fiesta",
+      "valvula termostática fiesta",
+      "valvula termostatica fiesta",
+      "válvula termostática fiesta 2012",
+      "válvula termostática motor sigma",
+      "valvula termostatica new fiesta 1.6 16v",
+      "válvula termostática do fiesta",
+      "válvula termostática do fiesta 2012",
+      "valvula termostatica fiesta 2013",
+      "valvula termostatica fiesta 2014",
+      "valvula termostatica motor sigma",
+      "valvula termostatica fiesta 2012",
+      "válvula termostática do fiesta 2014",
+      "válvula termostática do fiesta 2011",
+      "valvula termostatica fiesta 2011",
+      "valvula termostatica ecosport 1.6 sigma",
+      "válvula termostática ecosport 1.6 sigma"
+    ],
+    "old_title": "válvula termostática Ford Fiesta Ka Focus Ecosport VALCLEI compatível com motores Sigma 1.5 e 1.6 2011–2017",
+    "new_title": "válvula termostática Fiesta Ka Focus Ecosport VALCLEI peça reposição motor Sigma 1.5 1.6 16V",
+    "reason": "The new search terms are much more comprehensive, covering more models, years, and engine variations. However, the new title is a significant regression because it removes the critical year range (2011-2017), which is essential compatibility information for automotive parts. The old title correctly includes this information, making it far superior and ready for production.",
+    "issues": [
+      "missing_core_specs",
+      "better_spec_coverage"
+    ]
+  }
+];
+
+// Group by type
+const grouped = {};
+allCases.forEach(c => {
+  if (!grouped[c.group]) grouped[c.group] = [];
+  grouped[c.group].push(c);
+});
+
+const ORDER = ['A','B','C','D','E','F'];
+
+function verdictBadge(v, type) {
+  if (!v) return '';
+  const labels = { new_better:'新模型胜', old_better:'旧链路胜', tie:'持平' };
+  const cls = v === 'new_better' ? 'badge-win' : v === 'old_better' ? 'badge-lose' : 'badge-tie';
+  return `<span class="badge ${cls}">${type}: ${labels[v]}</span>`;
+}
+
+function scoreSpan(old_s, new_s) {
+  const delta = new_s - old_s;
+  const arrow = delta > 0 ? `▲+${delta}` : delta < 0 ? `▼${delta}` : '=';
+  const color = delta > 0 ? '#16a34a' : delta < 0 ? '#dc2626' : '#64748b';
+  return `<span style="color:${color};font-weight:700;font-size:13px;">  ${old_s}→${new_s} ${arrow}</span>`;
+}
+
+function termsHtml(terms, cls) {
+  if (!terms || terms.length === 0)
+    return '<span class="term-empty">（旧链路未召回任何词）</span>';
+  return terms.map(t => `<span class="term">${t}</span>`).join('');
+}
+
+function caseHtml(c, idx) {
+  const rWinner = c.r_verdict;
+  const tWinner = c.t_verdict;
+  const oldColCls = (tWinner === 'old_better') ? 'col old-col winner' : 'col old-col';
+  const newColCls = (tWinner === 'new_better') ? 'col new-col winner' : 'col new-col';
+
+  return `
+  <div class="case-card">
+    <div class="case-head">
+      <span class="case-num">Case ${idx}</span>
+      <span class="region-badge">${c.region}</span>
+      <span class="product-name">${c.product_title}</span>
+      <div class="score-badges">
+        ${verdictBadge(c.r_verdict,'Retrieval')}
+        ${verdictBadge(c.t_verdict,'Title')}
+        ${verdictBadge(c.overall,'综合')}
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="${oldColCls}">
+        <div class="col-header">
+          <span class="col-label">旧链路 (P8 Chain)</span>
+          <span class="col-score">Retrieval ${c.r_old}/5 · Title ${c.t_old}/5</span>
+        </div>
+        <div class="terms-section">
+          <div class="terms-label">📌 搜索词</div>
+          <div class="terms-wrap">${termsHtml(c.old_terms, 'old')}</div>
+        </div>
+        <div class="title-section">
+          <div class="terms-label">📝 生成 Title</div>
+          <div class="title-text">${c.old_title}</div>
+        </div>
+      </div>
+
+      <div class="${newColCls}">
+        <div class="col-header">
+          <span class="col-label">新模型 (QC8503 v2)</span>
+          <span class="col-score">Retrieval ${c.r_new}/5 · Title ${c.t_new}/5</span>
+        </div>
+        <div class="terms-section">
+          <div class="terms-label">📌 搜索词</div>
+          <div class="terms-wrap">${termsHtml(c.new_terms, 'new')}</div>
+        </div>
+        <div class="title-section">
+          <div class="terms-label">📝 生成 Title</div>
+          <div class="title-text">${c.new_title}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reason-section">
+      <div class="reason-label">🧑‍⚖️ Judge 评审意见</div>
+      <div class="reason-text">${c.reason}</div>
+      ${c.issues && c.issues.length > 0 ? `
+        <div class="issues-wrap">
+          ${c.issues.map(t => `<span class="issue-tag">${t}</span>`).join('')}
+        </div>` : ''}
+    </div>
+  </div>`;
+}
+
+// Build tabs
+const tabBar = document.getElementById('tabBar');
+const mainContent = document.getElementById('mainContent');
+
+ORDER.forEach((g, i) => {
+  const meta = GROUP_META[g];
+  const cases = grouped[g] || [];
+
+  // Tab
+  const tab = document.createElement('div');
+  tab.className = 'tab' + (i === 0 ? ' active' : '');
+  tab.textContent = `${meta.icon} ${meta.label} (${cases.length})`;
+  tab.dataset.group = g;
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.group-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + g).classList.add('active');
+  };
+  tabBar.appendChild(tab);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.id = 'panel-' + g;
+  panel.className = 'group-panel' + (i === 0 ? ' active' : '');
+
+  let panelHtml = `
+    <div class="group-header" style="background:${meta.bg};border:1px solid ${meta.border};">
+      <div class="icon">${meta.icon}</div>
+      <div>
+        <h2 style="color:${meta.color}">${meta.label}</h2>
+        <p style="color:${meta.color};opacity:.8">${meta.desc}</p>
+      </div>
+    </div>`;
+
+  cases.forEach((c, idx) => {
+    panelHtml += caseHtml(c, idx + 1);
+  });
+
+  panel.innerHTML = panelHtml;
+  mainContent.appendChild(panel);
+});
+</script>
+</body>
+</html>
