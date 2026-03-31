@@ -273,7 +273,13 @@ function render() {
     const txt = (ln.text || '').trim();
 
     // 跳过空条目（理论上不应出现）
-    if (!txt) { i++; continue; }
+    if (!txt && ln.action !== 'paragraph_break') { i++; continue; }
+
+    if (ln.action === 'paragraph_break') {
+      origHtml  += '<span class="para-break"></span>';
+      cleanHtml += '<span class="para-break"></span>';
+      i++; continue;
+    }
 
     if (ln.action === 'deleted_paragraph') {
       const reasonSet = new Set();
