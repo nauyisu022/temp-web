@@ -64,7 +64,11 @@ h1{font-size:22px;font-weight:600;margin-bottom:4px;text-align:center}
 .title-box.old{background:var(--losebg);border:1px solid var(--losebd);color:#9f1239}
 .title-box.new{background:var(--winbg);border:1px solid var(--winbd);color:#14532d}
 
-.terms-box{padding:8px 10px;border-radius:5px;font-size:11.5px;background:var(--bg3);border:1px solid var(--border);max-height:120px;overflow-y:auto;word-break:break-word;font-family:monospace}
+.term-tags{display:flex;flex-wrap:wrap;gap:4px;padding:6px 0;max-height:110px;overflow-y:auto}
+.term-tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;background:var(--bg3);border:1px solid var(--border);color:var(--text);white-space:nowrap}
+.term-tag.old-only{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.term-tag.new-only{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
+.term-tag.shared{background:var(--bg3);border-color:var(--border);color:var(--dim)}
 
 .reason-box{padding:10px 12px;border-radius:5px;background:#f0f4ff;border:1px solid #c7d2e8;font-size:12.5px;color:#24292f;line-height:1.5}
 
@@ -139,8 +143,21 @@ function verdictClass(v) {
   return 'tie';
 }
 
+function parseTerms(raw) {
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  if (typeof raw === 'string') {
+    // handle Python list string like "['term1', 'term2']"
+    return raw.replace(/^\[|\]$/g,'').split(',').map(t=>t.trim().replace(/^['"]|['"]$/g,'')).filter(Boolean);
+  }
+  return [];
+}
+
 function renderCase(c, idx) {
   const tags = typeof c.tags === 'string' ? c.tags.replace(/[\[\]']/g,'').split(',').map(t=>t.trim()).filter(Boolean) : c.tags;
+  const oldTerms = parseTerms(c.old_search_terms);
+  const newTerms = parseTerms(c.new_search_terms);
+  const oldSet = new Set(oldTerms);
+  const newSet = new Set(newTerms);
   const rClass = verdictClass(c.retrieval_verdict);
   const tClass = verdictClass(c.title_verdict);
   return `
@@ -168,12 +185,12 @@ function renderCase(c, idx) {
     </div>
     <div class="row">
       <div>
-        <div class="col-label">旧搜索词</div>
-        <div class="terms-box">${esc(c.old_search_terms)}</div>
+        <div class="col-label">旧搜索词 (${oldTerms.length})</div>
+        <div class="term-tags">${oldTerms.map(t => `<span class="term-tag ${newSet.has(t)?'shared':'old-only'}">${esc(t)}</span>`).join('')}</div>
       </div>
       <div>
-        <div class="col-label">新搜索词</div>
-        <div class="terms-box">${esc(c.new_search_terms)}</div>
+        <div class="col-label">新搜索词 (${newTerms.length})</div>
+        <div class="term-tags">${newTerms.map(t => `<span class="term-tag ${oldSet.has(t)?'shared':'new-only'}">${esc(t)}</span>`).join('')}</div>
       </div>
     </div>
     <div class="reason-box">${esc(c.reason)}</div>
