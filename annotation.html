@@ -189,7 +189,11 @@ let DATA_ORIG = [];   // 保存原始顺序
 let labels = {};
 let current = 0;
 
-fetch('annotation_data.json')
+// 支持 ?data=xxx.json URL 参数
+const urlParams = new URLSearchParams(window.location.search);
+const dataFile = urlParams.get('data') || 'annotation_data.json';
+
+fetch(dataFile)
   .then(r => r.json())
   .then(d => {
     DATA_ORIG = d;
