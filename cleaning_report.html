@@ -212,32 +212,33 @@ classify_line(line, region):
 <!-- ═══════════════════════════════════════════════ -->
 <h2>4. 验证结果</h2>
 
-<h3>4.1 清洗质量（1966 条 · 8 地区）</h3>
+<h3>4.1 清洗质量（8000 条 · 每地区 1000 条）</h3>
 
 <div class="metrics">
-<div class="metric"><div class="metric-num">100%</div><div class="metric-label">规格保留率<br>3993 / 3993</div></div>
-<div class="metric"><div class="metric-num">100%</div><div class="metric-label">认证保留率<br>58 / 58</div></div>
+<div class="metric"><div class="metric-num">100%</div><div class="metric-label">规格保留率<br>19697 / 19697</div></div>
+<div class="metric"><div class="metric-num">100%</div><div class="metric-label">认证保留率<br>358 / 358</div></div>
 <div class="metric"><div class="metric-num">0</div><div class="metric-label">引入额外换行</div></div>
-<div class="metric"><div class="metric-num">10.1%</div><div class="metric-label">总删除率</div></div>
+<div class="metric"><div class="metric-num">4.7%</div><div class="metric-label">总删除率</div></div>
 </div>
 
 <h3>4.2 各阶段删除占比</h3>
 
 <table>
 <tr><th>阶段</th><th>删除占比</th><th>作用</th></tr>
-<tr><td>阶段一 · 预处理</td><td>2.9%</td><td>Emoji / HTML / URL / 电话 / 重复行</td></tr>
-<tr><td>阶段二 · 行级过滤</td><td>7.2%</td><td>噪音关键词命中的行（无长度限制约束的纯噪音）</td></tr>
+<tr><td>阶段一 · 预处理</td><td>~1.5%</td><td>Emoji / HTML / URL / 电话 / 重复行</td></tr>
+<tr><td>阶段二 · 行级过滤</td><td>~3.2%</td><td>噪音关键词命中的行</td></tr>
 </table>
 
 <h3>4.3 地区差异</h3>
 
 <table>
-<tr><th>地区</th><th>有变化</th><th>说明</th></tr>
-<tr><td><strong>TW</strong></td><td>62.5%</td><td>效果最显著，大量运营文案 + Emoji</td></tr>
-<tr><td>BR</td><td>31.9%</td><td>物流/退换文案</td></tr>
-<tr><td>TH</td><td>18.1%</td><td>Emoji 较多</td></tr>
-<tr><td>ID</td><td>19.4%</td><td></td></tr>
-<tr><td>MY / PH / SG / VN</td><td>8~18%</td><td>原文较干净</td></tr>
+<tr><th>地区</th><th>有变化</th><th>总删除率</th><th>说明</th></tr>
+<tr><td><strong>TW</strong></td><td>63.1%</td><td>25.0%</td><td>效果最显著，大量运营文案 + Emoji</td></tr>
+<tr><td>BR</td><td>43.6%</td><td>3.1%</td><td>物流/退换文案</td></tr>
+<tr><td>ID</td><td>32.2%</td><td>7.2%</td><td></td></tr>
+<tr><td>TH</td><td>33.0%</td><td>6.1%</td><td></td></tr>
+<tr><td>VN</td><td>35.4%</td><td>2.8%</td><td></td></tr>
+<tr><td>MY / PH / SG</td><td>17~25%</td><td>1.6~2.1%</td><td>原文较干净</td></tr>
 </table>
 
 <h3>4.4 Token 长度分析（Qwen Tokenizer）</h3>
