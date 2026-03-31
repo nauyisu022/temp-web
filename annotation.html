@@ -145,6 +145,7 @@
   <span class="item-title" id="itemTitle">-</span>
   <span class="badge badge-reduction" id="badgeReduction">-</span>
   <span class="item-cat" id="itemCat">-</span>
+  <span id="judgeInfo" style="font-size:11px;color:#b45309;background:#fef3c7;padding:2px 8px;border-radius:6px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:none"></span>
 </div>
 
 <div class="main">
@@ -285,6 +286,16 @@ function render() {
   rb.className = 'badge badge-reduction' + (pct >= 30 ? ' high' : '');
   document.getElementById('itemCat').textContent =
     (item.category || '').split('->').slice(-2).join(' > ');
+
+  // Gemini judge 信息（仅当有时显示）
+  const judgeEl = document.getElementById('judgeInfo');
+  if (item.judge_missing && item.judge_missing.length) {
+    judgeEl.style.display = 'inline';
+    judgeEl.title = (item.judge_reason || '') + '\n缺失: ' + item.judge_missing.join('; ');
+    judgeEl.textContent = `🤖 score=${item.judge_score} · ${item.judge_missing[0].slice(0,40)}${item.judge_missing[0].length>40?'…':''}`;
+  } else {
+    judgeEl.style.display = 'none';
+  }
 
   const done = Object.keys(labels).length;
   document.getElementById('counter').textContent =
