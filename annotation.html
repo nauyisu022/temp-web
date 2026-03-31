@@ -290,46 +290,30 @@ function render() {
     `${current + 1} / ${DATA.length}（已标 ${done}）`;
   document.getElementById('progressFill').style.width = (done / DATA.length * 100) + '%';
 
-  // 左栏：diffLines 对比原文 vs 清洗后，逐行标红删除 + 查规则标签
-  // 右栏：直接渲染 item.cleaned 原样
+  // 左栏：original vs cleaned 的完整 diff（含 L1 变化）
+  // 右栏：item.cleaned 原样显示
   const lines = item.lines || [];
-
-  // 建立删除文本 → 规则标签的映射（用前几个词做 key）
   const ruleMap = new Map();
   for (const ln of lines) {
-    if (ln.action === 'deleted_paragraph' || ln.action === 'deleted_sentence') {
+    if (ln.action === 'deleted' || ln.action === 'deleted_paragraph' || ln.action === 'deleted_sentence') {
       const key = (ln.text || '').trim().slice(0, 40);
       if (key) ruleMap.set(key, ln.reason);
     }
   }
 
-  // 左栏：用原始文本显示（含 emoji），diff 基于预处理后文本计算删除位置
-  // 右栏：直接渲染 item.cleaned 原样
-  const diffResult = Diff.diffLines(item.preprocessed || item.original || '', item.cleaned || '');
+  const diffResult = Diff.diffLines(item.original || '', item.cleaned || '');
   let origHtml = '';
-  // 同时准备原始文本的行映射（用于左栏显示含 emoji 的真实内容）
-  const origLines = (item.original || '').split('\n');
-  const preLines  = (item.preprocessed || item.original || '').split('\n');
-  let origLineIdx = 0;
   for (const part of diffResult) {
-    const lineCount = (part.value.match(/\n/g) || []).length;
+    const escaped = esc(part.value);
     if (part.removed) {
-      // 取对应的原始行（含 emoji）显示
-      const rawLines = origLines.slice(origLineIdx, origLineIdx + lineCount).join('\n')
-                    || origLines[origLineIdx] || part.value;
       const key = part.value.trim().slice(0, 40);
       let tags = '';
       for (const [k, reason] of ruleMap) {
         if (part.value.includes(k)) { tags = reasonTags(reason); break; }
       }
-      origHtml += `<span class="line-removed">${esc(rawLines)}${tags}</span>`;
-      origLineIdx += lineCount;
+      origHtml += `<span class="line-removed">${escaped}${tags}</span>`;
     } else if (!part.added) {
-      // kept：用原始行显示（含 emoji）
-      const rawLines = origLines.slice(origLineIdx, origLineIdx + lineCount).join('\n')
-                    || origLines[origLineIdx] || part.value;
-      origHtml += `<span class="line-kept">${esc(rawLines)}</span>`;
-      origLineIdx += lineCount;
+      origHtml += `<span class="line-kept">${escaped}</span>`;
     }
   }
 
