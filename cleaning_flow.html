@@ -35,9 +35,9 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 /* 子步骤网格 */
 .steps { display: grid; gap: 8px; }
 .steps-row { display: flex; align-items: stretch; gap: 6px; }
-.step { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #f9fafb; font-size: 11px; }
+.step { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #f9fafb; font-size: 13px; }
 .step-title { font-weight: 600; margin-bottom: 3px; }
-.step-ex { font-size: 9.5px; color: #94a3b8; font-family: 'SF Mono', Consolas, monospace; line-height: 1.5; }
+.step-ex { font-size: 11px; color: #4b5563; font-family: 'SF Mono', Consolas, monospace; line-height: 1.5; }
 .s-new     { background: #dbeafe; border-color: #93c5fd; }
 .s-new .step-title { color: #1d4ed8; }
 .s-accent  { background: #eff6ff; border-color: #bfdbfe; }
@@ -50,16 +50,16 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .s-keep .step-title { color: var(--green); }
 
 /* 箭头 */
-.arr { display: flex; align-items: center; color: #c0c5ce; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.arr { display: flex; align-items: center; color: #9ca3af; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 
 /* classify_line 决策流 */
-.logic { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 8px; font-size: 12px; }
+.logic { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 8px; font-size: 13px; }
 .logic-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); }
 .logic-row:last-child { border-bottom: none; }
-.logic-num { width: 18px; height: 18px; border-radius: 50%; background: #e5e7eb; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.logic-cond { flex: 1; color: var(--muted); }
+.logic-num { width: 18px; height: 18px; border-radius: 50%; background: #e5e7eb; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #374151; }
+.logic-cond { flex: 1; color: #374151; }
 .logic-arrow { color: #c0c5ce; }
-.logic-result { font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 8px; flex-shrink: 0; }
+.logic-result { font-weight: 700; font-size: 12px; padding: 3px 10px; border-radius: 8px; flex-shrink: 0; }
 .r-fact  { background: #dcfce7; color: var(--green); }
 .r-noise { background: #fee2e2; color: var(--red); }
 .r-keep  { background: #dbeafe; color: #1d4ed8; }
