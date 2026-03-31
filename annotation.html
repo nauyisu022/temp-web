@@ -70,6 +70,7 @@
   /* jsdiff 行内字符级高亮 */
   ins.diff-add { background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 2px; padding: 0 1px; }
   del.diff-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; border-radius: 2px; padding: 0 1px; }
+  del.word-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; border-radius: 3px; padding: 0 2px; }
 
   /* 规则标签 */
   .rtag {
@@ -290,7 +291,7 @@ function render() {
     `${current + 1} / ${DATA.length}（已标 ${done}）`;
   document.getElementById('progressFill').style.width = (done / DATA.length * 100) + '%';
 
-  // 左栏：original vs cleaned 的完整 diff（含 L1 变化）
+  // 左栏：word-level diff，精确高亮行内被删的词（emoji/URL/噪音词等）
   // 右栏：item.cleaned 原样显示
   const lines = item.lines || [];
   const ruleMap = new Map();
@@ -301,24 +302,42 @@ function render() {
     }
   }
 
-  const diffResult = Diff.diffLines(item.original || '', item.cleaned || '');
+  // diffWords 对比整文，然后逐部分渲染
+  const diffResult = Diff.diffWords(item.original || '', item.cleaned || '');
   let origHtml = '';
-  for (const part of diffResult) {
-    const escaped = esc(part.value);
+
+  // 收集连续的 removed 块，查规则标签
+  let pendingRemoved = '';
+  for (let i = 0; i < diffResult.length; i++) {
+    const part = diffResult[i];
     if (part.removed) {
-      const key = part.value.trim().slice(0, 40);
-      let tags = '';
-      for (const [k, reason] of ruleMap) {
-        if (part.value.includes(k)) { tags = reasonTags(reason); break; }
+      pendingRemoved += part.value;
+    } else {
+      // 先输出积累的删除内容
+      if (pendingRemoved) {
+        const key = pendingRemoved.trim().slice(0, 40);
+        let tags = '';
+        for (const [k, reason] of ruleMap) {
+          if (pendingRemoved.includes(k)) { tags = reasonTags(reason); break; }
+        }
+        origHtml += `<del class="word-del">${esc(pendingRemoved)}</del>${tags}`;
+        pendingRemoved = '';
       }
-      origHtml += `<span class="line-removed">${escaped}${tags}</span>`;
-    } else if (!part.added) {
-      origHtml += `<span class="line-kept">${escaped}</span>`;
+      if (!part.added) {
+        origHtml += esc(part.value);
+      }
     }
   }
+  // 尾部剩余
+  if (pendingRemoved) {
+    origHtml += `<del class="word-del">${esc(pendingRemoved)}</del>`;
+  }
+
+  // 换行转 br 保留结构
+  origHtml = origHtml.replace(/\n/g, '<br>');
 
   document.getElementById('origBody').innerHTML =
-    `<div style="white-space:pre-wrap;line-height:1.8">${origHtml}</div>`;
+    `<div style="line-height:1.8">${origHtml}</div>`;
   document.getElementById('origLen').textContent = `${item.orig_len} chars`;
 
   document.getElementById('cleanBody').innerHTML =
