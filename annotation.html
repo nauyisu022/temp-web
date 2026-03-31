@@ -8,110 +8,115 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
 
-  /* ── 顶部导航 ── */
   .topbar {
     background: #1a1a2e; color: #fff; padding: 12px 24px;
     display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   .topbar h1 { font-size: 15px; font-weight: 600; flex: 1; }
-  .counter { font-size: 13px; color: #aaa; }
-  .progress-wrap { flex: 1; max-width: 200px; }
+  .counter { font-size: 13px; color: #aaa; white-space: nowrap; }
+  .progress-wrap { flex: 1; max-width: 180px; }
   .progress-bar { height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
   .progress-fill { height: 100%; background: #4ade80; transition: width .3s; border-radius: 3px; }
   .btn-nav {
     padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer;
-    font-size: 13px; font-weight: 500; transition: all .15s;
+    font-size: 13px; font-weight: 500; transition: all .15s; white-space: nowrap;
   }
   .btn-nav:hover { transform: translateY(-1px); }
   .btn-prev { background: #374151; color: #e5e7eb; }
   .btn-next { background: #3b82f6; color: #fff; }
-  .btn-export { background: #10b981; color: #fff; margin-left: 8px; }
+  .btn-export { background: #10b981; color: #fff; }
 
-  /* ── 商品信息条 ── */
   .item-info {
     background: #fff; border-bottom: 1px solid #e5e7eb;
-    padding: 10px 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 8px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 10px;
-    font-size: 11px; font-weight: 600; letter-spacing: .3px;
-  }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
   .badge-region { background: #dbeafe; color: #1e40af; }
   .badge-reduction { background: #fef3c7; color: #92400e; }
   .badge-reduction.high { background: #fee2e2; color: #991b1b; }
   .item-title { font-size: 13px; color: #374151; font-weight: 500; flex: 1; min-width: 0;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .item-cat { font-size: 11px; color: #9ca3af; }
+  .item-cat { font-size: 11px; color: #9ca3af; white-space: nowrap; }
 
-  /* ── 主内容区 ── */
-  .main { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 140px); }
+  .main { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 148px); }
 
-  .panel {
-    display: flex; flex-direction: column; border-right: 1px solid #e5e7eb;
-    background: #fff;
-  }
+  .panel { display: flex; flex-direction: column; border-right: 1px solid #e5e7eb; background: #fff; }
   .panel:last-child { border-right: none; }
 
   .panel-header {
-    padding: 10px 16px; font-size: 12px; font-weight: 700; letter-spacing: .5px;
-    border-bottom: 2px solid; display: flex; align-items: center; gap: 8px;
-    position: sticky; top: 0; background: inherit;
+    padding: 9px 16px; font-size: 12px; font-weight: 700; letter-spacing: .5px;
+    border-bottom: 2px solid; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
   }
-  .panel-header.orig { border-color: #6366f1; color: #4338ca; background: #eef2ff; }
+  .panel-header.orig  { border-color: #6366f1; color: #4338ca; background: #eef2ff; }
   .panel-header.clean { border-color: #10b981; color: #065f46; background: #ecfdf5; }
-
   .char-count { font-size: 11px; font-weight: 400; color: #6b7280; margin-left: auto; }
 
-  .panel-body { flex: 1; overflow-y: auto; padding: 16px; line-height: 1.75; font-size: 13px; }
+  .panel-body { flex: 1; overflow-y: auto; padding: 14px 16px; line-height: 1.8; font-size: 13px; }
 
-  /* 高亮删除的行 */
-  .line-removed { background: #fee2e2; color: #991b1b; text-decoration: line-through;
-    border-radius: 3px; padding: 1px 3px; display: block; margin: 2px 0; }
-  .line-kept    { display: block; margin: 2px 0; }
-  .line-empty   { height: 10px; display: block; }
+  /* 行样式 */
+  .line-kept    { display: block; padding: 1px 4px; margin: 1px 0; }
+  .line-fact    { display: block; padding: 1px 4px; margin: 1px 0;
+    background: #f0fdf4; border-left: 3px solid #10b981; }
+  .line-removed {
+    display: block; padding: 2px 6px; margin: 2px 0;
+    background: #fee2e2; color: #991b1b; text-decoration: line-through;
+    border-radius: 4px; border-left: 3px solid #ef4444;
+  }
+  .line-empty { height: 8px; display: block; }
 
-  /* ── 打标区 ── */
+  /* 规则标签 */
+  .rtag {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .2px;
+    padding: 0px 5px; border-radius: 8px; margin-left: 5px; vertical-align: middle;
+    text-decoration: none; opacity: .9;
+  }
+  .rtag-shipping         { background: #dbeafe; color: #1d4ed8; }
+  .rtag-returns          { background: #fce7f3; color: #be185d; }
+  .rtag-customer_service { background: #fef3c7; color: #b45309; }
+  .rtag-disclaimers      { background: #f3f4f6; color: #4b5563; }
+  .rtag-store_intro      { background: #ede9fe; color: #6d28d9; }
+  .rtag-warnings         { background: #ffedd5; color: #c2410c; }
+  .rtag-sentence_noise   { background: #fee2e2; color: #b91c1c; }
+  .rtag-fact             { background: #dcfce7; color: #15803d; }
+
+  /* 打标区 */
   .label-panel {
     background: #f9fafb; border-top: 1px solid #e5e7eb;
-    padding: 14px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 10px 20px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .label-title { font-size: 12px; color: #6b7280; font-weight: 600; white-space: nowrap; }
-
   .label-btn {
-    padding: 6px 14px; border-radius: 20px; border: 2px solid transparent;
+    padding: 5px 13px; border-radius: 20px; border: 2px solid #e5e7eb;
     font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s;
-    background: #f3f4f6; color: #374151;
+    background: #fff; color: #374151;
   }
-  .label-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-  .label-btn.selected { color: #fff; transform: translateY(-1px); }
-  .label-btn[data-val="correct"].selected   { background: #10b981; border-color: #059669; }
-  .label-btn[data-val="minor"].selected     { background: #f59e0b; border-color: #d97706; }
-  .label-btn[data-val="miss_info"].selected { background: #ef4444; border-color: #dc2626; }
-  .label-btn[data-val="over_clean"].selected{ background: #8b5cf6; border-color: #7c3aed; }
-  .label-btn[data-val="skip"].selected      { background: #6b7280; border-color: #4b5563; }
-
+  .label-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+  .label-btn.selected { color: #fff; transform: translateY(-1px); border-color: transparent; }
+  .label-btn[data-val="correct"].selected    { background: #10b981; }
+  .label-btn[data-val="minor"].selected      { background: #f59e0b; }
+  .label-btn[data-val="miss_info"].selected  { background: #ef4444; }
+  .label-btn[data-val="over_clean"].selected { background: #8b5cf6; }
+  .label-btn[data-val="skip"].selected       { background: #6b7280; }
   .note-input {
-    flex: 1; min-width: 200px; padding: 6px 10px; border: 1px solid #d1d5db;
+    flex: 1; min-width: 180px; padding: 5px 10px; border: 1px solid #d1d5db;
     border-radius: 8px; font-size: 12px; outline: none; background: #fff;
   }
   .note-input:focus { border-color: #3b82f6; }
+  .kbd-hint { font-size: 10px; color: #9ca3af; white-space: nowrap; }
+  .kbd { display: inline-block; background: #374151; color: #d1d5db;
+    padding: 0 4px; border-radius: 3px; font-size: 10px; font-family: monospace; }
 
   .stats-bar {
-    background: #1a1a2e; color: #9ca3af; font-size: 11px;
-    padding: 6px 24px; display: flex; gap: 16px;
+    background: #111827; color: #9ca3af; font-size: 11px;
+    padding: 5px 20px; display: flex; gap: 14px; flex-wrap: wrap;
   }
   .stats-item { display: flex; align-items: center; gap: 4px; }
-  .stats-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* 键盘提示 */
-  .kbd { display: inline-block; background: #374151; color: #d1d5db;
-    padding: 1px 5px; border-radius: 4px; font-size: 10px; font-family: monospace; }
+  .stats-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
-<!-- 顶部导航 -->
 <div class="topbar">
   <h1>🔍 Description 清洗人工打标</h1>
   <div class="progress-wrap">
@@ -120,10 +125,9 @@
   <span class="counter" id="counter">0 / 0</span>
   <button class="btn-nav btn-prev" onclick="navigate(-1)">← 上一条</button>
   <button class="btn-nav btn-next" onclick="navigate(1)">下一条 →</button>
-  <button class="btn-nav btn-export" onclick="exportResults()">📥 导出结果</button>
+  <button class="btn-nav btn-export" onclick="exportResults()">📥 导出</button>
 </div>
 
-<!-- 商品信息 -->
 <div class="item-info">
   <span class="badge badge-region" id="badgeRegion">-</span>
   <span class="item-title" id="itemTitle">-</span>
@@ -131,17 +135,15 @@
   <span class="item-cat" id="itemCat">-</span>
 </div>
 
-<!-- 主内容 -->
 <div class="main">
-  <!-- 原始 -->
   <div class="panel">
     <div class="panel-header orig">
       📄 原始 Description
+      <span style="font-size:10px;font-weight:400;color:#6b7280">红色=被删 | 绿边=规格事实 | 标签=命中规则</span>
       <span class="char-count" id="origLen">-</span>
     </div>
     <div class="panel-body" id="origBody"></div>
   </div>
-  <!-- 清洗后 -->
   <div class="panel">
     <div class="panel-header clean">
       ✨ 清洗后 Description
@@ -151,85 +153,136 @@
   </div>
 </div>
 
-<!-- 打标区 -->
 <div class="label-panel">
   <span class="label-title">打标：</span>
-  <button class="label-btn" data-val="correct"   onclick="setLabel('correct')">✅ 清洗正确</button>
-  <button class="label-btn" data-val="minor"     onclick="setLabel('minor')">⚠️ 轻微问题</button>
-  <button class="label-btn" data-val="miss_info" onclick="setLabel('miss_info')">❌ 漏删信息</button>
+  <button class="label-btn" data-val="correct"    onclick="setLabel('correct')">✅ 清洗正确</button>
+  <button class="label-btn" data-val="minor"      onclick="setLabel('minor')">⚠️ 轻微问题</button>
+  <button class="label-btn" data-val="miss_info"  onclick="setLabel('miss_info')">❌ 漏删信息</button>
   <button class="label-btn" data-val="over_clean" onclick="setLabel('over_clean')">🔴 过度清洗</button>
-  <button class="label-btn" data-val="skip"      onclick="setLabel('skip')">⏭ 跳过</button>
+  <button class="label-btn" data-val="skip"       onclick="setLabel('skip')">⏭ 跳过</button>
   <input class="note-input" id="noteInput" placeholder="备注（可选）" oninput="saveNote()" />
-  <span style="font-size:11px;color:#9ca3af;white-space:nowrap">
-    键盘：<span class="kbd">1</span>正确 <span class="kbd">2</span>轻微
-    <span class="kbd">3</span>漏信 <span class="kbd">4</span>过度 <span class="kbd">5</span>跳过
-    <span class="kbd">←→</span>翻页
+  <span class="kbd-hint">
+    <span class="kbd">1</span>正确 <span class="kbd">2</span>轻微
+    <span class="kbd">3</span>漏信 <span class="kbd">4</span>过度
+    <span class="kbd">5</span>跳过 <span class="kbd">←→</span>翻页
   </span>
 </div>
 
-<!-- 统计条 -->
 <div class="stats-bar" id="statsBar"></div>
 
 <script>
 let DATA = [];
-let labels = {};  // id -> {label, note}
+let labels = {};
 let current = 0;
 
-// ── 加载数据 ──
 fetch('annotation_data.json')
   .then(r => r.json())
   .then(d => {
     DATA = d;
-    // 尝试恢复本地存储
-    const saved = localStorage.getItem('ksp_labels');
+    const saved = localStorage.getItem('ksp_labels_v2');
     if (saved) labels = JSON.parse(saved);
     render();
   })
-  .catch(e => {
+  .catch(() => {
     document.body.innerHTML = '<div style="padding:40px;color:red">无法加载 annotation_data.json，请确保文件在同目录</div>';
   });
+
+// ── 规则标签映射 ──
+const TAG_CLASS = {
+  shipping: 'rtag-shipping', returns: 'rtag-returns',
+  customer_service: 'rtag-customer_service', disclaimers: 'rtag-disclaimers',
+  store_intro: 'rtag-store_intro', warnings: 'rtag-warnings',
+  sentence_noise_pattern: 'rtag-sentence_noise',
+};
+const TAG_LABEL = {
+  shipping: '📦物流', returns: '↩退换', customer_service: '💬客服',
+  disclaimers: '⚠免责', store_intro: '🏪店铺', warnings: '⛔警告',
+  sentence_noise_pattern: '🚫促销/主观',
+};
+
+function reasonTags(reason) {
+  return reason.split(', ').map(r => {
+    const cls = TAG_CLASS[r] || 'rtag-disclaimers';
+    const lbl = TAG_LABEL[r] || r;
+    return `<span class="rtag ${cls}">${lbl}</span>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
 // ── 渲染 ──
 function render() {
   const item = DATA[current];
   if (!item) return;
 
-  // 信息栏
   document.getElementById('badgeRegion').textContent = item.region;
   document.getElementById('itemTitle').textContent = item.title;
   const pct = Math.round(item.reduction * 100);
-  const redBadge = document.getElementById('badgeReduction');
-  redBadge.textContent = `删除 ${pct}%`;
-  redBadge.className = 'badge badge-reduction' + (pct >= 30 ? ' high' : '');
-  document.getElementById('itemCat').textContent = item.category.split('->').slice(-2).join(' > ');
+  const rb = document.getElementById('badgeReduction');
+  rb.textContent = `删除 ${pct}%`;
+  rb.className = 'badge badge-reduction' + (pct >= 30 ? ' high' : '');
+  document.getElementById('itemCat').textContent =
+    (item.category || '').split('->').slice(-2).join(' > ');
 
-  // 进度
   const done = Object.keys(labels).length;
-  const total = DATA.length;
-  document.getElementById('counter').textContent = `${current + 1} / ${total}（已标 ${done}）`;
-  document.getElementById('progressFill').style.width = (done / total * 100) + '%';
+  document.getElementById('counter').textContent =
+    `${current + 1} / ${DATA.length}（已标 ${done}）`;
+  document.getElementById('progressFill').style.width = (done / DATA.length * 100) + '%';
 
-  // 内容对比 - diff 高亮
-  const origLines = item.original.split('\n');
-  const cleanLines = new Set(item.cleaned.split('\n'));
-
-  // 原始：标记哪些行被删了
+  // 左栏：用 lines 数据渲染，显示命中规则标签
+  const lines = item.lines || [];
   let origHtml = '';
-  for (const line of origLines) {
-    if (!line.trim()) { origHtml += '<span class="line-empty"></span>'; continue; }
-    if (!cleanLines.has(line)) {
-      origHtml += `<span class="line-removed">${esc(line)}</span>`;
+
+  let i = 0;
+  while (i < lines.length) {
+    const ln = lines[i];
+    const txt = (ln.text || '').trim();
+
+    if (!txt) {
+      origHtml += '<span class="line-empty"></span>';
+      i++; continue;
+    }
+
+    if (ln.action === 'deleted_paragraph') {
+      // 合并连续的段落删除行（同一逻辑段落可能多行）
+      const reasonSet = new Set();
+      let combined = '';
+      while (i < lines.length && lines[i].action === 'deleted_paragraph') {
+        if (combined) combined += '\n';
+        combined += lines[i].text;
+        lines[i].reason.split(', ').forEach(r => reasonSet.add(r));
+        i++;
+      }
+      const tags = [...reasonSet].map(r => reasonTags(r)).join('');
+      origHtml += `<span class="line-removed">${esc(combined)}${tags}</span>`;
+
+    } else if (ln.action === 'deleted_sentence') {
+      origHtml += `<span class="line-removed">${esc(txt)}${reasonTags(ln.reason)}</span>`;
+      i++;
+
     } else {
-      origHtml += `<span class="line-kept">${esc(line)}</span>`;
+      // kept
+      if (ln.reason === 'fact') {
+        origHtml += `<span class="line-fact">${esc(txt)}<span class="rtag rtag-fact">⭐事实</span></span>`;
+      } else {
+        origHtml += `<span class="line-kept">${esc(txt)}</span>`;
+      }
+      i++;
     }
   }
+
   document.getElementById('origBody').innerHTML = origHtml;
   document.getElementById('origLen').textContent = `${item.orig_len} chars`;
 
-  // 清洗后
-  let cleanHtml = item.cleaned.split('\n')
-    .map(l => l.trim() ? `<span class="line-kept">${esc(l)}</span>` : '<span class="line-empty"></span>')
-    .join('');
+  // 右栏
+  let cleanHtml = (item.cleaned || '').split('\n').map(l =>
+    l.trim()
+      ? `<span class="line-kept">${esc(l)}</span>`
+      : '<span class="line-empty"></span>'
+  ).join('');
   document.getElementById('cleanBody').innerHTML = cleanHtml;
   document.getElementById('cleanLen').textContent = `${item.clean_len} chars`;
 
@@ -241,57 +294,47 @@ function render() {
   document.getElementById('noteInput').value = entry.note || '';
 
   updateStats();
-}
 
-function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ── 导航 ──
-function navigate(dir) {
-  current = Math.max(0, Math.min(DATA.length - 1, current + dir));
-  render();
   // 滚回顶
   document.getElementById('origBody').scrollTop = 0;
   document.getElementById('cleanBody').scrollTop = 0;
 }
 
-// ── 打标 ──
+function navigate(dir) {
+  current = Math.max(0, Math.min(DATA.length - 1, current + dir));
+  render();
+}
+
 function setLabel(val) {
   const item = DATA[current];
   if (!labels[item.id]) labels[item.id] = {};
   labels[item.id].label = val;
   labels[item.id].note  = document.getElementById('noteInput').value;
-  localStorage.setItem('ksp_labels', JSON.stringify(labels));
+  localStorage.setItem('ksp_labels_v2', JSON.stringify(labels));
   render();
-  // 自动跳到下一条
-  if (val !== 'skip' && current < DATA.length - 1) {
-    setTimeout(() => navigate(1), 300);
-  }
+  if (current < DATA.length - 1) setTimeout(() => navigate(1), 280);
 }
 
 function saveNote() {
   const item = DATA[current];
   if (!labels[item.id]) labels[item.id] = {};
   labels[item.id].note = document.getElementById('noteInput').value;
-  localStorage.setItem('ksp_labels', JSON.stringify(labels));
+  localStorage.setItem('ksp_labels_v2', JSON.stringify(labels));
 }
 
-// ── 统计 ──
 const LABEL_COLORS = {
-  correct: '#10b981', minor: '#f59e0b',
-  miss_info: '#ef4444', over_clean: '#8b5cf6', skip: '#6b7280'
+  correct:'#10b981', minor:'#f59e0b', miss_info:'#ef4444', over_clean:'#8b5cf6', skip:'#6b7280'
 };
 const LABEL_NAMES = {
-  correct: '正确', minor: '轻微', miss_info: '漏信息', over_clean: '过度', skip: '跳过'
+  correct:'正确', minor:'轻微', miss_info:'漏信息', over_clean:'过度', skip:'跳过'
 };
 
 function updateStats() {
   const counts = {};
   for (const {label} of Object.values(labels)) {
-    if (label) counts[label] = (counts[label] || 0) + 1;
+    if (label) counts[label] = (counts[label]||0) + 1;
   }
-  const total = Object.values(counts).reduce((a,b) => a+b, 0);
+  const total = Object.values(counts).reduce((a,b)=>a+b, 0);
   let html = `<span>已标注: ${total} / ${DATA.length}</span>`;
   for (const [k, cnt] of Object.entries(counts)) {
     const pct = Math.round(cnt / DATA.length * 100);
@@ -303,26 +346,22 @@ function updateStats() {
   document.getElementById('statsBar').innerHTML = html;
 }
 
-// ── 导出 ──
 function exportResults() {
   const out = DATA.map(item => ({
     id: item.id, region: item.region, title: item.title,
     reduction: item.reduction,
-    label: (labels[item.id] || {}).label || '',
-    note:  (labels[item.id] || {}).note  || '',
+    label: (labels[item.id]||{}).label || '',
+    note:  (labels[item.id]||{}).note  || '',
     original: item.original,
     cleaned:  item.cleaned,
   }));
-  const labeled = out.filter(x => x.label);
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `ksp_annotation_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
-  alert(`导出完成！已标注 ${labeled.length} / ${out.length} 条`);
 }
 
-// ── 键盘快捷键 ──
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   const map = {'1':'correct','2':'minor','3':'miss_info','4':'over_clean','5':'skip'};
