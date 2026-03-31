@@ -135,6 +135,7 @@
 
 <div class="item-info">
   <span class="badge badge-region" id="badgeRegion">-</span>
+  <code id="itemId" style="font-size:11px;color:#64748b;background:#1e293b;padding:2px 7px;border-radius:4px;cursor:pointer;user-select:all" title="点击复制">-</code>
   <span class="item-title" id="itemTitle">-</span>
   <span class="badge badge-reduction" id="badgeReduction">-</span>
   <span class="item-cat" id="itemCat">-</span>
@@ -248,6 +249,14 @@ function render() {
   if (!item) return;
 
   document.getElementById('badgeRegion').textContent = item.region;
+  const idEl = document.getElementById('itemId');
+  idEl.textContent = item.id;
+  idEl.onclick = () => {
+    navigator.clipboard.writeText(item.id).then(() => {
+      idEl.textContent = '✓ copied';
+      setTimeout(() => { idEl.textContent = item.id; }, 1200);
+    });
+  };
   document.getElementById('itemTitle').textContent = item.title;
   const pct = Math.round(item.reduction * 100);
   const rb = document.getElementById('badgeReduction');
