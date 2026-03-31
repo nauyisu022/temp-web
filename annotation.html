@@ -128,6 +128,11 @@
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
   <span class="counter" id="counter">0 / 0</span>
+  <select id="sortSelect" onchange="applySort()" style="background:#374151;color:#e5e7eb;border:none;border-radius:6px;padding:5px 8px;font-size:12px;cursor:pointer">
+    <option value="original">原始顺序</option>
+    <option value="reduction_desc">删除量 ↓ 多→少</option>
+    <option value="reduction_asc">删除量 ↑ 少→多</option>
+  </select>
   <button class="btn-nav btn-prev" onclick="navigate(-1)">← 上一条</button>
   <button class="btn-nav btn-next" onclick="navigate(1)">下一条 →</button>
   <button class="btn-nav btn-export" onclick="exportResults()">📥 导出</button>
@@ -178,13 +183,15 @@
 
 <script>
 let DATA = [];
+let DATA_ORIG = [];   // 保存原始顺序
 let labels = {};
 let current = 0;
 
 fetch('annotation_data.json')
   .then(r => r.json())
   .then(d => {
-    DATA = d;
+    DATA_ORIG = d;
+    DATA = [...d];
     const saved = localStorage.getItem('ksp_labels_v2');
     if (saved) labels = JSON.parse(saved);
     render();
@@ -192,6 +199,19 @@ fetch('annotation_data.json')
   .catch(() => {
     document.body.innerHTML = '<div style="padding:40px;color:red">无法加载 annotation_data.json，请确保文件在同目录</div>';
   });
+
+function applySort() {
+  const mode = document.getElementById('sortSelect').value;
+  if (mode === 'reduction_desc') {
+    DATA = [...DATA_ORIG].sort((a, b) => b.reduction - a.reduction);
+  } else if (mode === 'reduction_asc') {
+    DATA = [...DATA_ORIG].sort((a, b) => a.reduction - b.reduction);
+  } else {
+    DATA = [...DATA_ORIG];
+  }
+  current = 0;
+  render();
+}
 
 // ── 行内词级 diff：高亮句子中被局部修改的词 ──
 // sentText: 原始句子  cleanedFull: 整篇清洗后文本
