@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Description 清洗人工打标</title>
+<script src="https://unpkg.com/diff@5.2.0/dist/diff.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
@@ -64,6 +65,10 @@
     border-radius: 4px; border-left: 3px solid #ef4444;
   }
   .line-empty { height: 8px; display: block; }
+
+  /* jsdiff 行内字符级高亮 */
+  ins.diff-add { background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 2px; padding: 0 1px; }
+  del.diff-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; border-radius: 2px; padding: 0 1px; }
 
   /* 规则标签 */
   .rtag {
@@ -187,6 +192,30 @@ fetch('annotation_data.json')
     document.body.innerHTML = '<div style="padding:40px;color:red">无法加载 annotation_data.json，请确保文件在同目录</div>';
   });
 
+// ── 行内词级 diff：高亮句子中被局部修改的词 ──
+// sentText: 原始句子  cleanedFull: 整篇清洗后文本
+function inlineDiff(sentText, cleanedFull) {
+  // 如果整句在清洗后文本里原样出现，直接输出（无改动）
+  if (cleanedFull.includes(sentText)) return esc(sentText);
+  // 否则对该句与清洗后文本做词级 diff，展示局部变化
+  const parts = Diff.diffWords(sentText, cleanedFull);
+  let out = '';
+  let remaining = sentText;
+  // 只渲染属于该句子范围内的 diff
+  for (const part of parts) {
+    if (!part.added && !part.removed) {
+      // 公共词：渲染
+      out += esc(part.value);
+      remaining = remaining.slice(part.value.length);
+      if (!remaining.trim()) break;
+    } else if (part.removed) {
+      out += `<del class="diff-del">${esc(part.value)}</del>`;
+    }
+    // added 部分（来自 cleaned 但不在原句）不渲染
+  }
+  return out || esc(sentText);
+}
+
 // ── 规则标签映射 ──
 const TAG_CLASS = {
   shipping: 'rtag-shipping', returns: 'rtag-returns',
@@ -266,9 +295,9 @@ function render() {
     } else {
       // kept
       if (ln.reason === 'fact') {
-        origHtml += `<span class="line-fact">${esc(txt)}<span class="rtag rtag-fact">⭐事实</span></span>`;
+        origHtml += `<span class="line-fact">${inlineDiff(txt, item.cleaned)}<span class="rtag rtag-fact">⭐事实</span></span>`;
       } else {
-        origHtml += `<span class="line-kept">${esc(txt)}</span>`;
+        origHtml += `<span class="line-kept">${inlineDiff(txt, item.cleaned)}</span>`;
       }
       i++;
     }
@@ -277,13 +306,23 @@ function render() {
   document.getElementById('origBody').innerHTML = origHtml;
   document.getElementById('origLen').textContent = `${item.orig_len} chars`;
 
-  // 右栏
-  let cleanHtml = (item.cleaned || '').split('\n').map(l =>
-    l.trim()
-      ? `<span class="line-kept">${esc(l)}</span>`
-      : '<span class="line-empty"></span>'
-  ).join('');
-  document.getElementById('cleanBody').innerHTML = cleanHtml;
+  // 右栏：用 jsdiff 对全文做词级 diff，高亮删除的词
+  const diffParts = Diff.diffWords(item.original || '', item.cleaned || '');
+  let cleanHtml = '';
+  for (const part of diffParts) {
+    const escaped = esc(part.value);
+    if (part.removed) {
+      // 删除的词在右栏不显示（已被清洗掉）
+    } else if (part.added) {
+      // 右栏新增（理论上不会有，cleaned 是 original 的子集）
+      cleanHtml += `<ins class="diff-add">${escaped}</ins>`;
+    } else {
+      cleanHtml += escaped;
+    }
+  }
+  // 保留换行格式
+  cleanHtml = cleanHtml.replace(/\n/g, '<br>');
+  document.getElementById('cleanBody').innerHTML = `<div style="white-space:pre-wrap;line-height:1.8">${cleanHtml}</div>`;
   document.getElementById('cleanLen').textContent = `${item.clean_len} chars`;
 
   // 恢复标签
