@@ -57,14 +57,15 @@
 
   /* 行样式 */
   .line-kept    { display: block; padding: 1px 4px; margin: 1px 0; }
-  .line-fact    { display: block; padding: 1px 4px; margin: 1px 0;
+  .line-fact    { display: block; padding: 2px 6px; margin: 1px 0;
     background: #f0fdf4; border-left: 3px solid #10b981; }
   .line-removed {
     display: block; padding: 2px 6px; margin: 2px 0;
     background: #fee2e2; color: #991b1b; text-decoration: line-through;
     border-radius: 4px; border-left: 3px solid #ef4444;
   }
-  .line-empty { height: 8px; display: block; }
+  /* 段落之间的间距 */
+  .para-break { display: block; height: 10px; }
 
   /* jsdiff 行内字符级高亮 */
   ins.diff-add { background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 2px; padding: 0 1px; }
@@ -84,7 +85,6 @@
   .rtag-warnings         { background: #ffedd5; color: #c2410c; }
   .rtag-sentence_noise   { background: #fee2e2; color: #b91c1c; }
   .rtag-fact             { background: #dcfce7; color: #15803d; }
-
   /* 打标区 */
   .label-panel {
     background: #f9fafb; border-top: 1px solid #e5e7eb;
@@ -272,14 +272,10 @@ function render() {
     const ln = lines[i];
     const txt = (ln.text || '').trim();
 
-    if (!txt) {
-      origHtml  += '<span class="line-empty"></span>';
-      cleanHtml += '<span class="line-empty"></span>';
-      i++; continue;
-    }
+    // 跳过空条目（理论上不应出现）
+    if (!txt) { i++; continue; }
 
     if (ln.action === 'deleted_paragraph') {
-      // 合并连续的段落删除块
       const reasonSet = new Set();
       let combined = '';
       while (i < lines.length && lines[i].action === 'deleted_paragraph') {
@@ -289,24 +285,23 @@ function render() {
         i++;
       }
       const tags = [...reasonSet].map(r => reasonTags(r)).join('');
-      // 左：红色删除线 + 规则标签
-      origHtml  += `<span class="line-removed">${esc(combined)}${tags}</span>`;
-      // 右：不显示（已删除）
+      origHtml += `<span class="line-removed">${esc(combined)}${tags}</span><span class="para-break"></span>`;
 
     } else if (ln.action === 'deleted_sentence') {
-      const tags = reasonTags(ln.reason);
-      origHtml  += `<span class="line-removed">${esc(txt)}${tags}</span>`;
-      // 右：不显示
+      origHtml += `<span class="line-removed">${esc(txt)}${reasonTags(ln.reason)}</span>`;
       i++;
 
     } else {
-      // kept：左栏显示行内 diff，右栏显示清洗后文本
+      // kept
       const leftContent = inlineDiff(txt, item.cleaned);
-      const cls = ln.reason === 'fact' ? 'line-fact' : 'line-kept';
-      const factTag = ln.reason === 'fact'
-        ? '<span class="rtag rtag-fact">⭐事实</span>' : '';
-      origHtml  += `<span class="${cls}">${leftContent}${factTag}</span>`;
-      cleanHtml += `<span class="${cls}">${esc(txt)}</span>`;
+      if (ln.reason === 'fact') {
+        const factTag = '<span class="rtag rtag-fact">📐规格保护</span>';
+        origHtml  += `<span class="line-fact">${leftContent}${factTag}</span>`;
+        cleanHtml += `<span class="line-fact">${esc(txt)}</span>`;
+      } else {
+        origHtml  += `<span class="line-kept">${leftContent}</span>`;
+        cleanHtml += `<span class="line-kept">${esc(txt)}</span>`;
+      }
       i++;
     }
   }
