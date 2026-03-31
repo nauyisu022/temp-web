@@ -70,14 +70,6 @@
   ins.diff-add { background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 2px; padding: 0 1px; }
   del.diff-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; border-radius: 2px; padding: 0 1px; }
 
-  /* 右栏：被删行的占位符，高度与左栏对齐 */
-  .line-placeholder {
-    display: block; padding: 2px 6px; margin: 2px 0;
-    background: #f3f4f6; border-left: 3px solid #e5e7eb;
-    border-radius: 4px; color: transparent; user-select: none;
-    min-height: 22px;
-  }
-
   /* 规则标签 */
   .rtag {
     display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .2px;
@@ -299,13 +291,12 @@ function render() {
       const tags = [...reasonSet].map(r => reasonTags(r)).join('');
       // 左：红色删除线 + 规则标签
       origHtml  += `<span class="line-removed">${esc(combined)}${tags}</span>`;
-      // 右：等高灰色占位（高度由 min-height + 内容撑开）
-      cleanHtml += `<span class="line-placeholder">${esc(combined)}</span>`;
+      // 右：不显示（已删除）
 
     } else if (ln.action === 'deleted_sentence') {
       const tags = reasonTags(ln.reason);
       origHtml  += `<span class="line-removed">${esc(txt)}${tags}</span>`;
-      cleanHtml += `<span class="line-placeholder">${esc(txt)}</span>`;
+      // 右：不显示
       i++;
 
     } else {
