@@ -25,9 +25,8 @@ const rc = rough.canvas(canvas);
 const S = 42; // shared seed
 
 // ── drawing helpers ──
-const pink = '#ffe0e0';
-const gray = '#eef0f4';
-const green = '#e0f5e0';
+const pink = '#f7c0c0';
+const gray = '#eaecf1';
 const white = '#fff';
 
 function rect(x, y, w, h, fill, opts) {
@@ -70,10 +69,10 @@ text('Shopee Google Ads Title Optimization Pipeline', W / 2, 62, { font: '13px',
 // Row 0: Inputs
 // ====================================================================
 const y0 = 95;
-roundRect(220, y0, 180, 42, gray);
+roundRect(220, y0, 180, 42, white);
 text('item Catalog', 310, y0 + 26, { font: '13px', bold: true });
 
-roundRect(650, y0, 220, 42, gray);
+roundRect(650, y0, 220, 42, white);
 text('item with performance', 760, y0 + 26, { font: '13px', bold: true });
 
 arrow(310, y0 + 42, 310, y0 + 42 + 28); // down to Product Selection
@@ -112,7 +111,7 @@ for (const lb of labels) {
 
 // ── Right branch: Cluster by ProductType ──
 const cy2 = y2 + 35;
-roundRect(rx - 110, cy2, 220, 45, gray);
+roundRect(rx - 110, cy2, 220, 45, white);
 text('Cluster by', rx, cy2 + 18, { font: '13px', bold: true });
 roundRect(rx - 60, cy2 + 22, 120, 20, white);
 text('Product Type', rx, cy2 + 36, { font: '10px' });
@@ -125,7 +124,7 @@ arrow(mx + kw / 2, y2 + 50, rx - 110, cy2 + 22);
 // ====================================================================
 const y3 = 420;
 // Product Information
-roundRect(mx - 190, y3, 175, 75, gray);
+roundRect(mx - 190, y3, 175, 75, white);
 text('Product Information', mx - 103, y3 + 20, { font: '13px', bold: true });
 roundRect(mx - 180, y3 + 30, 155, 35, white);
 text('Original Title + Description', mx - 103, y3 + 44, { font: '9px' });
@@ -168,9 +167,9 @@ arrow(mx + 127, y3 + 55, mx + 105, y4);
 const iiY = y4 + 80;
 roundRect(mx - 160, iiY, 320, 55, white);
 text('Inverted Index', mx, iiY + 16, { font: '12px', bold: true });
-roundRect(mx - 140, iiY + 22, 130, 26, gray);
+roundRect(mx - 140, iiY + 22, 130, 26, white);
 text('Text Index (BM25s)', mx - 75, iiY + 38, { font: '10px' });
-roundRect(mx + 10, iiY + 22, 150, 26, gray);
+roundRect(mx + 10, iiY + 22, 150, 26, white);
 text('Semantic Index (Qwen3 Emb)', mx + 85, iiY + 38, { font: '9px' });
 
 // arrows Word Seg → Inverted Index
@@ -198,7 +197,7 @@ arrow(mx, srY + 30, mx, rrY);
 // Row 5: Sorting
 // ====================================================================
 const y5 = y4 + ssH + 35;
-roundRect(mx - 145, y5, 290, 40, gray);
+roundRect(mx - 145, y5, 290, 40, white);
 text('Sorting (Conversion score × Relevance score)', mx, y5 + 25, { font: '12px' });
 
 arrow(mx, y4 + ssH, mx, y5);
@@ -249,7 +248,7 @@ arrow(rx, cy2 + 45, rx, tpY);
 
 // Expert Knowledge box
 const ekY = tpY + 110;
-roundRect(rx - 120, ekY, 240, 95, gray);
+roundRect(rx - 120, ekY, 240, 95, pink);
 text('Expert Knowledge', rx, ekY + 20, { font: '13px', bold: true });
 text('by cluster priority:', rx, ekY + 38, { font: '11px', color: '#555' });
 text('1. Product Type', rx, ekY + 55, { font: '11px', color: '#555' });
@@ -276,8 +275,8 @@ arrow(mx, y6 + lgH, mx, y7);
 // Row 8: Output
 // ====================================================================
 const y8 = y7 + 80;
-roundRect(mx - 95, y8, 190, 40, green, { stroke: '#2e7d32' });
-text('Enhanced Title', mx, y8 + 17, { font: '14px', bold: true, color: '#2e7d32' });
+roundRect(mx - 95, y8, 190, 40, white, { stroke: '#c62828', strokeWidth: 2 });
+text('Enhanced Title', mx, y8 + 17, { font: '14px', bold: true, color: '#c62828' });
 text('→ Hive (Parquet)', mx, y8 + 33, { font: '11px', color: '#555' });
 
 arrow(mx, y7 + 55, mx, y8);
