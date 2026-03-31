@@ -1,0 +1,236 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "updated": "2026-03-31",
+    "description": "Description 清洗关键词库。噪音词=删什么，保护词=留什么。"
+  },
+
+  "noise_keywords": {
+    "_doc": "命中任一短语 → 该行标记为 noise（除非保护规则生效）。按语言分组，每组按噪音类型分类。MY 地区同时使用 EN + ID 两套规则。",
+
+    "EN": {
+      "_regions": ["MY", "SG", "PH"],
+      "shipping": [
+        "free shipping", "shipping fee", "delivery fee", "tracking number",
+        "ship within", "shipped within", "ready stock", "cash on delivery",
+        "cod available", "parcel will be sent"
+      ],
+      "returns": [
+        "return policy", "returns accepted", "refund policy", "no refund",
+        "no exchange", "exchange policy", "unboxing video required"
+      ],
+      "customer_service": [
+        "contact customer service", "contact us", "chat us", "message us",
+        "inbox us", "customer support", "whatsapp us", "pm us", "dm us", "hotline"
+      ],
+      "disclaimers": [
+        "actual product may vary", "actual colour may vary", "actual color may vary",
+        "manual measurement", "please allow", "for illustration purposes only",
+        "image is for reference only", "picture is for reference only",
+        "subject to availability", "due to lighting"
+      ],
+      "store_intro": [
+        "welcome to our store", "welcome to our shop", "thank you for visiting",
+        "follow our shop", "about us", "we are a", "we are an"
+      ],
+      "warnings": [
+        "keep out of reach of children", "do not ingest", "use with caution",
+        "safety warning", "please note that"
+      ]
+    },
+
+    "ID": {
+      "_regions": ["ID", "MY"],
+      "shipping": [
+        "gratis ongkir", "ongkir", "pengiriman", "dikirim", "siap kirim",
+        "ready stock", "kurir", "resi", "pengantaran", "biaya kirim"
+      ],
+      "returns": [
+        "retur", "pengembalian", "tidak menerima komplain",
+        "tidak menerima retur", "tidak menerima refund",
+        "video unboxing", "syarat komplain"
+      ],
+      "customer_service": [
+        "hubungi kami", "hubungi admin", "chat admin", "layanan pelanggan",
+        "customer service", "cs kami", "inbox kami", "whatsapp",
+        "jam operasional"
+      ],
+      "disclaimers": [
+        "gambar hanya ilustrasi", "foto hanya ilustrasi", "warna bisa berbeda",
+        "warna dapat berbeda", "tergantung stok", "harap maklum",
+        "membeli berarti setuju"
+      ],
+      "store_intro": [
+        "selamat datang di toko kami", "terima kasih sudah berbelanja",
+        "terimakasih sudah berbelanja", "follow toko kami",
+        "tentang toko", "kami adalah"
+      ],
+      "warnings": [
+        "perhatian", "harap diperhatikan", "mohon pastikan"
+      ]
+    },
+
+    "BR": {
+      "_regions": ["BR"],
+      "shipping": [
+        "frete", "envio", "entrega", "prazo de postagem", "prazo de envio",
+        "código de rastreio", "transportadora", "postagem",
+        "enviamos para todo o brasil"
+      ],
+      "returns": [
+        "devolução", "reembolso", "política de devolução",
+        "política de troca", "arrependimento da compra"
+      ],
+      "customer_service": [
+        "fale conosco", "entre em contato", "atendimento ao cliente",
+        "atendimento", "whatsapp", "nos chame"
+      ],
+      "disclaimers": [
+        "imagem meramente ilustrativa", "imagens meramente ilustrativas",
+        "pode haver variação", "sujeito à disponibilidade",
+        "medição manual", "variação de cor"
+      ],
+      "store_intro": [
+        "bem-vindo à nossa loja", "bem vindos à nossa loja",
+        "somos uma empresa", "somos especialistas", "nossa loja"
+      ],
+      "warnings": [
+        "atenção ao comprar", "atenção importante", "leia atentamente"
+      ]
+    },
+
+    "TW": {
+      "_regions": ["TW"],
+      "shipping": [
+        "運費", "配送", "出貨", "物流", "宅配", "到貨", "寄送", "超商取貨", "宅配通"
+      ],
+      "returns": [
+        "退貨", "退款", "換貨", "退換", "鑑賞期"
+      ],
+      "customer_service": [
+        "客服", "聯絡我們", "聯繫我們", "聊聊", "私訊", "服務時間", "服務保障"
+      ],
+      "disclaimers": [
+        "圖片僅供參考", "照片僅供參考", "以實物為準", "手工測量", "色差",
+        "依實際商品為準"
+      ],
+      "store_intro": [
+        "歡迎光臨", "歡迎來到本店", "本店", "關於我們"
+      ],
+      "warnings": [
+        "溫馨提示", "注意事項", "警告"
+      ]
+    },
+
+    "TH": {
+      "_regions": ["TH"],
+      "shipping": [
+        "จัดส่ง", "ส่งสินค้า", "ขนส่ง", "ค่าส่ง", "พร้อมส่ง", "ระยะเวลาจัดส่ง", "พัสดุ"
+      ],
+      "returns": [
+        "คืนสินค้า", "คืนเงิน", "เปลี่ยนสินค้า", "นโยบายการคืนสินค้า", "เคลมสินค้า"
+      ],
+      "customer_service": [
+        "ติดต่อเรา", "ติดต่อแอดมิน", "ลูกค้าสัมพันธ์", "สอบถามแอดมิน", "แชทหาเรา"
+      ],
+      "disclaimers": [
+        "ภาพใช้เพื่อประกอบการขาย", "สีอาจแตกต่าง", "วัดด้วยมือ", "โปรดเข้าใจ"
+      ],
+      "store_intro": [
+        "ยินดีต้อนรับสู่ร้าน", "ขอบคุณที่อุดหนุน", "ร้านของเรา", "เกี่ยวกับเรา",
+        "ทางร้านจัดส่ง", "ทางร้านพยายามจัดส่ง", "กดสั่งซื้อทางร้าน", "ติดต่อทางร้าน"
+      ],
+      "warnings": [
+        "คำเตือน", "ข้อควรระวัง", "โปรดทราบ", "หมายเหตุ"
+      ]
+    },
+
+    "VN": {
+      "_regions": ["VN"],
+      "shipping": [
+        "giao hàng", "vận chuyển", "phí ship", "miễn phí vận chuyển",
+        "thời gian giao hàng", "gửi hàng", "mã vận đơn"
+      ],
+      "returns": [
+        "đổi trả", "hoàn tiền", "trả hàng", "chính sách đổi trả",
+        "chính sách hoàn tiền", "video mở hộp"
+      ],
+      "customer_service": [
+        "liên hệ", "chăm sóc khách hàng", "tư vấn hỗ trợ",
+        "nhắn tin cho shop", "hotline", "ib shop"
+      ],
+      "disclaimers": [
+        "hình ảnh chỉ mang tính chất minh họa", "ảnh chỉ mang tính minh họa",
+        "màu sắc có thể khác", "đo thủ công", "tùy theo lô hàng"
+      ],
+      "store_intro": [
+        "chào mừng bạn đến với cửa hàng", "shop cam kết",
+        "cửa hàng của chúng tôi", "cảm ơn quý khách", "về chúng tôi"
+      ],
+      "warnings": [
+        "cảnh báo", "xin lưu ý", "quý khách vui lòng"
+      ]
+    }
+  },
+
+  "protection": {
+    "_doc": "命中任一规则 → 该行强制保留，无论是否匹配噪音词。",
+
+    "spec_units": [
+      "g", "gr", "gram", "grams", "gramas", "kg", "mg", "mcg",
+      "ml", "l", "liter", "cl",
+      "cm", "mm", "m", "km", "inch", "in",
+      "pcs", "pc", "buah",
+      "件", "個", "入", "包", "箱", "瓶", "毫升", "公克", "公斤", "公分", "毫米",
+      "pack", "packs", "set", "sets", "unit", "units", "un", "und",
+      "sachet", "sachets", "capsule", "capsules", "tablet", "tablets",
+      "w", "kw", "v", "vac", "vdc", "mah", "ah", "wh",
+      "gb", "tb", "mb", "mhz", "ghz", "hz",
+      "rpm", "nm", "oz", "lb", "lbs", "ohm", "ohms", "rms",
+      "℃", "°C"
+    ],
+
+    "certifications": [
+      "halal", "bpom", "fda", "sni", "iso", "haccp", "gmp", "mui"
+    ],
+
+    "origin_latin": [
+      "sumatera", "jawa", "java", "bali", "sulawesi", "kalimantan", "papua",
+      "aceh", "medan", "bandung", "yogyakarta", "solo", "malang", "semarang",
+      "kerinci", "toraja", "flores", "lombok",
+      "sabah", "sarawak", "pahang", "kelantan", "penang", "johor", "selangor",
+      "cameron", "highland",
+      "chiang mai", "chiang rai", "phuket", "bangkok", "chiangmai", "doi inthanon",
+      "dalat", "sapa", "moc chau", "ha giang",
+      "minas gerais", "sao paulo", "cerrado", "bahia", "sul de minas",
+      "perkebunan", "plantation", "kebun", "farm", "desa",
+      "lereng gunung", "pegunungan", "dataran tinggi"
+    ],
+
+    "origin_cjk": [
+      "阿里山", "玉山", "梨山", "高山茶", "台灣", "台湾", "大禹嶺", "杉林溪",
+      "เชียงใหม่", "เชียงราย", "ภูเก็ต", "ดอยอินทนนท์", "ดอยสุเทพ",
+      "Đà Lạt", "Sa Pa", "Mộc Châu",
+      "高山", "山麓", "山區", "茶園", "茶山", "原產地", "產地"
+    ],
+
+    "origin_country_prefix": [
+      "dari indonesia", "dari malaysia", "dari thailand", "dari vietnam",
+      "dari taiwan", "dari brazil", "dari brasil", "dari jepang", "dari japan",
+      "dari korea", "dari china", "dari india", "dari eropa", "dari europe",
+      "dari perancis", "dari france", "dari italy", "dari italia"
+    ]
+  },
+
+  "region_language_map": {
+    "_doc": "每个地区使用哪些语言的噪音关键词",
+    "BR": ["BR"],
+    "ID": ["ID"],
+    "MY": ["EN", "ID"],
+    "PH": ["EN"],
+    "SG": ["EN"],
+    "TH": ["TH"],
+    "TW": ["TW"],
+    "VN": ["VN"]
+  }
+}
