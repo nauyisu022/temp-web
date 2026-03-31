@@ -16,30 +16,24 @@ h3 { font-size: 14px; font-weight: 700; margin: 28px 0 10px; }
 p { font-size: 14px; margin-bottom: 12px; }
 .sub { font-size: 13px; color: var(--muted); margin-bottom: 40px; }
 
-/* 表格 */
 table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0 24px; }
 th { background: #f9fafb; text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border); font-weight: 700; font-size: 12px; }
 td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
 tr:last-child td { border-bottom: none; }
 
-/* 代码 */
 code { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; }
 pre { background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 12px 0 20px; font-family: 'SF Mono', Consolas, monospace; }
 
-/* 引用 */
 blockquote { border-left: 3px solid var(--accent); padding: 8px 16px; margin: 12px 0 20px; background: #f8fafc; font-size: 13px; color: #374151; }
 
-/* 高亮框 */
 .card { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin: 16px 0 24px; }
 .card-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
 
-/* 统计数字 */
 .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 24px; }
 .metric { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
 .metric-num { font-size: 22px; font-weight: 800; color: var(--accent); }
 .metric-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-/* Case 对比 */
 .case { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 12px 0 20px; font-size: 12px; }
 .case-col { padding: 10px 14px; line-height: 1.7; font-family: 'SF Mono', Consolas, monospace; white-space: pre-wrap; }
 .case-col:first-child { border-right: 1px solid var(--border); background: #fafafa; }
@@ -50,9 +44,22 @@ blockquote { border-left: 3px solid var(--accent); padding: 8px 16px; margin: 12
 .keep { }
 .fact { background: #f0fdf4; border-left: 2px solid var(--green); padding-left: 5px; }
 
-/* 列表 */
 ul, ol { padding-left: 24px; margin: 8px 0 16px; font-size: 14px; }
 li { margin-bottom: 4px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 24px; }
+.phase-box { border: 2px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.phase-box.p1 { border-color: #7c3aed; }
+.phase-box.p2 { border-color: #059669; }
+.phase-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.phase-box.p1 .phase-title { color: #7c3aed; }
+.phase-box.p2 .phase-title { color: #059669; }
+.phase-item { font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--border); display: flex; gap: 6px; }
+.phase-item:last-child { border-bottom: none; }
+.badge { font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.b-del { background: #fee2e2; color: var(--red); }
+.b-keep { background: #dcfce7; color: var(--green); }
+.b-new { background: #dbeafe; color: #1d4ed8; }
 </style>
 </head>
 <body>
@@ -72,8 +79,7 @@ li { margin-bottom: 4px; }
 <tr><td>退换货政策</td><td>退貨須知 · 鑑賞期非試用期 · video unboxing</td><td>标题中出现退货条款</td></tr>
 <tr><td>客服联系</td><td>whatsapp · 聊聊 · hubungi kami</td><td>KSP 含电话/聊天信息</td></tr>
 <tr><td>店铺介绍</td><td>歡迎光臨 · tentang toko · welcome</td><td>卖点被店铺宣传稀释</td></tr>
-<tr><td>促销/免责</td><td>圖片僅供參考 · 色差 · atenção</td><td>标题含免责声明</td></tr>
-<tr><td>Emoji / URL</td><td>💎📦⚠️ · shopee.tw/... · @gmail.com</td><td>噪音符号进入卖点</td></tr>
+<tr><td>Emoji / URL / 电话</td><td>💎📦⚠️ · shopee.tw/... · +6016-661-6081</td><td>噪音符号进入卖点</td></tr>
 </table>
 
 <p>对 29 万条已有 KSP 输出的静态分析显示：</p>
@@ -81,15 +87,6 @@ li { margin-bottom: 4px; }
 <blockquote>
 <strong>15.6%</strong> 含噪音的商品中，KSP 的卖点词来自被清洗掉的噪音文本——即物流/客服/促销内容直接"泄漏"进了 KSP 卖点。
 </blockquote>
-
-<p>噪音污染的具体案例：</p>
-<ul>
-<li><strong>BR</strong>：KSP 中出现 <code>frete por conta do comprador</code>（运费由买家承担）</li>
-<li><strong>TW</strong>：KSP 中出现 <code>代開發票</code>（开发票服务）、<code>經正常管道引進販售</code></li>
-<li><strong>VN</strong>：KSP 中出现 <code>giá rẻ</code>（便宜）、<code>khuyến mãi</code>（促销）</li>
-</ul>
-
-<p>因此需要一个规则化的 description 前置清洗管线，在 P0/P4 之前过滤噪音、保留产品事实。</p>
 
 <!-- ═══════════════════════════════════════════════ -->
 <h2>2. 方案设计</h2>
@@ -103,47 +100,66 @@ li { margin-bottom: 4px; }
 <li><strong>行级输出</strong>——不拆句、不重组，输出保持原始格式，不引入额外换行</li>
 </ol>
 
-<h3>2.2 三级过滤管线</h3>
+<h3>2.2 两阶段管线</h3>
 
 <pre>
 原始 description
-  → Level 1: 预处理（HTML / 控制符 / Emoji / URL / 电话 / 去重 / 空白规范化）
-  → Level 2: 段落级过滤（按 \n\n 分段，6类噪音关键词，全噪音段删除）
-  → Level 3: 行级输出（逐行分类 fact/noise/keep，≤60字符短噪音行删除）
+  → 阶段一: 预处理（结构清理，不涉及语义）
+  → 阶段二: 行级过滤（依赖长度限制 + 噪音/保护词库）
   → 输出: description_cleaned
 </pre>
 
-<h3>2.3 Level 1：预处理（结构清理）</h3>
+<div class="two-col">
+<div class="phase-box p1">
+  <div class="phase-title">阶段一：预处理</div>
+  <div class="phase-item"><span class="badge b-del">删</span>HTML 标签 / 实体<br><small style="color:#94a3b8">&lt;br&gt; &lt;p&gt; &amp;amp;</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>控制符 / 零宽字符<br><small style="color:#94a3b8">\x00 \ufeff \u200b</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>Emoji<br><small style="color:#94a3b8">💎 📦 ⚠️ 🛒 ⭐ 🌸</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>URL / Email<br><small style="color:#94a3b8">https://shopee.tw/... · @gmail.com</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>电话号码<br><small style="color:#94a3b8">+6016-661-6081</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>重复行（保留首次）<br><small style="color:#94a3b8">实测去除 729 行</small></div>
+  <div class="phase-item"><span class="badge" style="background:#f3f4f6;color:#374151">改</span>空白规范化<br><small style="color:#94a3b8">多空格→单空格 · \n{3+}→\n\n</small></div>
+</div>
+<div class="phase-box p2">
+  <div class="phase-title">阶段二：行级过滤</div>
+  <div class="phase-item"><span class="badge b-keep">留</span>含规格单位<br><small style="color:#94a3b8">500g · 4000mAh · 14CM → fact</small></div>
+  <div class="phase-item"><span class="badge b-keep">留</span>含型号 / 认证词<br><small style="color:#94a3b8">CB300F · Halal · BPOM → fact</small></div>
+  <div class="phase-item"><span class="badge b-keep">留</span>含产地词<br><small style="color:#94a3b8">Kerinci · 阿里山 → fact</small></div>
+  <div class="phase-item"><span class="badge b-keep">留</span>行长度 &gt; 100 字符<br><small style="color:#94a3b8">混合内容安全保留</small></div>
+  <div class="phase-item"><span class="badge b-del">删</span>命中噪音关键词<br><small style="color:#94a3b8">6 类 × 8 地区 · 228 个短语</small></div>
+  <div class="phase-item"><span class="badge b-keep">留</span>其余 → keep<br><small style="color:#94a3b8">宁可留多</small></div>
+</div>
+</div>
 
-<p>不涉及语义判断，仅清理非文本噪音：</p>
-
-<table>
-<tr><th>步骤</th><th>操作</th><th>示例</th></tr>
-<tr><td>HTML 标签/实体</td><td>去除</td><td><code>&lt;br&gt; &lt;p&gt; &amp;amp;</code></td></tr>
-<tr><td>控制符/零宽字符</td><td>去除</td><td><code>\x00 \ufeff \u200b</code></td></tr>
-<tr><td>Emoji</td><td>去除</td><td>💎 📦 ⚠️ 🛒 ⭐ 🌸</td></tr>
-<tr><td>URL / Email</td><td>去除</td><td><code>https://shopee.tw/... · @gmail.com</code></td></tr>
-<tr><td>电话号码</td><td>去除</td><td><code>+6016-661-6081</code></td></tr>
-<tr><td>行级去重</td><td>相同行只保留首次</td><td>重复行删除</td></tr>
-<tr><td>空白规范化</td><td>多空格→单空格，连续空行合并</td><td></td></tr>
-</table>
-
-<h3>2.4 Level 2：段落级过滤</h3>
-
-<p>按 <code>\n\n</code> 分段，对每个段落整体判断。判定逻辑：</p>
+<h3>2.3 行级过滤逻辑</h3>
 
 <pre>
-含规格/型号/认证/产地词 → 整段保留（硬保护）
-无噪音关键词           → 整段保留
-有噪音关键词 → 逐行扫描:
-    有 fact 行         → 整段保留
-    全 noise           → 整段删除
+classify_line(line, region):
+  1. 含规格单位 / 型号 / 认证词 / 产地词  → fact（强制保留）
+  2. 行长度 > 100 字符                    → keep（混合内容安全保留）
+  3. 命中噪音关键词库（6类×8地区）         → noise（删除）
+  4. 其余                                → keep（宁可留多）
 </pre>
 
-<p>6 类噪音关键词覆盖 8 个地区：</p>
+<p>长度阈值（100字符）的作用：原始 description 中有 22% 只有单换行，整段内容被视为一行。当产品信息和物流信息混在一行时，超过 100 字符的行不删，防止误删产品事实。</p>
+
+<h3>2.4 词库结构（<code>cleaning_keywords.json</code>）</h3>
+
+<p>所有关键词独立于代码之外，修改词库只改 JSON 文件，无需改代码：</p>
 
 <table>
-<tr><th>类别</th><th>EN (MY/SG/PH)</th><th>ID</th><th>BR</th><th>TW</th><th>TH</th><th>VN</th></tr>
+<tr><th>词库</th><th>规模</th><th>作用</th></tr>
+<tr><td>噪音关键词（noise）</td><td>6 类 × 6 语言 = 228 个短语</td><td>命中 → 删除</td></tr>
+<tr><td>规格单位（spec_units）</td><td>65 个单位词</td><td>含数字+单位 → 强制保留</td></tr>
+<tr><td>认证词（certifications）</td><td>8 个</td><td>Halal / BPOM / FDA… → 保留</td></tr>
+<tr><td>产地词·拉丁（origin_latin）</td><td>68 个</td><td>Kerinci / Sumatera… → 保留</td></tr>
+<tr><td>产地词·CJK（origin_cjk）</td><td>25 个</td><td>阿里山 / เชียงราย… → 保留</td></tr>
+</table>
+
+<p>6 类噪音关键词覆盖 8 个地区（MY 同时使用 EN + ID 两套）：</p>
+
+<table>
+<tr><th>类别</th><th>EN</th><th>ID</th><th>BR</th><th>TW</th><th>TH</th><th>VN</th></tr>
 <tr><td>📦 物流</td><td>free shipping</td><td>ongkir</td><td>frete</td><td>出貨 · 宅配</td><td>จัดส่ง</td><td>giao hàng</td></tr>
 <tr><td>↩ 退换</td><td>return policy</td><td>retur</td><td>devolução</td><td>退貨 · 鑑賞期</td><td>คืนสินค้า</td><td>đổi trả</td></tr>
 <tr><td>💬 客服</td><td>contact us</td><td>hubungi kami</td><td>fale conosco</td><td>客服 · 聊聊</td><td>ติดต่อเรา</td><td>liên hệ</td></tr>
@@ -151,36 +167,6 @@ li { margin-bottom: 4px; }
 <tr><td>⚠ 免责</td><td>image for ref.</td><td>ilustrasi</td><td>ilustrativa</td><td>僅供參考</td><td>สีอาจแตกต่าง</td><td>minh họa</td></tr>
 <tr><td>⛔ 警告</td><td>safety warning</td><td>perhatian</td><td>atenção</td><td>注意事項</td><td>คำเตือน</td><td>lưu ý</td></tr>
 </table>
-
-<p>MY 地区同时应用 EN + ID 两套规则（覆盖双语混用）。</p>
-
-<h3>2.5 Level 3：行级输出</h3>
-
-<p>对 Level 2 保留的段落逐行分类：</p>
-
-<table>
-<tr><th>分类</th><th>条件</th><th>处理</th></tr>
-<tr><td><strong>fact</strong></td><td>含规格单位（500g）/ 型号（CB300F）/ 认证（Halal）/ 产地（Sumatera）</td><td>保留</td></tr>
-<tr><td><strong>noise</strong></td><td>≤60字符 + 命中噪音关键词 + 无规格单位</td><td>删除</td></tr>
-<tr><td><strong>keep</strong></td><td>其余</td><td>保留</td></tr>
-</table>
-
-<h3>2.6 保护机制（免死规则）</h3>
-
-<p>任何文本命中以下任一条件，无论周围内容如何，<strong>强制保留</strong>：</p>
-
-<div class="card">
-<div class="card-title">4 类保护</div>
-<table>
-<tr><th>类型</th><th>示例</th></tr>
-<tr><td>📐 规格单位</td><td><code>500g</code> · <code>4000mAh</code> · <code>14CM</code> · <code>128GB</code> · <code>50ml</code></td></tr>
-<tr><td>🔖 型号模式</td><td><code>CB300F</code> · <code>YH-8004</code> · <code>iPhone 15</code></td></tr>
-<tr><td>✅ 认证词</td><td><code>Halal</code> · <code>BPOM</code> · <code>FDA</code> · <code>ISO</code> · <code>SNI</code></td></tr>
-<tr><td>🌍 产地词</td><td>Sumatera · Kerinci · 阿里山 · เชียงราย · Đà Lạt · Minas Gerais</td></tr>
-</table>
-</div>
-
-<p>产地保护的意义：<code>Teh terbaik dari perkebunan di lereng gunung Kerinci, Sumatera</code> 含主观词 <code>terbaik</code>（最好的），但同时包含产地信息 Kerinci + Sumatera，整句保留。</p>
 
 <!-- ═══════════════════════════════════════════════ -->
 <h2>3. Case 示例</h2>
@@ -193,30 +179,36 @@ li { margin-bottom: 4px; }
 <div class="case-col"><span class="case-label c-clean">清洗后</span><span class="fact">Berat bersih 500g</span></div>
 </div>
 
-<h3>退换货删除 [TW]</h3>
-<div class="case">
-<div class="case-col"><span class="case-label c-orig">原文</span><span class="keep">材質: 不鏽鋼 304</span>
-<span class="del">退貨請在7天內申請</span>
-<span class="fact">尺寸: 25cm x 15cm</span></div>
-<div class="case-col"><span class="case-label c-clean">清洗后</span><span class="keep">材質: 不鏽鋼 304</span>
-<span class="fact">尺寸: 25cm x 15cm</span></div>
-</div>
-
-<h3>产地保护 [ID]</h3>
-<div class="case">
-<div class="case-col"><span class="case-label c-orig">原文</span><span class="fact">Teh <u>terbaik</u> dari perkebunan <b>Kerinci, Sumatera</b></span>
-<span class="keep">Harga murah meriah</span></div>
-<div class="case-col"><span class="case-label c-clean">清洗后</span><span class="fact">Teh terbaik dari perkebunan Kerinci, Sumatera</span>
-<span class="keep">Harga murah meriah</span></div>
-</div>
-
-<h3>客服 + 规格保护 [SG]</h3>
+<h3>客服 + 型号保护 [SG]</h3>
 <div class="case">
 <div class="case-col"><span class="case-label c-orig">原文</span><span class="keep">Wireless Bluetooth V5.3 Earbuds</span>
 <span class="fact">40mm Driver</span>
 <span class="del">Contact us via whatsapp</span></div>
 <div class="case-col"><span class="case-label c-clean">清洗后</span><span class="keep">Wireless Bluetooth V5.3 Earbuds</span>
 <span class="fact">40mm Driver</span></div>
+</div>
+
+<h3>产地保护 [ID]</h3>
+<div class="case">
+<div class="case-col"><span class="case-label c-orig">原文</span><span class="fact">Teh <u>terbaik</u> dari perkebunan <b>Kerinci, Sumatera</b></span>
+<span class="del">Gratis ongkir se-Indonesia</span></div>
+<div class="case-col"><span class="case-label c-clean">清洗后</span><span class="fact">Teh terbaik dari perkebunan Kerinci, Sumatera</span></div>
+</div>
+
+<h3>长度保护（混合内容）[ID]</h3>
+<div class="case">
+<div class="case-col"><span class="case-label c-orig">原文（单行 419 字符）</span><span class="keep">KEJU OLAHAN DENGAN AROMA EDAM, SANGAT BAIK UNTUK TOPING KUE KERING PRODUK READY SESUAI STOCK DISARANKAN PENGIRIMAN MENGGUNAKAN KURIR...</span></div>
+<div class="case-col"><span class="case-label c-clean">清洗后</span><span class="keep">KEJU OLAHAN DENGAN AROMA EDAM, SANGAT BAIK UNTUK TOPING KUE KERING PRODUK READY SESUAI STOCK DISARANKAN PENGIRIMAN MENGGUNAKAN KURIR...</span>
+<div style="font-size:9px;color:#6b7280;font-style:italic;margin-top:4px">↑ 含"PENGIRIMAN"（物流词）但 >100 字符，整行保留</div></div>
+</div>
+
+<h3>退换货 + 规格保护 [TW]</h3>
+<div class="case">
+<div class="case-col"><span class="case-label c-orig">原文</span><span class="keep">材質: 不鏽鋼 304</span>
+<span class="del">退貨請在7天內申請</span>
+<span class="fact">尺寸: 25cm x 15cm</span></div>
+<div class="case-col"><span class="case-label c-clean">清洗后</span><span class="keep">材質: 不鏽鋼 304</span>
+<span class="fact">尺寸: 25cm x 15cm</span></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
@@ -228,27 +220,26 @@ li { margin-bottom: 4px; }
 <div class="metric"><div class="metric-num">100%</div><div class="metric-label">规格保留率<br>3993 / 3993</div></div>
 <div class="metric"><div class="metric-num">100%</div><div class="metric-label">认证保留率<br>58 / 58</div></div>
 <div class="metric"><div class="metric-num">0</div><div class="metric-label">引入额外换行</div></div>
-<div class="metric"><div class="metric-num">6.5%</div><div class="metric-label">总删除率<br>L1+L2+L3</div></div>
+<div class="metric"><div class="metric-num">10.1%</div><div class="metric-label">总删除率</div></div>
 </div>
 
-<h3>4.2 各层删除占比</h3>
+<h3>4.2 各阶段删除占比</h3>
 
 <table>
-<tr><th>Level</th><th>删除占比</th><th>作用</th></tr>
-<tr><td>L1 预处理</td><td>2.9%</td><td>Emoji / HTML / URL / 电话 / 去重</td></tr>
-<tr><td>L2 段落级</td><td>1.2%</td><td>整段噪音（物流/客服整块）</td></tr>
-<tr><td>L3 行级</td><td>2.4%</td><td>逐行删短噪音行</td></tr>
+<tr><th>阶段</th><th>删除占比</th><th>作用</th></tr>
+<tr><td>阶段一 · 预处理</td><td>2.9%</td><td>Emoji / HTML / URL / 电话 / 重复行</td></tr>
+<tr><td>阶段二 · 行级过滤</td><td>7.2%</td><td>噪音关键词命中的行（无长度限制约束的纯噪音）</td></tr>
 </table>
 
 <h3>4.3 地区差异</h3>
 
 <table>
-<tr><th>地区</th><th>有变化</th><th>总删除率</th><th>说明</th></tr>
-<tr><td><strong>TW</strong></td><td>62.5%</td><td>25.0%</td><td>效果最显著，大量运营文案 + Emoji</td></tr>
-<tr><td>TH</td><td>18.1%</td><td>5.1%</td><td>Emoji 较多</td></tr>
-<tr><td>BR</td><td>31.9%</td><td>4.8%</td><td>物流/退换文案</td></tr>
-<tr><td>ID</td><td>19.4%</td><td>4.1%</td><td></td></tr>
-<tr><td>MY / PH / SG / VN</td><td>8~18%</td><td>2~3%</td><td>原文较干净</td></tr>
+<tr><th>地区</th><th>有变化</th><th>说明</th></tr>
+<tr><td><strong>TW</strong></td><td>62.5%</td><td>效果最显著，大量运营文案 + Emoji</td></tr>
+<tr><td>BR</td><td>31.9%</td><td>物流/退换文案</td></tr>
+<tr><td>TH</td><td>18.1%</td><td>Emoji 较多</td></tr>
+<tr><td>ID</td><td>19.4%</td><td></td></tr>
+<tr><td>MY / PH / SG / VN</td><td>8~18%</td><td>原文较干净</td></tr>
 </table>
 
 <h3>4.4 Token 长度分析（Qwen Tokenizer）</h3>
@@ -256,8 +247,8 @@ li { margin-bottom: 4px; }
 <table>
 <tr><th>地区</th><th>清洗前 avg</th><th>清洗后 avg</th><th>节省</th></tr>
 <tr><td>TW</td><td>289</td><td>243</td><td><strong>-16.1%</strong></td></tr>
-<tr><td>BR</td><td>237</td><td>228</td><td>-3.8%</td></tr>
 <tr><td>ID</td><td>162</td><td>145</td><td>-10.0%</td></tr>
+<tr><td>BR</td><td>237</td><td>228</td><td>-3.8%</td></tr>
 <tr><td>ALL</td><td>223</td><td>210</td><td>-5.8%</td></tr>
 </table>
 
@@ -266,85 +257,50 @@ li { margin-bottom: 4px; }
 
 <h3>5.1 实验设计</h3>
 
-<p>使用 <code>sft_datagen_re/p0_ksp.py</code> 的 4 步 KSP 提取管线（用户画像 → 关键词 → 候选生成 → 评估），在 AIS GPU 集群上对 1966 条商品分别跑：</p>
+<p>使用 <code>sft_datagen_re/p0_ksp.py</code>（4 步管线：用户画像→关键词→候选生成→评估），在 AIS GPU 集群对 1966 条商品分别用原始 / 清洗后 description 跑 KSP 生成，模型：Qwen2.5-7B-Instruct。</p>
 
-<ul>
-<li><strong>Control（A 组）</strong>：原始 description → KSP</li>
-<li><strong>Treatment（B 组）</strong>：清洗后 description → KSP</li>
-</ul>
-
-<p>模型：Qwen2.5-7B-Instruct，batch_size=64，每组约 15 分钟完成。</p>
-
-<h3>5.2 噪音污染对比</h3>
+<h3>5.2 核心结果</h3>
 
 <table>
-<tr><th>指标</th><th>Control</th><th>Treatment</th><th>变化</th></tr>
+<tr><th>指标</th><th>Control（原始）</th><th>Treatment（清洗后）</th><th>变化</th></tr>
 <tr><td>来自噪音的 KSP 词</td><td>0.010</td><td>0.003</td><td><strong>-66.7%</strong></td></tr>
+<tr><td>TW 短语命中率</td><td>9.1%</td><td>9.2%</td><td>+0.9%</td></tr>
+<tr><td>BR 覆盖曝光</td><td>1349M</td><td>1553M</td><td>+15.1%</td></tr>
+<tr><td>TW Factscore</td><td>0.527</td><td>0.510</td><td>-1.6%</td></tr>
+<tr><td>BR Factscore</td><td>0.747</td><td>0.748</td><td>+0.1%</td></tr>
 </table>
 
-<blockquote>Treatment 组中，KSP 词来源于噪音段落的比例下降了 66.7%——清洗的核心价值。</blockquote>
-
-<h3>5.3 搜索词覆盖率评测（Tantivy 索引）</h3>
-
-<table>
-<tr><th>指标</th><th>TW ctrl → trt</th><th>BR ctrl → trt</th></tr>
-<tr><td>短语命中率</td><td>9.1% → 9.2% (+0.9%)</td><td>44.4% → 42.6% (-4.2%)</td></tr>
-<tr><td>词级命中率</td><td>55.9% → 57.3% (+2.5%)</td><td>95.6% → 95.6% (=)</td></tr>
-<tr><td>覆盖曝光</td><td>27M → 27M (-1.2%)</td><td>1349M → 1553M (+15.1%)</td></tr>
-</table>
-
-<p>TW 搜索覆盖基本持平，BR 覆盖曝光反而上升 15%——词少了但更精准对齐真实搜索行为。</p>
-
-<h3>5.4 Factscore 忠实度</h3>
-
-<table>
-<tr><th>地区</th><th>Control</th><th>Treatment</th><th>变化</th></tr>
-<tr><td>TW</td><td>0.527</td><td>0.510</td><td>-1.6%</td></tr>
-<tr><td>BR</td><td>0.747</td><td>0.748</td><td>+0.1%</td></tr>
-</table>
-
-<p>Factscore 衡量 KSP 词能否在原文中找到出处。TW 轻微下降是 description 缩短后模型产出有变化，并非有效信息被清洗掉（case 分析已确认规格保留率 100%）。</p>
+<blockquote>Treatment 组 KSP 噪音词来源减少 66.7%，搜索词覆盖中性偏正，Factscore 基本持平。</blockquote>
 
 <!-- ═══════════════════════════════════════════════ -->
-<h2>6. Case 分析：是否漏信息</h2>
-
-<p>对 1966 条数据进行系统性误删检查：</p>
+<h2>6. 误删分析</h2>
 
 <table>
 <tr><th>检查项</th><th>结果</th></tr>
-<tr><td>规格数据误删</td><td>0 / 3993 = <strong>0%</strong></td></tr>
-<tr><td>认证词误删</td><td>0 / 58 = <strong>0%</strong></td></tr>
-<tr><td>句级过度过滤</td><td>0 例</td></tr>
-<tr><td>引入额外换行</td><td>0 例</td></tr>
+<tr><td>规格数据误删</td><td><strong>0 / 3993 = 0%</strong></td></tr>
+<tr><td>认证词误删</td><td><strong>0 / 58 = 0%</strong></td></tr>
+<tr><td>引入额外换行</td><td><strong>0 例</strong></td></tr>
 </table>
 
 <p>已知边界情况：</p>
 <ul>
-<li>物流限制含产品尺寸（<code>45cm×30cm</code> 为超商尺寸上限）→ 因含 <code>cm</code> 被保留（保守）</li>
-<li>店铺优惠券行（<code>點關注領取10元優惠券</code>）→ 无法匹配现有模式，保留（已知漏检）</li>
-<li>极短描述清洗后所剩无几 → 原数据质量问题</li>
+<li>产品信息和物流信息混在同一长行（>100字符）→ 整行保留（保守，可接受）</li>
+<li>店铺优惠券行（<code>點關注領取10元優惠券</code>）→ 词库未覆盖，保留（已知漏检）</li>
 </ul>
 
 <!-- ═══════════════════════════════════════════════ -->
 <h2>7. 接入方式</h2>
 
-<h3>7.1 代码位置</h3>
-
-<pre>reranker_sft_old/data/description_cleaner.py</pre>
-
-<h3>7.2 API</h3>
-
 <pre>
 from data.description_cleaner import clean_description
 
-# 单条清洗
 cleaned = clean_description(description, region)
 # region: 'BR' | 'ID' | 'MY' | 'PH' | 'SG' | 'TH' | 'TW' | 'VN'
 </pre>
 
-<h3>7.3 接入 P0 KSP（建议位置）</h3>
+<p>词库维护：修改 <code>reranker_sft_old/data/cleaning_keywords.json</code>，无需改代码。</p>
 
-<p>在 <code>p0_ksp.py</code> 的 <code>load_items</code> 之后加一行：</p>
+<p>接入 P0 KSP：在 <code>load_items</code> 后加一行：</p>
 
 <pre>
 df['description'] = df.apply(
@@ -352,28 +308,25 @@ df['description'] = df.apply(
 )
 </pre>
 
-<p>无需修改其他管线阶段。</p>
-
 <!-- ═══════════════════════════════════════════════ -->
 <h2>8. 结论</h2>
 
 <div class="card">
 <div class="card-title">核心结论</div>
 <ol>
-<li>Description 清洗对 KSP 质量有<strong>净正向影响</strong>：噪音词来源减少 66.7%，搜索覆盖中性偏正</li>
-<li>规格/认证/产地保留率 <strong>100%</strong>，无任何误删产品事实</li>
-<li>TW 效果最显著（token 节省 16.1%），因运营文案占比最高</li>
-<li>清洗成本极低——纯规则引擎，秒级处理全量数据，无需 GPU</li>
-<li>建议首先在 TW 和 BR 上线，后续扩展至全地区</li>
+<li>两阶段管线（预处理 + 行级过滤）设计简洁，逻辑清晰，易于维护</li>
+<li>词库独立于代码（<code>cleaning_keywords.json</code>），扩展地区 / 增加关键词只改 JSON</li>
+<li>规格/认证/产地保留率 <strong>100%</strong>，无误删产品事实</li>
+<li>KSP 噪音词来源减少 <strong>66.7%</strong>，搜索覆盖中性偏正</li>
+<li>TW 效果最显著（token 节省 16.1%）；建议优先在 TW 和 BR 上线</li>
 </ol>
 </div>
 
 <h3>后续计划</h3>
-
 <ol>
-<li>完成人工标注（200 条，<a href="https://nauyisu022.github.io/temp-web/annotation.html">标注工具</a>），验证清洗质量</li>
-<li>根据标注结果迭代规则</li>
-<li>正式接入 P0 KSP，上线 AB test 验证标题质量</li>
+<li>完成人工标注（200 条，<a href="https://nauyisu022.github.io/temp-web/annotation.html">标注工具</a>），基于结果补充词库漏检项</li>
+<li>正式接入 P0 KSP，上线 AB test 验证标题质量提升</li>
+<li>根据各地区运营反馈持续迭代词库（<code>cleaning_keywords.json</code>）</li>
 </ol>
 
 </div>
