@@ -2,419 +2,447 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>Description 清洗逻辑</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Description 清洗策略</title>
 <style>
+:root {
+  --bg: #fafafa; --card: #fff; --border: #e5e7eb; --text: #1a1a2e;
+  --muted: #6b7280; --accent: #2563eb; --green: #059669; --red: #dc2626;
+  --orange: #d97706; --purple: #7c3aed; --teal: #0d9488;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, 'Segoe UI', sans-serif;
-  background: #0f172a; color: #e2e8f0;
-  min-height: 100vh; padding: 40px 24px;
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+.page { max-width: 880px; margin: 0 auto; padding: 48px 24px 60px; }
+h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.sub { font-size: 12px; color: var(--muted); margin-bottom: 40px; }
+
+/* ── 流程图 ── */
+.flow { position: relative; padding-left: 28px; margin-bottom: 48px; }
+.flow::before {
+  content: ''; position: absolute; left: 11px; top: 14px; bottom: 14px;
+  width: 2px; background: var(--border);
 }
-
-h1 { text-align: center; font-size: 20px; color: #f1f5f9; margin-bottom: 6px; }
-.subtitle { text-align: center; font-size: 12px; color: #475569; margin-bottom: 36px; }
-
-.pipeline {
-  display: flex; flex-direction: column; align-items: center; gap: 0;
-  max-width: 960px; margin: 0 auto;
+.flow-step {
+  position: relative; margin-bottom: 20px;
+  padding: 14px 18px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
-
-/* 输入/输出节点 */
-.node {
-  width: 100%; border-radius: 12px; padding: 14px 20px;
-  border: 1px solid; text-align: center;
+.flow-step::before {
+  content: ''; position: absolute; left: -22px; top: 18px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--accent); background: var(--card);
 }
-.node-input  { background: #1e293b; border-color: #334155; }
-.node-output { background: #0f2d1f; border-color: #166534; }
-.node-title  { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
-.node-desc   { font-size: 12px; color: #94a3b8; }
+.flow-step.step-l1::before { border-color: var(--purple); background: var(--purple); }
+.flow-step.step-l2::before { border-color: var(--orange); background: var(--orange); }
+.flow-step.step-l3::before { border-color: var(--green); background: var(--green); }
+.flow-step.step-out::before { border-color: var(--teal); background: var(--teal); }
 
-/* 箭头 */
-.arrow { padding: 6px 0; color: #475569; font-size: 20px; text-align: center; width: 100%; }
-
-/* Level 卡片 */
-.levels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; }
-.level-card { border-radius: 10px; padding: 15px; border: 1px solid; }
-.l1 { background: #1e1b4b; border-color: #4338ca; }
-.l2 { background: #1c1917; border-color: #d97706; }
-.l3 { background: #0c1a0c; border-color: #16a34a; }
-
-.level-num {
-  font-size: 10px; font-weight: 700; letter-spacing: 1px;
-  padding: 2px 8px; border-radius: 10px; display: inline-block;
+.step-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  margin-bottom: 4px;
 }
-.l1 .level-num { background: #4338ca; color: #e0e7ff; }
-.l2 .level-num { background: #d97706; color: #fef3c7; }
-.l3 .level-num { background: #16a34a; color: #dcfce7; }
+.step-label.lbl-purple { color: var(--purple); }
+.step-label.lbl-orange { color: var(--orange); }
+.step-label.lbl-green  { color: var(--green); }
+.step-label.lbl-teal   { color: var(--teal); }
 
-.level-title { font-size: 13px; font-weight: 700; margin: 6px 0 2px; }
-.level-sub   { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
-
-.step-list { display: flex; flex-direction: column; gap: 4px; }
-.step {
-  font-size: 11px; padding: 3px 7px; border-radius: 5px;
-  background: rgba(255,255,255,0.05); color: #cbd5e1;
-  display: flex; align-items: flex-start; gap: 5px; line-height: 1.4;
+.step-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.step-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.step-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.pill {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  background: #f3f4f6; color: #374151; font-weight: 500;
 }
-.step b { color: #86efac; }
-.step .del { color: #f87171; }
+.pill-new { background: #dbeafe; color: #1d4ed8; }
 
-/* 分隔 */
+/* ── 策略 case 区 ── */
 .section-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 1px; color: #475569;
-  text-transform: uppercase; text-align: center; padding: 6px 0;
-  display: flex; align-items: center; gap: 10px; width: 100%;
-}
-.section-title::before, .section-title::after {
-  content: ''; flex: 1; height: 1px; background: #1e293b;
+  font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 16px;
+  padding-bottom: 6px; border-bottom: 2px solid var(--text);
 }
 
-/* 决策树 */
-.decision-box {
-  width: 100%; background: #1c1917; border: 1px solid #d97706;
-  border-radius: 10px; padding: 14px 18px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.decision-row { display: flex; align-items: center; gap: 8px; font-size: 12px; flex-wrap: wrap; }
-.cond {
-  background: rgba(255,255,255,0.06); border-radius: 5px;
-  padding: 2px 9px; font-size: 11px; white-space: nowrap; flex-shrink: 0;
-}
-.r-keep { color: #4ade80; font-weight: 700; }
-.r-del  { color: #f87171; font-weight: 700; }
-.r-scan { color: #fbbf24; font-weight: 700; }
-.arr    { color: #475569; flex-shrink: 0; }
+.case-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
 
-/* 保护块 */
-.protect-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;
+.case-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
-.protect-card {
-  background: #052e16; border: 1px solid #166534;
-  border-radius: 10px; padding: 12px;
+.case-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
+  background: #f9fafb;
 }
-.protect-title { font-size: 12px; font-weight: 700; color: #86efac; margin-bottom: 6px; }
-.protect-ex { font-size: 11px; color: #6ee7b7; line-height: 1.6; }
-.protect-ex s { color: #ef4444; text-decoration: line-through; font-size: 10px; }
+.case-icon { font-size: 16px; }
+.case-name { font-size: 13px; font-weight: 700; flex: 1; }
+.case-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600;
+}
+.tag-del  { background: #fee2e2; color: var(--red); }
+.tag-keep { background: #dcfce7; color: var(--green); }
+.tag-new  { background: #dbeafe; color: #1d4ed8; }
+.tag-region { background: #f3f4f6; color: #374151; }
 
-/* 噪音关键词表格 */
-.noise-table { width: 100%; border-radius: 10px; overflow: hidden; }
-.noise-table table { width: 100%; border-collapse: collapse; font-size: 11px; }
-.noise-table th {
-  background: #1e293b; padding: 6px 10px; text-align: left;
-  color: #94a3b8; font-weight: 700; border-bottom: 1px solid #334155;
+.case-body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
 }
-.noise-table td {
-  padding: 5px 10px; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: top;
+.case-col {
+  padding: 12px 16px; font-size: 12px; line-height: 1.7;
+  white-space: pre-wrap; font-family: 'SF Mono', Consolas, monospace;
 }
-.noise-table tr:last-child td { border-bottom: none; }
-.noise-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
-.rb {
-  display: inline-block; padding: 1px 5px; border-radius: 8px;
-  font-size: 10px; font-weight: 700; background: #1e3a5f; color: #93c5fd; margin-right: 3px;
+.case-col:first-child { border-right: 1px solid var(--border); }
+.col-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase; margin-bottom: 6px; display: block;
+  font-family: -apple-system, sans-serif;
 }
+.col-label-orig { color: var(--muted); }
+.col-label-clean { color: var(--green); }
+
+.line-del {
+  background: #fee2e2; color: var(--red); text-decoration: line-through;
+  border-radius: 3px; padding: 0 3px; display: block;
+}
+.line-keep { display: block; }
+.line-fact { display: block; background: #f0fdf4; border-left: 2px solid var(--green); padding-left: 6px; }
+.line-dup  { display: block; background: #fef3c7; color: var(--orange); text-decoration: line-through; border-radius: 3px; padding: 0 3px; }
 
 /* 原则 */
 .principles {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 40px;
 }
 .principle {
-  background: #1e293b; border: 1px solid #334155; border-radius: 10px;
-  padding: 12px; text-align: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; text-align: center;
 }
-.principle-icon { font-size: 20px; margin-bottom: 5px; }
-.principle-title { font-size: 11px; font-weight: 700; color: #f1f5f9; margin-bottom: 3px; }
-.principle-desc  { font-size: 10px; color: #64748b; line-height: 1.4; }
+.principle-icon { font-size: 20px; margin-bottom: 4px; }
+.principle-title { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+.principle-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
 
-/* 变更标记 */
-.changed { background: #1a0a00; border-color: #c2410c !important; }
-.changed .level-num { background: #c2410c !important; color: #fff !important; }
-.new-badge {
-  font-size: 9px; background: #c2410c; color: #fff;
-  padding: 1px 5px; border-radius: 8px; margin-left: 4px; vertical-align: middle;
+/* 统计 */
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
 }
-.removed-badge {
-  font-size: 9px; background: #374151; color: #9ca3af;
-  padding: 1px 5px; border-radius: 8px; margin-left: 4px;
-  text-decoration: line-through;
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; text-align: center;
 }
+.stat-num { font-size: 20px; font-weight: 800; color: var(--accent); }
+.stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
 </style>
 </head>
 <body>
+<div class="page">
 
-<h1>⚙️ Description 清洗逻辑</h1>
-<p class="subtitle">v1.12 · 2026-03-31 · 电商商品描述去噪管线 · 8 地区多语言</p>
+<h1>Description 清洗策略</h1>
+<p class="sub">v1.12 · 电商商品描述去噪 · 8 地区多语言 · 规格免死 · 宁可留多</p>
 
-<div class="pipeline">
-
-  <!-- 输入 -->
-  <div class="node node-input">
-    <div class="node-title">原始 description</div>
-    <div class="node-desc">包含产品事实 + 运营噪音（物流/退款/促销/客服/emoji…）</div>
+<!-- ═══ 流程图 ═══ -->
+<div class="flow">
+  <div class="flow-step" style="border-left:3px solid var(--muted)">
+    <div class="step-label" style="color:var(--muted)">INPUT</div>
+    <div class="step-title">原始 description</div>
+    <div class="step-desc">产品事实 + 运营噪音 + emoji + HTML</div>
   </div>
 
-  <div class="arrow">↓</div>
-
-  <!-- 三个 Level -->
-  <div class="levels">
-    <!-- L1 -->
-    <div class="level-card l1">
-      <span class="level-num">Level 1</span>
-      <div class="level-title">预处理</div>
-      <div class="level-sub">结构规范化，不删内容</div>
-      <div class="step-list">
-        <div class="step">🧹 去 HTML 标签 / 实体</div>
-        <div class="step">🗑 去控制字符 / 零宽字符</div>
-        <div class="step"><span class="new-badge">NEW</span> 🎯 去 Emoji（🛒💎📦⛱等）</div>
-        <div class="step">↔ 规范化空白（保留换行）</div>
-        <div class="step">⬛ 合并连续空行</div>
-      </div>
-    </div>
-
-    <!-- L2 -->
-    <div class="level-card l2">
-      <span class="level-num">Level 2</span>
-      <div class="level-title">段落级过滤</div>
-      <div class="level-sub">按 \n\n 分段，整段判断</div>
-      <div class="step-list">
-        <div class="step">🛡 <b>规格/型号/认证/产地</b>→ 保留</div>
-        <div class="step">🔑 匹配 6 类噪音关键词</div>
-        <div class="step">🔍 逐行扫描：有 fact → 整段留</div>
-        <div class="step">✂ 全噪音 → 整段删除</div>
-      </div>
-    </div>
-
-    <!-- L3 -->
-    <div class="level-card l3 changed">
-      <span class="level-num">Level 3</span>
-      <div class="level-title">行级输出 <span class="new-badge">重构</span></div>
-      <div class="level-sub">逐行判断，原样输出</div>
-      <div class="step-list">
-        <div class="step">⭐ <b>规格/型号/认证/产地</b>→ fact 保留</div>
-        <div class="step">✂ len≤60 + 噪音词 + 无规格单位 → 删</div>
-        <div class="step"><span class="removed-badge">已删除</span> <span class="del">主观/促销正则</span></div>
-        <div class="step">✅ 其余 → keep（宁可留多）</div>
-        <div class="step">🔁 全局去重（相同行只留首次）</div>
-      </div>
+  <div class="flow-step step-l1">
+    <div class="step-label lbl-purple">Level 1 · 预处理</div>
+    <div class="step-title">结构规范化</div>
+    <div class="step-pills">
+      <span class="pill">HTML 标签</span>
+      <span class="pill">控制字符</span>
+      <span class="pill">零宽字符</span>
+      <span class="pill pill-new">Emoji 删除</span>
+      <span class="pill">空白规范化</span>
     </div>
   </div>
 
-  <div class="arrow">↓</div>
-
-  <div class="node node-output">
-    <div class="node-title">description_cleaned</div>
-    <div class="node-desc">保留产品事实 · 原始行格式 · 无 emoji · 无运营噪音</div>
-  </div>
-
-  <!-- L2 决策树 -->
-  <div class="section-title" style="margin-top:22px">Level 2 决策树</div>
-  <div class="decision-box">
-    <div class="decision-row">
-      <span class="cond">段落为空 / &lt;10字符</span>
-      <span class="arr">→</span> <span class="r-del">删除</span>
+  <div class="flow-step step-l2">
+    <div class="step-label lbl-orange">Level 2 · 段落级过滤</div>
+    <div class="step-title">按 \n\n 分段 → 整段判断</div>
+    <div class="step-desc">
+      含 <b>规格/型号/认证/产地</b> → 硬保护<br>
+      命中 6 类噪音关键词 → 逐行扫描 → 有 fact 行则保留，全 noise 则删
     </div>
-    <div class="decision-row">
-      <span class="cond">含 规格 / 型号 / 认证 / 产地词</span>
-      <span class="arr">→</span> <span class="r-keep">保留（硬保护）</span>
-    </div>
-    <div class="decision-row">
-      <span class="cond">无噪音关键词</span>
-      <span class="arr">→</span> <span class="r-keep">保留</span>
-    </div>
-    <div class="decision-row">
-      <span class="cond" style="color:#fbbf24">有噪音关键词</span>
-      <span class="arr">→</span>
-      <span class="r-scan">逐行扫描</span>
-      <span class="arr">→</span>
-      有 fact 行 <span class="r-keep" style="margin:0 6px">→ 整段保留</span>
-      / 全 noise <span class="r-del" style="margin-left:6px">→ 整段删除</span>
+    <div class="step-pills">
+      <span class="pill">📦 物流</span>
+      <span class="pill">↩ 退换</span>
+      <span class="pill">💬 客服</span>
+      <span class="pill">🏪 店铺</span>
+      <span class="pill">⚠ 免责</span>
+      <span class="pill">⛔ 警告</span>
     </div>
   </div>
 
-  <!-- 保护机制 -->
-  <div class="section-title" style="margin-top:16px">4 类保护（任一命中 → 强制保留）</div>
-  <div class="protect-grid">
-    <div class="protect-card">
-      <div class="protect-title">📐 规格单位</div>
-      <div class="protect-ex">
-        500<b>g</b> · 4000<b>mAh</b> · 14<b>cm</b> · 128<b>GB</b><br>
-        370<b>gr</b> · 1<b>buah</b> · 3<b>件</b> · 50<b>ml</b><br>
-        <s>5-7個工作日 → 无单位，不保护</s>
-      </div>
+  <div class="flow-step step-l3">
+    <div class="step-label lbl-green">Level 3 · 行级输出</div>
+    <div class="step-title">逐行判断 → 原样输出</div>
+    <div class="step-desc">
+      规格/型号/认证/产地 → <b>fact</b>（保留）<br>
+      ≤60字符 + 噪音词 + 无规格单位 → 删除<br>
+      其余 → <b>keep</b> · 全局去重 · 不拆句不重组
     </div>
-    <div class="protect-card">
-      <div class="protect-title">🔖 型号 + 认证</div>
-      <div class="protect-ex">
-        <b>CB</b>300F · <b>YH</b>-8004 · iPhone 15<br>
-        <b>Halal</b> · <b>BPOM</b> · <b>FDA</b> · <b>ISO</b> · <b>SNI</b>
-      </div>
+  </div>
+
+  <div class="flow-step step-out">
+    <div class="step-label lbl-teal">OUTPUT</div>
+    <div class="step-title">description_cleaned</div>
+    <div class="step-desc">保留产品事实 · 原始行格式 · 无 emoji · 无运营噪音</div>
+  </div>
+</div>
+
+<!-- ═══ Case 对比 ═══ -->
+<div class="section-title">清洗策略 Case 对比</div>
+<div class="case-grid">
+
+  <!-- 1. Emoji -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">🎯</span>
+      <span class="case-name">Emoji 删除</span>
+      <span class="case-tag tag-new">L1 预处理</span>
+      <span class="case-tag tag-region">TW</span>
     </div>
-    <div class="protect-card">
-      <div class="protect-title">🌍 产地词（拉丁）<span class="new-badge">NEW</span></div>
-      <div class="protect-ex">
-        Sumatera · Kerinci · Toraja<br>
-        Minas Gerais · Cameron Highland<br>
-        Chiang Rai · Dalat · Sa Pa<br>
-        dari Indonesia / dari Japan…
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-del">💎</span><span class="line-keep">【寄運說明】</span><span class="line-del">💎</span>
+        <span class="line-del">⚠️</span><span class="line-keep">超商取貨請參考規定尺寸</span>
       </div>
-    </div>
-    <div class="protect-card">
-      <div class="protect-title">🌏 产地词（CJK/泰语）<span class="new-badge">NEW</span></div>
-      <div class="protect-ex">
-        阿里山 · 高山茶 · 台灣 · 玉山<br>
-        เชียงราย · เชียงใหม่ · ดอยอินทนนท์<br>
-        Đà Lạt · Mộc Châu
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-keep">【寄運說明】</span>
+        <span class="line-keep">超商取貨請參考規定尺寸</span>
       </div>
     </div>
   </div>
 
-  <!-- 段落噪音关键词 -->
-  <div class="section-title" style="margin-top:16px">段落级噪音关键词（6 类 · 8 地区）</div>
-  <div class="noise-table">
-    <table>
-      <thead>
-        <tr><th>类别</th><th>EN / MY / SG / PH</th><th>ID</th><th>BR</th><th>TW</th><th>TH</th><th>VN</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>📦 物流</td>
-          <td>free shipping · COD</td>
-          <td>ongkir · pengiriman</td>
-          <td>frete · envio</td>
-          <td>運費 · 出貨 · 宅配 · 超商取貨</td>
-          <td>จัดส่ง · ค่าส่ง</td>
-          <td>giao hàng · phí ship</td>
-        </tr>
-        <tr>
-          <td>↩ 退换</td>
-          <td>return policy · refund</td>
-          <td>retur · pengembalian</td>
-          <td>devolução · troca</td>
-          <td>退貨 · 退款 · 鑑賞期</td>
-          <td>คืนสินค้า</td>
-          <td>đổi trả · hoàn tiền</td>
-        </tr>
-        <tr>
-          <td>💬 客服</td>
-          <td>contact us · whatsapp</td>
-          <td>hubungi kami · CS</td>
-          <td>fale conosco</td>
-          <td>客服 · 聊聊 · 服務時間</td>
-          <td>ติดต่อเรา</td>
-          <td>liên hệ · hotline</td>
-        </tr>
-        <tr>
-          <td>🏪 店铺</td>
-          <td>welcome to our store</td>
-          <td>tentang toko</td>
-          <td>nossa loja</td>
-          <td>歡迎光臨 · 賣場</td>
-          <td>ทางร้าน</td>
-          <td>về chúng tôi</td>
-        </tr>
-        <tr>
-          <td>⚠ 免责</td>
-          <td>image for reference</td>
-          <td>gambar hanya ilustrasi</td>
-          <td>imagem ilustrativa</td>
-          <td>圖片僅供參考 · 色差</td>
-          <td>สีอาจแตกต่าง</td>
-          <td>màu sắc có thể khác</td>
-        </tr>
-        <tr>
-          <td>⛔ 警告</td>
-          <td>safety warning</td>
-          <td>perhatian · catatan</td>
-          <td>atenção · aviso</td>
-          <td>溫馨提示 · 注意事項</td>
-          <td>คำเตือน · หมายเหตุ</td>
-          <td>lưu ý · cảnh báo</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- 重要变更 -->
-  <div class="section-title" style="margin-top:16px">v1.12 关键变更</div>
-  <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;font-size:11px;color:#94a3b8;line-height:1.8">
-      <div style="color:#f87171;font-weight:700;margin-bottom:6px">❌ 已删除</div>
-      <div>句级促销/主观正则（6种语言）</div>
-      <div style="color:#6b7280">→ <s>easy to use / terbaik / best quality</s> 不再删除</div>
-      <div style="color:#6b7280">→ 产品特性描述与主观词共存时不误删</div>
+  <!-- 2. 物流 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">📦</span>
+      <span class="case-name">物流发货</span>
+      <span class="case-tag tag-del">L2 段落删除</span>
+      <span class="case-tag tag-region">ID</span>
     </div>
-    <div style="background:#052e16;border:1px solid #166534;border-radius:10px;padding:14px;font-size:11px;color:#94a3b8;line-height:1.8">
-      <div style="color:#4ade80;font-weight:700;margin-bottom:6px">✅ 新增 / 修复</div>
-      <div>Emoji 在 Level 1 预处理阶段删除</div>
-      <div>数字保护 → 规格单位保护（5-7天不误保护）</div>
-      <div>行级输出（不拆句重组，不引入额外换行）</div>
-      <div>产地词保护（Sumatera / 阿里山 / เชียงราย）</div>
-      <div>行级噪音阈值 ≤60字符（短纯噪音行）</div>
-      <div>全局去重（连续重复行只保留一次）</div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-fact">Berat bersih 500g</span>
+        <span class="line-del">Gratis ongkir se-Indonesia</span>
+        <span class="line-del">Dikirim dari Jakarta</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-fact">Berat bersih 500g</span>
+      </div>
     </div>
   </div>
 
-  <!-- 设计原则 -->
-  <div class="section-title" style="margin-top:16px">核心设计原则</div>
-  <div class="principles">
-    <div class="principle">
-      <div class="principle-icon">🛡</div>
-      <div class="principle-title">宁可留多</div>
-      <div class="principle-desc">默认 keep；只删高置信度噪音。不确定 = 保留。</div>
+  <!-- 3. 退换货 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">↩</span>
+      <span class="case-name">退换货</span>
+      <span class="case-tag tag-del">L3 行删除</span>
+      <span class="case-tag tag-region">TW</span>
     </div>
-    <div class="principle">
-      <div class="principle-icon">📐</div>
-      <div class="principle-title">规格单位免死</div>
-      <div class="principle-desc">含规格单位的行强制保留；纯数字（时间/价格）不豁免。</div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon">🌍</div>
-      <div class="principle-title">产地保护</div>
-      <div class="principle-desc">含已知产地词的行，即使含主观词（terbaik/melhor）也保留。</div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon">📏</div>
-      <div class="principle-title">短行才删</div>
-      <div class="principle-desc">行级噪音规则只对 ≤60字符行生效，长行混合内容整行保留。</div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon">📋</div>
-      <div class="principle-title">行级输出</div>
-      <div class="principle-desc">不拆句、不重组，输出保持原始换行结构。</div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon">🌏</div>
-      <div class="principle-title">MY 双规则</div>
-      <div class="principle-desc">马来西亚同时应用 EN + ID 两套关键词（双语混用）。</div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-keep">材質: 不鏽鋼 304</span>
+        <span class="line-del">退貨請在7天內申請</span>
+        <span class="line-fact">尺寸: 25cm x 15cm</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-keep">材質: 不鏽鋼 304</span>
+        <span class="line-fact">尺寸: 25cm x 15cm</span>
+      </div>
     </div>
   </div>
 
-  <!-- 实测 -->
-  <div class="section-title" style="margin-top:16px">实测结果（1966 条）</div>
-  <div style="width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center">
-      <div style="font-size:22px;font-weight:700;color:#4ade80">33.5%</div>
-      <div style="font-size:11px;color:#64748b;margin-top:3px">有变化条目</div>
+  <!-- 4. 客服 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">💬</span>
+      <span class="case-name">客服联系</span>
+      <span class="case-tag tag-del">L3 行删除</span>
+      <span class="case-tag tag-region">SG</span>
     </div>
-    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center">
-      <div style="font-size:22px;font-weight:700;color:#4ade80">100%</div>
-      <div style="font-size:11px;color:#64748b;margin-top:3px">规格保留率</div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-keep">Wireless Bluetooth V5.3 Earbuds</span>
+        <span class="line-fact">40mm Driver</span>
+        <span class="line-del">Contact us via whatsapp for bulk orders</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-keep">Wireless Bluetooth V5.3 Earbuds</span>
+        <span class="line-fact">40mm Driver</span>
+      </div>
     </div>
-    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center">
-      <div style="font-size:22px;font-weight:700;color:#4ade80">0</div>
-      <div style="font-size:11px;color:#64748b;margin-top:3px">引入额外换行</div>
+  </div>
+
+  <!-- 5. 店铺介绍 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">🏪</span>
+      <span class="case-name">店铺介绍</span>
+      <span class="case-tag tag-del">L2 段落删除</span>
+      <span class="case-tag tag-region">VN</span>
     </div>
-    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;text-align:center">
-      <div style="font-size:22px;font-weight:700;color:#4ade80">-66.7%</div>
-      <div style="font-size:11px;color:#64748b;margin-top:3px">KSP 噪音词来源</div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-del">Chào mừng bạn đến với cửa hàng</span>
+        <span class="line-fact">Kem chống nắng SPF50 50ml</span>
+        <span class="line-keep">Chiết xuất từ thiên nhiên</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-fact">Kem chống nắng SPF50 50ml</span>
+        <span class="line-keep">Chiết xuất từ thiên nhiên</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 规格保护 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">📐</span>
+      <span class="case-name">规格保护（免死）</span>
+      <span class="case-tag tag-keep">保护生效</span>
+      <span class="case-tag tag-region">TW</span>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-keep">商品規格</span>
+        <span class="line-fact">尺寸:寬14CM 長20.5CM</span>
+        <span class="line-fact">可承受重量:5KG以下</span>
+        <span class="line-del">歡迎光臨本店</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-keep">商品規格</span>
+        <span class="line-fact">尺寸:寬14CM 長20.5CM</span>
+        <span class="line-fact">可承受重量:5KG以下</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 产地保护 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">🌍</span>
+      <span class="case-name">产地保护</span>
+      <span class="case-tag tag-keep">保护生效</span>
+      <span class="case-tag tag-new">NEW</span>
+      <span class="case-tag tag-region">ID</span>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-fact">Teh <u>terbaik</u> dari perkebunan di lereng gunung <b>Kerinci, Sumatera</b>, Indonesia.</span>
+        <span class="line-keep">Harga murah meriah</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-fact">Teh terbaik dari perkebunan di lereng gunung Kerinci, Sumatera, Indonesia.</span>
+        <span class="line-keep">Harga murah meriah</span>
+        <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:sans-serif">
+          ↑ 含产地词 <b>Kerinci + Sumatera</b>，即使有主观词 <i>terbaik</i> 也保留
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. 去重 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span class="case-icon">🔁</span>
+      <span class="case-name">去重</span>
+      <span class="case-tag tag-del">重复行删除</span>
+      <span class="case-tag tag-region">ID</span>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <span class="col-label col-label-orig">原文</span>
+        <span class="line-fact">Produk premium 500g</span>
+        <span class="line-dup">Produk premium 500g</span>
+        <span class="line-keep">Kualitas terjamin</span>
+        <span class="line-dup">Kualitas terjamin</span>
+      </div>
+      <div class="case-col">
+        <span class="col-label col-label-clean">清洗后</span>
+        <span class="line-fact">Produk premium 500g</span>
+        <span class="line-keep">Kualitas terjamin</span>
+      </div>
     </div>
   </div>
 
 </div>
 
-<div style="text-align:center;margin-top:28px;font-size:10px;color:#334155">
-  v1.12 · reranker_sft_old/data/description_cleaner.py
+<!-- ═══ 设计原则 ═══ -->
+<div class="section-title">设计原则</div>
+<div class="principles">
+  <div class="principle">
+    <div class="principle-icon">🛡</div>
+    <div class="principle-title">宁可留多</div>
+    <div class="principle-desc">默认 keep，只删高置信度噪音</div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">📐</div>
+    <div class="principle-title">规格单位免死</div>
+    <div class="principle-desc">含规格单位 → 强制保留<br>纯数字（时间/价格）不豁免</div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">🌍</div>
+    <div class="principle-title">产地保护</div>
+    <div class="principle-desc">Kerinci · 阿里山 · เชียงราย<br>即使含主观词也保留</div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">📏</div>
+    <div class="principle-title">短行才删</div>
+    <div class="principle-desc">≤60字符行级噪音过滤<br>长行混合内容整行保留</div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">📋</div>
+    <div class="principle-title">行级输出</div>
+    <div class="principle-desc">不拆句不重组<br>保持原始换行结构</div>
+  </div>
+  <div class="principle">
+    <div class="principle-icon">🌏</div>
+    <div class="principle-title">MY 双规则</div>
+    <div class="principle-desc">EN + ID 两套规则并行<br>覆盖双语混用</div>
+  </div>
 </div>
 
+<!-- ═══ 实测 ═══ -->
+<div class="section-title">实测结果（1966 条 · 8 地区）</div>
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-num">33.5%</div>
+    <div class="stat-label">有变化条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">规格保留率</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">0</div>
+    <div class="stat-label">引入额外换行</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">-66.7%</div>
+    <div class="stat-label">KSP 噪音词来源</div>
+  </div>
+</div>
+
+</div>
 </body>
 </html>
