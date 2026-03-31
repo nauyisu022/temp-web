@@ -22,18 +22,27 @@ canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
 const ctx = canvas.getContext('2d');
 ctx.scale(dpr, dpr);
 const rc = rough.canvas(canvas);
-const S = 42; // shared seed
+const S = 42;
 
-// ── drawing helpers ──
-const pink = '#f7c0c0';
-const gray = '#eaecf1';
-const white = '#fff';
+// ── Per-stage colors (v1 multi-color palette) ──
+const C = {
+  input:   '#e8f0fe',
+  select:  '#fff3e0',
+  ksp:     '#fce4ec',
+  info:    '#e8f0fe',
+  search:  '#e8f5e9',
+  sim:     '#e8f5e9',
+  sort:    '#f3e5f5',
+  llm:     '#e3f2fd',
+  pattern: '#fff8e1',
+  ek:      '#fff3e0',
+  filter:  '#fce4ec',
+  output:  '#e8f5e9',
+  white:   '#fff',
+};
 
 function rect(x, y, w, h, fill, opts) {
   rc.rectangle(x, y, w, h, { roughness: 1, strokeWidth: 1.5, fill, fillStyle: 'solid', seed: S, ...opts });
-}
-function roundRect(x, y, w, h, fill) {
-  rect(x, y, w, h, fill);
 }
 
 function text(str, x, y, { font = '14px', bold = false, color = '#222', align = 'center' } = {}) {
@@ -51,158 +60,122 @@ function arrow(x1, y1, x2, y2, opts = {}) {
   rc.line(x2, y2, x2 - sz * Math.cos(a + 0.4), y2 - sz * Math.sin(a + 0.4), o);
 }
 
-function dashLine(x1, y1, x2, y2) {
-  rc.line(x1, y1, x2, y2, { roughness: 0.5, strokeWidth: 1, strokeLineDash: [6, 4], stroke: '#999', seed: S });
-}
+const mx = 350;
+const rx = 810;
 
-// ── Layout constants ──
-const mx = 350;   // main flow center-x
-const rx = 810;   // right branch center-x
-
-// ====================================================================
-// Title
-// ====================================================================
+// ── Title ──
 text('Title Optimization v9', W / 2, 38, { font: '26px', bold: true });
 text('Shopee Google Ads Title Optimization Pipeline', W / 2, 62, { font: '13px', color: '#888' });
 
-// ====================================================================
-// Row 0: Inputs
-// ====================================================================
+// ── Row 0: Inputs ──
 const y0 = 95;
-roundRect(220, y0, 180, 42, white);
+rect(220, y0, 180, 42, C.input);
 text('item Catalog', 310, y0 + 26, { font: '13px', bold: true });
 
-roundRect(650, y0, 220, 42, white);
+rect(650, y0, 220, 42, C.input);
 text('item with performance', 760, y0 + 26, { font: '13px', bold: true });
 
-arrow(310, y0 + 42, 310, y0 + 42 + 28); // down to Product Selection
-arrow(420, y0 + 15, 650, y0 + 15);       // horizontal to right
+arrow(310, y0 + 42, 310, y0 + 70);
+arrow(420, y0 + 15, 650, y0 + 15);
 
-// ====================================================================
-// Row 1: Product Selection
-// ====================================================================
+// ── Row 1: Product Selection ──
 const y1 = 170;
-roundRect(mx - 140, y1, 280, 55, pink);
+rect(mx - 140, y1, 280, 55, C.select);
 text('Product Selection', mx, y1 + 22, { font: '15px', bold: true });
 text('Choosing Items with CPO Improvement Space', mx, y1 + 42, { font: '11px', color: '#666' });
 
-arrow(mx, y1 + 55, mx, y1 + 55 + 30);
+arrow(mx, y1 + 55, mx, y1 + 85);
 
-// ====================================================================
-// Row 2: KSP Extraction (changed in v9)
-// ====================================================================
+// ── Row 2: KSP Extraction ──
 const y2 = 265;
 const kw = 320, kh = 110;
-roundRect(mx - kw/2, y2, kw, kh, pink);
+rect(mx - kw/2, y2, kw, kh, C.ksp);
 text('Product KSP Extraction', mx, y2 + 24, { font: '15px', bold: true });
 text('4-Round Multi-turn CoT', mx, y2 + 44, { font: '12px', bold: true, color: '#c62828' });
 
-// sub-boxes inside KSP
 const subY = y2 + 58;
 const subW = 68, subH = 28, subGap = 8;
 const labels = ['Brand', 'Product Type', 'Selling Points', 'Longtail Words'];
 const totalW = labels.length * subW + (labels.length - 1) * subGap;
 let sx = mx - totalW / 2;
 for (const lb of labels) {
-  roundRect(sx, subY, subW, subH, white);
+  rect(sx, subY, subW, subH, C.white);
   text(lb, sx + subW / 2, subY + 18, { font: '10px' });
   sx += subW + subGap;
 }
 
-// ── Right branch: Cluster by ProductType ──
+// ── Right: Cluster by ProductType ──
 const cy2 = y2 + 35;
-roundRect(rx - 110, cy2, 220, 45, white);
+rect(rx - 110, cy2, 220, 45, C.pattern);
 text('Cluster by', rx, cy2 + 18, { font: '13px', bold: true });
-roundRect(rx - 60, cy2 + 22, 120, 20, white);
+rect(rx - 60, cy2 + 22, 120, 20, C.white);
 text('Product Type', rx, cy2 + 36, { font: '10px' });
 
-// arrow KSP → Cluster
 arrow(mx + kw / 2, y2 + 50, rx - 110, cy2 + 22);
 
-// ====================================================================
-// Row 3: Product Information + Search Terms
-// ====================================================================
+// ── Row 3: Product Info + Search Terms ──
 const y3 = 420;
-// Product Information
-roundRect(mx - 190, y3, 175, 75, white);
+rect(mx - 190, y3, 175, 75, C.info);
 text('Product Information', mx - 103, y3 + 20, { font: '13px', bold: true });
-roundRect(mx - 180, y3 + 30, 155, 35, white);
+rect(mx - 180, y3 + 30, 155, 35, C.white);
 text('Original Title + Description', mx - 103, y3 + 44, { font: '9px' });
 text('Original Title + KSP', mx - 103, y3 + 58, { font: '9px' });
 
-// Search Terms
-roundRect(mx + 30, y3, 195, 55, gray);
+rect(mx + 30, y3, 195, 55, C.search);
 text('Search Terms', mx + 127, y3 + 22, { font: '13px', bold: true });
 text('(with Performance)', mx + 127, y3 + 40, { font: '11px', color: '#666' });
 
-// arrows down from KSP
 arrow(mx - 50, y2 + kh, mx - 103, y3);
 arrow(mx + 50, y2 + kh, mx + 127, y3);
 
-// arrow from item with performance → Search Terms
 arrow(760, y0 + 42, 760, y3 - 30);
-arrow(760, y3 - 30, mx + 225, y3 - 30);
+rc.line(760, y3 - 30, mx + 225, y3 - 30, { roughness: 0.7, strokeWidth: 1.5, seed: S });
 arrow(mx + 225, y3 - 30, mx + 127, y3);
 
-// ====================================================================
-// Row 4: Search Simulator (container)
-// ====================================================================
+// ── Row 4: Search Simulator ──
 const y4 = 545;
 const ssW = 430, ssH = 280;
-roundRect(mx - ssW/2, y4, ssW, ssH, pink);
+rect(mx - ssW/2, y4, ssW, ssH, C.sim);
 text('Search Simulator', mx, y4 + 24, { font: '16px', bold: true });
 
-// Word Segmentation (two small boxes)
 const wsY = y4 + 38;
-roundRect(mx - 170, wsY, 130, 28, white);
+rect(mx - 170, wsY, 130, 28, C.white);
 text('Word Segmentation', mx - 105, wsY + 18, { font: '10px' });
-roundRect(mx + 40, wsY, 130, 28, white);
+rect(mx + 40, wsY, 130, 28, C.white);
 text('Word Segmentation', mx + 105, wsY + 18, { font: '10px' });
 
-// arrows from Product Info / Search Terms → Word Segmentation
 arrow(mx - 103, y3 + 75, mx - 105, y4);
 arrow(mx + 127, y3 + 55, mx + 105, y4);
 
-// Inverted Index container
 const iiY = y4 + 80;
-roundRect(mx - 160, iiY, 320, 55, white);
+rect(mx - 160, iiY, 320, 55, C.white);
 text('Inverted Index', mx, iiY + 16, { font: '12px', bold: true });
-roundRect(mx - 140, iiY + 22, 130, 26, white);
+rect(mx - 140, iiY + 22, 130, 26, C.input);
 text('Text Index (BM25s)', mx - 75, iiY + 38, { font: '10px' });
-roundRect(mx + 10, iiY + 22, 150, 26, white);
+rect(mx + 10, iiY + 22, 150, 26, C.input);
 text('Semantic Index (Qwen3 Emb)', mx + 85, iiY + 38, { font: '9px' });
 
-// arrows Word Seg → Inverted Index
 arrow(mx - 105, wsY + 28, mx - 75, iiY);
 arrow(mx + 105, wsY + 28, mx + 85, iiY);
 
-// Similarity Recall
 const srY = iiY + 68;
-roundRect(mx - 85, srY, 170, 30, white);
+rect(mx - 85, srY, 170, 30, C.white);
 text('Similarity Recall', mx, srY + 19, { font: '12px' });
 arrow(mx, iiY + 55, mx, srY);
 
-// Relevance Re-ranking
 const rrY = srY + 45;
-roundRect(mx - 100, rrY, 200, 35, white);
+rect(mx - 100, rrY, 200, 35, C.white);
 text('Relevance Re-ranking', mx, rrY + 15, { font: '12px' });
 text('(Qwen3 Reranker)', mx, rrY + 29, { font: '10px', color: '#666' });
 arrow(mx, srY + 30, mx, rrY);
 
-// curved arrow: Product Info → Recall (bypassing index for original doc matching)
-// Actually this represents the documents being matched
-// Let me add the arrow from word seg down to inverted index already done
-
-// ====================================================================
-// Row 5: Sorting
-// ====================================================================
+// ── Row 5: Sorting ──
 const y5 = y4 + ssH + 35;
-roundRect(mx - 145, y5, 290, 40, white);
+rect(mx - 145, y5, 290, 40, C.sort);
 text('Sorting (Conversion score × Relevance score)', mx, y5 + 25, { font: '12px' });
 
 arrow(mx, y4 + ssH, mx, y5);
 
-// annotation: what comes out
 const y5b = y5 + 55;
 text('Original Title + KSP +', mx - 30, y5b, { font: '11px', color: '#555', align: 'left' });
 text('High Relevance Good search terms', mx + 5, y5b + 16, { font: '11px', color: '#555', align: 'left' });
@@ -210,90 +183,70 @@ text('High Relevance Bad search terms', mx + 5, y5b + 32, { font: '11px', color:
 
 arrow(mx, y5 + 40, mx, y5b - 10);
 
-// ====================================================================
-// Row 6: LLM Title Generator (changed in v9: 2-step)
-// ====================================================================
+// ── Row 6: LLM Title Generator ──
 const y6 = y5b + 55;
 const lgW = 350, lgH = 145;
-roundRect(mx - lgW/2, y6, lgW, lgH, pink);
+rect(mx - lgW/2, y6, lgW, lgH, C.llm);
 text('LLM Title Generator', mx, y6 + 24, { font: '16px', bold: true });
 
-// Call 1
-roundRect(mx - lgW/2 + 20, y6 + 36, lgW - 40, 32, white);
+rect(mx - lgW/2 + 20, y6 + 36, lgW - 40, 32, C.white);
 text('Call 1: Extract Facts + Policy', mx, y6 + 56, { font: '12px' });
 
-// "+" sign
-text('+', mx, y6 + 78, { font: '16px', bold: true, color: '#c62828' });
+text('+', mx, y6 + 78, { font: '16px', bold: true, color: '#1565c0' });
 
-// Call 2
-roundRect(mx - lgW/2 + 20, y6 + 86, lgW - 40, 32, white);
+rect(mx - lgW/2 + 20, y6 + 86, lgW - 40, 32, C.white);
 text('Call 2: Generate Optimized Title', mx, y6 + 106, { font: '12px' });
 
-// model note
 text('GPT-5-mini · async · concurrency=200', mx, y6 + 135, { font: '10px', color: '#888' });
 
 arrow(mx, y5b + 35, mx, y6);
 
-// ── Right branch: Title Pattern Generation ──
+// ── Right: Title Pattern Generation ──
 const tpY = y6 - 55;
-roundRect(rx - 130, tpY, 260, 90, pink);
+rect(rx - 130, tpY, 260, 90, C.pattern);
 text('Title Pattern Generation', rx, tpY + 22, { font: '14px', bold: true });
-roundRect(rx - 115, tpY + 32, 230, 22, white);
+rect(rx - 115, tpY + 32, 230, 22, C.white);
 text('Mining Good / Bad Title Examples', rx, tpY + 47, { font: '10px' });
-roundRect(rx - 115, tpY + 58, 230, 22, white);
+rect(rx - 115, tpY + 58, 230, 22, C.white);
 text('Pattern Generation (LLM & CoT)', rx, tpY + 73, { font: '10px' });
 
-// Cluster → Title Pattern Generation
 arrow(rx, cy2 + 45, rx, tpY);
 
-// Expert Knowledge box
+// ── Right: Expert Knowledge ──
 const ekY = tpY + 110;
-roundRect(rx - 120, ekY, 240, 95, pink);
+rect(rx - 120, ekY, 240, 95, C.ek);
 text('Expert Knowledge', rx, ekY + 20, { font: '13px', bold: true });
 text('by cluster priority:', rx, ekY + 38, { font: '11px', color: '#555' });
 text('1. Product Type', rx, ekY + 55, { font: '11px', color: '#555' });
 text('2. L3 Category', rx, ekY + 70, { font: '11px', color: '#555' });
 text('3. L2 Category', rx, ekY + 85, { font: '11px', color: '#555' });
 
-// Title Pattern → Expert Knowledge
 arrow(rx, tpY + 90, rx, ekY);
-
-// Expert Knowledge → LLM Title Generator
 arrow(rx - 120, ekY + 50, mx + lgW / 2, y6 + 95);
 
-// ====================================================================
-// Row 7: Blacklist Filter (P5)
-// ====================================================================
+// ── Row 7: Blacklist Filter ──
 const y7 = y6 + lgH + 40;
-roundRect(mx - 130, y7, 260, 55, pink);
+rect(mx - 130, y7, 260, 55, C.filter);
 text('Blacklist Filter', mx, y7 + 22, { font: '14px', bold: true });
 text('flashtext (Aho-Corasick) · CJK cleanup', mx, y7 + 42, { font: '10px', color: '#666' });
 
 arrow(mx, y6 + lgH, mx, y7);
 
-// ====================================================================
-// Row 8: Output
-// ====================================================================
+// ── Row 8: Output ──
 const y8 = y7 + 80;
-roundRect(mx - 95, y8, 190, 40, white, { stroke: '#c62828', strokeWidth: 2 });
-text('Enhanced Title', mx, y8 + 17, { font: '14px', bold: true, color: '#c62828' });
+rect(mx - 95, y8, 190, 40, C.output, { stroke: '#2e7d32', strokeWidth: 2 });
+text('Enhanced Title', mx, y8 + 17, { font: '14px', bold: true, color: '#2e7d32' });
 text('→ Hive (Parquet)', mx, y8 + 33, { font: '11px', color: '#555' });
 
 arrow(mx, y7 + 55, mx, y8);
-
-// ── Regions note ──
 text('BR · ID · MY · PH · SG · TH · TW · VN', mx, y8 + 58, { font: '11px', color: '#aaa' });
 
-// ====================================================================
-// v9 change annotations (red dashed highlights)
-// ====================================================================
+// ── v9 change highlights ──
 const redDash = { roughness: 0.5, strokeWidth: 1.8, strokeLineDash: [5, 3], stroke: '#c62828', seed: S };
 
-// highlight KSP
 rc.rectangle(mx - kw/2 - 6, y2 - 6, kw + 12, kh + 12, redDash);
 text('v9 changed', mx + kw/2 + 20, y2 + 15, { font: '11px', bold: true, color: '#c62828', align: 'left' });
 
-// highlight LLM Generator
 rc.rectangle(mx - lgW/2 - 6, y6 - 6, lgW + 12, lgH + 12, redDash);
 text('v9 changed', mx + lgW/2 + 20, y6 + 15, { font: '11px', bold: true, color: '#c62828', align: 'left' });
 
