@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Title Optimization v9 Pipeline</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  body { background: #1e1e1e; margin: 0; padding: 20px; }
+  .mermaid { background: #fff; border-radius: 8px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="mermaid">
+flowchart TD
+    subgraph INPUT["📥 数据输入"]
+        ITEMS[("商品数据\ntitle + description\nl3_category + item_id")]
+        SEARCH[("搜索词数据\nsearch_term\nimpressions/clicks/orders")]
+        EK_DB[("专家知识 DB\nVC / L3 / L2 层级")]
+        BL[("黑名单 CSV\n各地区 Google 违规词")]
+    end
+
+    subgraph P0["🔬 P0 — KSP 卖点蒸馏"]
+        direction TB
+        P0_IN["商品 title + description + l3_category"]
+        P0_VLLM["vLLM 批量推理\n（Qwen2.5-7B + 可选 LoRA）"]
+        P0_PARSE["JSON 解析 + 重试\nmax_retries=5"]
+        P0_OUT[/"distill_ksp_*.jsonl\n结构化卖点 JSON"/]
+        P0_IN --> P0_VLLM --> P0_PARSE --> P0_OUT
+    end
+
+    subgraph P1["🔍 P1 — 双路召回"]
+        direction TB
+        subgraph P1A["P1a: BM25 召回"]
+            P1A_IDX["bm25s 建索引\n+ 分词/停用词"]
+            P1A_SEARCH["批量检索\nquery_topk=1000"]
+            P1A_INV["倒排反转\ndoc→top-100 queries\nnumba 加速"]
+            P1A_IDX --> P1A_SEARCH --> P1A_INV
+        end
+        subgraph P1B["P1b: Embedding 召回"]
+            P1B_ENC["Qwen3-Embedding-4B\n向量编码"]
+            P1B_FAISS["FAISS ANN 检索\ndoc_topk=100"]
+            P1B_ENC --> P1B_FAISS
+        end
+        P1_OUT[/"memmap 召回矩阵\nidx + score\n(N × 100)"/]
+        P1A_INV --> P1_OUT
+        P1B_FAISS --> P1_OUT
+    end
+
+    subgraph P2["⚖️ P2 — Rerank 精排"]
+        direction TB
+        P2_MERGE["合并两路召回\nhstack(BM25, Embedding)"]
+        P2_TRUNC["文档预截断\nchar模式: max_doc_tokens×4"]
+        P2_SCORE["Qwen3-Reranker-0.6B-seq-cls\n（可选 LoRA）\nvLLM score() 批量打分"]
+        P2_FILTER["阈值过滤 ≥ 0.5\n每商品 max_k=100"]
+        P2_OUT[/"rerank_*_idx.memmap\nrerank_*_sco.memmap"/]
+        P2_MERGE --> P2_TRUNC --> P2_SCORE --> P2_FILTER --> P2_OUT
+    end
+
+    subgraph P3["🧩 P3 — 上下文构建"]
+        direction TB
+        P3_LOAD["加载 Rerank 结果\n+ KSP 卖点 + 搜索词元数据"]
+        P3_SPAM["过滤垃圾搜索词\n重复率≥50% / 纯数字 / 过短"]
+        P3_RANK["计算 good/bad keywords\nimpressions×0.2 + clicks×0.3\n+ orders×0.5 × meaning_score"]
+        P3_EK["注入专家知识\n优先级: VC → L3 → L2"]
+        P3_CLEAN["清理 CJK/泰文分词空格\n标准化 product_type"]
+        P3_OUT[/"llm_context_*.pkl\n每商品完整上下文 DataFrame"/]
+        P3_LOAD --> P3_SPAM --> P3_RANK --> P3_EK --> P3_CLEAN --> P3_OUT
+    end
+
+    subgraph P4["🤖 P4 — LLM 标题生成"]
+        direction TB
+        P4_BL["搜索词黑名单过滤\nSimpleBlacklistFilter"]
+        P4_GRAPH["图算法搜索词选择\n去重 + 层次选择\ntopk=12"]
+        P4_CALL1["📞 Call 1: 提取 Facts + Policy\n品牌/规格/USP/product_type\n+ 搜索词 + 专家知识"]
+        P4_VALID["验证 facts + policy\nvalidate_facts / validate_policy"]
+        P4_CALL2["📞 Call 2: 生成标题\n基于 facts + policy\n+ validated_search_terms"]
+        P4_GUARD["TitleGuard 后处理\n去重 / TW繁简 / 强制截断"]
+        P4_OUT[/"generated_*.db\nSQLite 断点续传"/]
+        P4_BL --> P4_GRAPH --> P4_CALL1 --> P4_VALID --> P4_CALL2 --> P4_GUARD --> P4_OUT
+    end
+
+    subgraph P5["🛡️ P5 — 过滤输出"]
+        direction TB
+        P5_KW["flashtext 黑名单移除\nAho-Corasick 高效匹配"]
+        P5_GUARD2["TitleGuard 再次清洗"]
+        P5_CJK["非TW地区\n去除 CJK 字符"]
+        P5_HIVE["写入 Hive\nParquet via PyArrowIO"]
+        P5_SQL["生成 Presto 建表 SQL"]
+        P5_KW --> P5_GUARD2 --> P5_CJK --> P5_HIVE --> P5_SQL
+    end
+
+    subgraph OUTPUT["📤 最终输出"]
+        HIVE_TABLE[("Hive 表\nopa_algo.google_optimized_title_*")]
+    end
+
+    ITEMS --> P0
+    ITEMS --> P1
+    SEARCH --> P1
+    P0_OUT --> P3_LOAD
+    P1_OUT --> P2_MERGE
+    SEARCH --> P2
+    ITEMS --> P2
+    P2_OUT --> P3_LOAD
+    SEARCH --> P3_LOAD
+    EK_DB --> P3_EK
+    P3_OUT --> P4
+    BL --> P4_BL
+    BL --> P5_KW
+    P4_OUT --> P5
+    P5_HIVE --> HIVE_TABLE
+
+    style INPUT fill:#e8f4f8,stroke:#2196F3
+    style P0 fill:#fff3e0,stroke:#FF9800
+    style P1 fill:#e8f5e9,stroke:#4CAF50
+    style P2 fill:#fce4ec,stroke:#E91E63
+    style P3 fill:#f3e5f5,stroke:#9C27B0
+    style P4 fill:#e3f2fd,stroke:#2196F3
+    style P5 fill:#fff8e1,stroke:#FFC107
+    style OUTPUT fill:#e8f5e9,stroke:#4CAF50
+</div>
+</body>
+</html>
