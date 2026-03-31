@@ -312,6 +312,8 @@ function render() {
       if (key) ruleMap.set(key, ln.reason);
     }
   }
+  // 也建立 reason → tag 的快速查找（当 text 匹配失败时用第一个 reason）
+  const firstReason = lines.find(l => l.action === 'deleted' || l.action === 'deleted_paragraph')?.reason || '';
 
   // diffWords 对比整文，然后逐部分渲染
   const diffResult = Diff.diffWords(item.original || '', item.cleaned || '');
@@ -326,11 +328,12 @@ function render() {
     } else {
       // 先输出积累的删除内容
       if (pendingRemoved) {
-        const key = pendingRemoved.trim().slice(0, 40);
         let tags = '';
         for (const [k, reason] of ruleMap) {
           if (pendingRemoved.includes(k)) { tags = reasonTags(reason); break; }
         }
+        // 如果 key 匹配失败（emoji 预处理导致 text 不一致），用第一个删除原因兜底
+        if (!tags && firstReason) tags = reasonTags(firstReason);
         origHtml += `<del class="word-del">${esc(pendingRemoved)}</del>${tags}`;
         pendingRemoved = '';
       }
