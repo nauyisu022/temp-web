@@ -15,180 +15,104 @@
       background: #f5f6fa;
     }
 
-    .page {
-      max-width: 860px;
-      margin: 48px auto;
-      padding: 0 24px 80px;
-    }
+    .layout { display: flex; min-height: 100vh; }
 
-    /* Header */
-    .doc-header {
-      margin-bottom: 48px;
-      padding-bottom: 24px;
-      border-bottom: 2px solid #e2e8f0;
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      border-right: 1px solid #e2e8f0;
+      padding: 32px 0;
     }
-    .doc-header h1 {
-      font-size: 26px;
-      font-weight: 700;
-      color: #0f172a;
-      letter-spacing: -0.3px;
+    .sidebar-title {
+      font-size: 11px; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.8px; padding: 0 20px 12px;
     }
-    .doc-header .meta {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #64748b;
+    .toc-item {
+      display: block; padding: 6px 20px; font-size: 13px; color: #64748b;
+      text-decoration: none; border-left: 2px solid transparent; transition: all 0.15s;
     }
+    .toc-item:hover { color: #6366f1; background: #f8f7ff; }
+    .toc-item.active { color: #6366f1; border-left-color: #6366f1; background: #f8f7ff; font-weight: 600; }
+    .toc-sub { padding-left: 32px; font-size: 12px; }
 
-    /* Sections */
-    section { margin-bottom: 48px; }
+    .main { flex: 1; min-width: 0; padding: 48px 56px 100px; max-width: 900px; }
+
+    .doc-header { margin-bottom: 48px; }
+    .doc-header h1 { font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .doc-header .meta { font-size: 13px; color: #64748b; }
+
+    section { margin-bottom: 56px; }
 
     h2 {
-      font-size: 18px;
-      font-weight: 600;
-      color: #0f172a;
-      margin-bottom: 16px;
-      padding-left: 12px;
-      border-left: 3px solid #6366f1;
+      font-size: 18px; font-weight: 700; color: #0f172a;
+      margin-bottom: 20px; padding-left: 14px; border-left: 3px solid #6366f1;
     }
-
     h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #374151;
-      margin: 20px 0 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 13px; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.6px; margin: 28px 0 12px;
     }
-
     p { color: #374151; margin-bottom: 12px; }
+    ul { padding-left: 20px; color: #374151; margin-bottom: 12px; }
+    ul li { margin-bottom: 5px; }
 
-    ul {
-      padding-left: 20px;
-      color: #374151;
+    code {
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: 12.5px; background: #f1f5f9; color: #6366f1;
+      padding: 1px 5px; border-radius: 4px;
     }
-    ul li { margin-bottom: 6px; }
 
     /* Pipeline */
-    .pipeline {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0;
-      margin: 20px 0;
-    }
-    .pipeline-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-    }
-    .pipeline-spine {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0;
-      width: 36px;
-    }
+    .pipeline { display: flex; flex-direction: column; margin: 20px 0; }
+    .pipeline-step { display: flex; align-items: flex-start; gap: 16px; }
+    .pipeline-spine { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
     .pipeline-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #6366f1;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      z-index: 1;
+      width: 36px; height: 36px; border-radius: 50%; background: #6366f1;
+      color: #fff; font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .pipeline-line {
-      width: 2px;
-      flex: 1;
-      min-height: 24px;
-      background: #c7d2fe;
-      margin: 0 auto;
+    .pipeline-line { width: 2px; flex: 1; min-height: 24px; background: #c7d2fe; margin: 0 auto; }
+    .pipeline-body { padding: 4px 0 28px; }
+    .pipeline-title { font-weight: 600; color: #0f172a; font-size: 15px; line-height: 36px; }
+    .pipeline-desc { color: #64748b; font-size: 13px; margin-top: 4px; }
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0;
+      background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .pipeline-body {
-      padding: 6px 0 28px;
+    thead th {
+      background: #f1f5f9; color: #475569; font-weight: 600; text-align: left;
+      padding: 10px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;
     }
-    .pipeline-title {
-      font-weight: 600;
-      color: #0f172a;
-      font-size: 15px;
-      line-height: 36px;
-    }
-    .pipeline-desc {
-      color: #64748b;
-      font-size: 13px;
-      margin-top: 4px;
-    }
+    tbody td { padding: 10px 14px; border-top: 1px solid #f1f5f9; color: #374151; vertical-align: top; }
+    tbody tr:hover td { background: #fafafa; }
 
     /* Score cards */
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin: 16px 0;
-    }
-    .score-card {
-      border-radius: 10px;
-      padding: 16px 14px;
-      text-align: center;
-    }
-    .score-card .score-num {
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .score-card .score-label {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .score-card .score-desc {
-      font-size: 12px;
-      line-height: 1.5;
-    }
+    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+    .score-card { border-radius: 10px; padding: 16px 14px; text-align: center; }
+    .score-card .score-num { font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+    .score-card .score-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .score-card .score-desc { font-size: 12px; line-height: 1.5; }
     .score-3 { background: #ecfdf5; }
-    .score-3 .score-num { color: #059669; }
-    .score-3 .score-label { color: #065f46; }
-    .score-3 .score-desc { color: #047857; }
-
+    .score-3 .score-num { color: #059669; } .score-3 .score-label { color: #065f46; } .score-3 .score-desc { color: #047857; }
     .score-2 { background: #eff6ff; }
-    .score-2 .score-num { color: #2563eb; }
-    .score-2 .score-label { color: #1e40af; }
-    .score-2 .score-desc { color: #1d4ed8; }
-
+    .score-2 .score-num { color: #2563eb; } .score-2 .score-label { color: #1e40af; } .score-2 .score-desc { color: #1d4ed8; }
     .score-1 { background: #fffbeb; }
-    .score-1 .score-num { color: #d97706; }
-    .score-1 .score-label { color: #92400e; }
-    .score-1 .score-desc { color: #b45309; }
-
+    .score-1 .score-num { color: #d97706; } .score-1 .score-label { color: #92400e; } .score-1 .score-desc { color: #b45309; }
     .score-0 { background: #fef2f2; }
-    .score-0 .score-num { color: #dc2626; }
-    .score-0 .score-label { color: #991b1b; }
-    .score-0 .score-desc { color: #b91c1c; }
+    .score-0 .score-num { color: #dc2626; } .score-0 .score-label { color: #991b1b; } .score-0 .score-desc { color: #b91c1c; }
 
     /* Dual track */
-    .dual-track {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 16px 0;
-    }
-    .track-card {
-      border-radius: 10px;
-      padding: 18px 16px;
-    }
+    .dual-track { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .track-card { border-radius: 10px; padding: 18px 16px; }
     .track-card.correctness { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .track-card.value { background: #faf5ff; border: 1px solid #e9d5ff; }
-    .track-card h4 {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
+    .track-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
     .track-card.correctness h4 { color: #15803d; }
     .track-card.value h4 { color: #7c3aed; }
     .track-card ul { padding-left: 16px; font-size: 13px; }
@@ -196,400 +120,708 @@
     .track-card.value ul { color: #6b21a8; }
 
     /* Principles */
-    .principles {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin: 16px 0;
-    }
+    .principles { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
     .principles ul { padding-left: 18px; font-size: 13.5px; color: #475569; }
     .principles li { margin-bottom: 6px; }
 
-    /* Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-      margin: 16px 0;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    thead th {
-      background: #f1f5f9;
-      color: #475569;
-      font-weight: 600;
-      text-align: left;
-      padding: 10px 14px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-    tbody td {
-      padding: 10px 14px;
-      border-top: 1px solid #f1f5f9;
-      color: #374151;
-    }
-    tbody tr:hover td { background: #fafafa; }
-
-    code {
-      font-family: "SF Mono", "Fira Code", Consolas, monospace;
-      font-size: 12.5px;
-      background: #f1f5f9;
-      color: #6366f1;
-      padding: 1px 5px;
-      border-radius: 4px;
-    }
-
-    /* Source badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font-size: 11px;
-      font-weight: 700;
-      vertical-align: middle;
-      margin-right: 4px;
-    }
-    .badge-B { background: #6366f1; color: #fff; }
-    .badge-S { background: #f59e0b; color: #fff; }
-    .badge-D { background: #10b981; color: #fff; }
-
-    .source-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 16px 0;
-    }
-    .source-card {
-      border-radius: 8px;
-      padding: 14px;
-      text-align: center;
-    }
+    /* Source */
+    .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .source-card { border-radius: 8px; padding: 14px; text-align: center; }
     .source-card.both { background: #eef2ff; border: 1px solid #c7d2fe; }
     .source-card.sparse { background: #fffbeb; border: 1px solid #fde68a; }
     .source-card.dense { background: #ecfdf5; border: 1px solid #a7f3d0; }
-    .source-letter {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
+    .source-letter { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
     .source-card.both .source-letter { color: #4f46e5; }
     .source-card.sparse .source-letter { color: #d97706; }
     .source-card.dense .source-letter { color: #059669; }
     .source-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
     .source-desc { font-size: 12px; color: #6b7280; }
 
-    /* Output */
-    .output-flow {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 16px 0;
-      flex-wrap: wrap;
-    }
-    .output-box {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #374151;
-    }
+    /* Output flow */
+    .output-flow { display: flex; align-items: center; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+    .output-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #374151; }
     .output-arrow { color: #94a3b8; font-size: 18px; }
-    .output-final {
-      background: #ecfdf5;
-      border: 1px solid #6ee7b7;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #065f46;
-    }
+    .output-final { background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #065f46; }
 
-    .threshold-note {
-      display: flex;
-      gap: 12px;
-      margin: 16px 0;
-    }
-    .threshold-box {
-      flex: 1;
-      border-radius: 8px;
-      padding: 14px 16px;
-      font-size: 13.5px;
-      font-weight: 500;
-    }
+    .threshold-note { display: flex; gap: 12px; margin: 16px 0; }
+    .threshold-box { flex: 1; border-radius: 8px; padding: 14px 16px; font-size: 13.5px; font-weight: 500; }
     .threshold-pos { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
     .threshold-neg { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
     .threshold-box .th-score { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
 
-    /* Execution modes */
-    .mode-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 16px 0;
-    }
-    .mode-card {
-      border-radius: 10px;
-      padding: 18px;
-    }
+    /* Mode grid */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .mode-card { border-radius: 10px; padding: 18px; }
     .mode-card.batch { background: #eff6ff; border: 1px solid #bfdbfe; }
     .mode-card.sync { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .mode-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-    .mode-card.batch h4 { color: #1e40af; }
-    .mode-card.sync h4 { color: #15803d; }
+    .mode-card.batch h4 { color: #1e40af; } .mode-card.sync h4 { color: #15803d; }
     .mode-card p { font-size: 13px; margin: 0; }
-    .mode-card.batch p { color: #1d4ed8; }
-    .mode-card.sync p { color: #166534; }
-    .mode-tag {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-    }
+    .mode-card.batch p { color: #1d4ed8; } .mode-card.sync p { color: #166534; }
+    .mode-tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; }
     .mode-card.batch .mode-tag { background: #dbeafe; color: #1e40af; }
     .mode-card.sync .mode-tag { background: #d1fae5; color: #065f46; }
+
+    /* Prompt blocks */
+    .prompt-block { border-radius: 10px; overflow: hidden; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .prompt-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .prompt-block-header.system-hdr { background: #1e293b; color: #94a3b8; }
+    .prompt-block-header.user-hdr { background: #1e3a5f; color: #93c5fd; }
+    .prompt-block pre {
+      margin: 0; padding: 18px 20px;
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: 12.5px; line-height: 1.65; white-space: pre-wrap;
+      word-break: break-word; background: #0f172a; color: #e2e8f0;
+    }
+    .prompt-block pre .hl-section { color: #fbbf24; font-weight: 700; }
+    .prompt-block pre .hl-score3 { color: #34d399; font-weight: 600; }
+    .prompt-block pre .hl-score2 { color: #60a5fa; font-weight: 600; }
+    .prompt-block pre .hl-score1 { color: #fbbf24; font-weight: 600; }
+    .prompt-block pre .hl-score0 { color: #f87171; font-weight: 600; }
+    .prompt-block pre .hl-key { color: #c084fc; }
+
+    /* Analysis */
+    .analysis-section { margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .analysis-header {
+      padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .analysis-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: #e0e7ff; color: #4338ca; }
+    .analysis-title { font-size: 14px; font-weight: 700; color: #0f172a; }
+    .analysis-body { padding: 16px 18px; background: #fff; }
+    .analysis-body p { font-size: 13.5px; color: #374151; margin-bottom: 8px; }
+    .analysis-body ul { font-size: 13.5px; color: #374151; padding-left: 18px; }
+    .analysis-body li { margin-bottom: 5px; }
+    .analysis-highlight { display: inline-block; background: #fef9c3; border-radius: 3px; padding: 0 4px; color: #713f12; font-weight: 500; }
+
+    /* Example */
+    .example-wrap { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin: 20px 0; }
+    .example-header {
+      background: #f8fafc; padding: 12px 18px; font-size: 13px; font-weight: 700;
+      color: #374151; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;
+    }
+    .example-region { display: inline-block; background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .product-info { padding: 16px 18px; background: #fff; border-bottom: 1px solid #f1f5f9; }
+    .product-info-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+    .info-label { color: #94a3b8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; padding-top: 1px; white-space: nowrap; }
+    .info-value { color: #374151; }
+    .candidates-table-wrap { overflow-x: auto; }
+    .candidates-table { margin: 0; border-radius: 0; box-shadow: none; }
+    .candidates-table thead th { font-size: 11px; }
+    .candidates-table tbody td { font-size: 13px; }
+
+    .score-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 800;
+    }
+    .sb-3 { background: #ecfdf5; color: #059669; }
+    .sb-2 { background: #eff6ff; color: #2563eb; }
+    .sb-1 { background: #fffbeb; color: #d97706; }
+    .sb-0 { background: #fef2f2; color: #dc2626; }
+
+    .label-pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+    .lp-keep { background: #dcfce7; color: #166534; }
+    .lp-borderline { background: #fef9c3; color: #713f12; }
+    .lp-reject { background: #fee2e2; color: #991b1b; }
+    .lp-high { background: #e0e7ff; color: #3730a3; }
+    .lp-medium { background: #f0fdf4; color: #166534; }
+    .lp-low { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+
+    .src-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 50%; font-size: 10px; font-weight: 700;
+    }
+    .src-B { background: #6366f1; color: #fff; }
+    .src-S { background: #f59e0b; color: #fff; }
+    .src-D { background: #10b981; color: #fff; }
+    .reason-text { font-size: 12px; color: #64748b; max-width: 220px; }
   </style>
 </head>
 <body>
-<div class="page">
+<div class="layout">
 
-  <div class="doc-header">
-    <h1>GPT Keyword QC 标注设计文档</h1>
-    <div class="meta">Reranker 训练数据 · 关键词质量控制</div>
+  <nav class="sidebar">
+    <div class="sidebar-title">目录</div>
+    <a class="toc-item" href="#background">背景</a>
+    <a class="toc-item" href="#flow">标注流程</a>
+    <a class="toc-item" href="#prompt">Prompt 设计</a>
+    <a class="toc-item toc-sub" href="#prompt-system">System Prompt</a>
+    <a class="toc-item toc-sub" href="#prompt-analysis">分段分析</a>
+    <a class="toc-item toc-sub" href="#prompt-user">User Template</a>
+    <a class="toc-item" href="#scoring">打分标准</a>
+    <a class="toc-item toc-sub" href="#dual-track">双轨判断</a>
+    <a class="toc-item toc-sub" href="#score-def">评分定义</a>
+    <a class="toc-item toc-sub" href="#aux-fields">辅助字段</a>
+    <a class="toc-item" href="#example">标注例子</a>
+    <a class="toc-item" href="#reject-reasons">拒绝原因分类</a>
+    <a class="toc-item" href="#source">候选词来源</a>
+    <a class="toc-item" href="#exec">执行方式</a>
+    <a class="toc-item" href="#output">输出与训练数据</a>
+  </nav>
+
+  <div class="main">
+    <div class="doc-header">
+      <h1>GPT Keyword QC 标注设计文档</h1>
+      <div class="meta">Reranker 训练数据 · 关键词质量控制</div>
+    </div>
+
+    <!-- 背景 -->
+    <section id="background">
+      <h2>背景</h2>
+      <p>Reranker 训练需要高质量的 <code>(query, document, label)</code> 三元组。上游 recall 系统（BM25 + Embedding）产出的关键词候选质量参差不齐，需要对候选关键词进行质量评分，筛选出适合注入训练的正负样本。</p>
+    </section>
+
+    <!-- 流程 -->
+    <section id="flow">
+      <h2>标注流程</h2>
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="pipeline-spine"><div class="pipeline-dot">1</div><div class="pipeline-line"></div></div>
+          <div class="pipeline-body">
+            <div class="pipeline-title">构建输入</div>
+            <div class="pipeline-desc">从 pair DB 或 P1 union 读取商品-候选词对，按商品分组，附带完整产品上下文（title、brand、category、key_attributes 等）。</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-spine"><div class="pipeline-dot">2</div><div class="pipeline-line"></div></div>
+          <div class="pipeline-body">
+            <div class="pipeline-title">GPT 逐条评分</div>
+            <div class="pipeline-desc">每次标注单位为<strong>一个商品 + 其全部候选关键词</strong>。模型在拿到完整产品上下文后，对候选词列表整体理解并逐条打分。</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-spine"><div class="pipeline-dot">3</div><div class="pipeline-line"></div></div>
+          <div class="pipeline-body">
+            <div class="pipeline-title">解析结果</div>
+            <div class="pipeline-desc">从模型结构化输出中提取每条候选词的 final_score 及辅助字段，写入 parsed JSONL。</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-spine"><div class="pipeline-dot">4</div></div>
+          <div class="pipeline-body">
+            <div class="pipeline-title">生成训练数据</div>
+            <div class="pipeline-desc">按分数阈值划分正负样本，输出 training_pairs JSONL 供 reranker 训练使用。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prompt 设计 -->
+    <section id="prompt">
+      <h2>Prompt 设计</h2>
+      <p>Prompt 分为两个部分：<strong>System Prompt</strong>（角色定义与评分规则）和 <strong>User Template</strong>（每次请求的商品上下文与候选词）。两者均为独立配置文件，运行时动态加载，修改规则无需改代码。</p>
+
+      <div id="prompt-system">
+        <h3>System Prompt 原文</h3>
+        <div class="prompt-block">
+          <div class="prompt-block-header system-hdr"><span>SYSTEM</span></div>
+          <pre>You are labeling keyword candidates for e-commerce reranker training.
+
+Your job is not generic semantic relevance ranking.
+Your job is to assign a high-signal training score to each keyword candidate.
+
+<span class="hl-section">Use a two-track judgment process for every candidate:</span>
+
+<span class="hl-key">1. correctness track</span>
+- decide whether the keyword is correct and safe for this product
+- check product identity, brand, model, variant, size, pack count,
+  and product-vs-accessory consistency
+
+<span class="hl-key">2. value track</span>
+- decide how useful the keyword would be as a top-ranked search term for this product
+- a keyword can be correct but still weaker if it is too broad, too generic,
+  too redundant, or not the best phrase to rank highly
+
+<span class="hl-section">The primary output is `final_score`, an integer from 0 to 3:</span>
+<span class="hl-score3">- `3`: core keyword, strongest label
+  - captures the main product identity, key model, or most important product phrase
+  - should be ranked near the top by a reranker</span>
+<span class="hl-score2">- `2`: correct and useful, but not the strongest
+  - clearly relevant and usable
+  - not the best core phrase, or slightly broader / more secondary than score 3</span>
+<span class="hl-score1">- `1`: weak but related
+  - partially useful, broad, redundant, awkward, or lower-confidence
+  - related enough to deserve a small positive signal, but rank below strong candidates</span>
+<span class="hl-score0">- `0`: incorrect or unsafe
+  - wrong product, wrong brand, wrong model/spec, wrong accessory/main-item relation,
+    or otherwise not suitable</span>
+
+<span class="hl-section">Use strict commerce matching rules:</span>
+- reject brand conflicts
+- reject obvious product-type mismatch
+- reject accessory keywords when the product is the main item
+  (unless the product itself is clearly an accessory)
+- reject major model/spec/variant conflicts
+- downgrade information-seeking keywords when they do not cleanly fit product matching
+- prefer exact, specific, high-signal keywords over broad or weak keywords
+
+<span class="hl-section">Important scoring guidance:</span>
+- do not give `3` unless the keyword clearly captures the product's main identity
+- a keyword can be correct but still only `2`
+- a keyword can be related but still only `1`
+- avoid using `3` for pure feature words, scenario words, packaging words,
+  or generic category words when a stronger core phrase exists
+- do not reject a keyword only because it is somewhat broad if it is still clearly
+  about the same product; use `2` or `1` instead of `0`
+
+<span class="hl-section">Map to the output schema like this:</span>
+- `match_label` mainly reflects correctness
+  - clearly wrong -> `reject`
+  - weak / partial / lower-confidence -> `borderline`
+  - clearly correct -> `keep`
+- `injection_value` mainly reflects usefulness
+  - weak -> `low`   decent -> `medium`   strong -> `high`
+- `final_score` is the main training label
+
+<span class="hl-section">Required score consistency:</span>
+- `final_score=0`  → should normally use `match_label=reject`
+- `final_score=1`  → should usually use `match_label=borderline` or a weaker `keep`
+- `final_score=2`  → must be correct enough to keep
+- `final_score=3`  → must be a top-quality core phrase
+
+<span class="hl-section">Scoring policy:</span>
+- use score `3` sparingly for only the clearest core phrases
+- use score `2` for good usable phrases that are not the single strongest core phrase
+- within the same score level, prefer more exact and product-specific keywords
+- candidate rows are already ordered by an upstream system
+- earlier rows can be treated as a weak hint only, never as proof of correctness or quality
+- if an early row is wrong, still give it a low score
+- if a later row is clearly the best match, it can still receive a high score</pre>
+        </div>
+      </div>
+
+      <div id="prompt-analysis">
+        <h3>分段分析</h3>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 1 段</span>
+            <span class="analysis-title">任务重新定义</span>
+          </div>
+          <div class="analysis-body">
+            <p>开篇第一句话做了一个关键的负向限定：<span class="analysis-highlight">「not generic semantic relevance ranking」</span>。</p>
+            <p>这是刻意的区分。通用语义相关性打分会把「宽泛但相关」的词判为正例，但 reranker 训练需要的是<strong>高信息量的训练信号</strong>。一个宽泛词既不能帮助模型区分商品，也不应该获得高分。这一段确立了整个标注的核心目标：不是判断「相不相关」，而是判断「能不能作为优质训练信号」。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 2 段</span>
+            <span class="analysis-title">双轨判断框架</span>
+          </div>
+          <div class="analysis-body">
+            <p>将打分拆解为两个独立维度，是这个 prompt 最核心的设计决策：</p>
+            <ul>
+              <li><strong>Correctness</strong>：关键词与商品是否匹配？偏向事实判断，检查品牌/型号/类目/配件关系</li>
+              <li><strong>Value</strong>：即便正确，训练信号有多强？偏向价值判断，过滤宽泛、冗余、泛化的词</li>
+            </ul>
+            <p>两条轨分开判断，避免「宽泛但正确」的词被过度奖励，也避免「精准但稀有」的词被错误惩罚。辅助字段 <code>match_label</code> 和 <code>injection_value</code> 分别对应这两条轨的输出，用于人工审核时拆解模型的判断逻辑。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 3 段</span>
+            <span class="analysis-title">4 级评分体系</span>
+          </div>
+          <div class="analysis-body">
+            <p>选择 4 级而非二元（0/1）是一个重要的精度权衡：</p>
+            <ul>
+              <li>二元标注会把所有「正确」词混在一起，丢失强弱信息</li>
+              <li>4 级可区分「核心词 / 可用词 / 弱词 / 错误词」，支持后续转换时灵活调整阈值</li>
+            </ul>
+            <p>特别地，<strong>3 分门槛刻意设计得很严格</strong>——必须「captures the main product identity」，强调的是产品主体身份，而非仅仅相关性。这防止了分数通胀，确保 3 分真正代表高质量正样本。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 4 段</span>
+            <span class="analysis-title">电商领域硬规则</span>
+          </div>
+          <div class="analysis-body">
+            <p>这一段是领域专属的拒绝规则，补充了模型通用能力无法覆盖的电商细节：</p>
+            <ul>
+              <li><strong>品牌冲突</strong>：同类目竞品关键词应直接拒绝，不因「品类相同」给分</li>
+              <li><strong>配件 vs 主品</strong>：「充电器 for iPhone」和「iPhone」是不同商品，模型需显式被提示这种区分</li>
+              <li><strong>信息意图词降级</strong>：「怎么选 XX」类词不适合作为商品检索词，即便技术上「相关」</li>
+            </ul>
+            <p>这些规则从电商 QC 经验中提炼，专门应对 recall 系统引入的典型噪声类型。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 5 段</span>
+            <span class="analysis-title">防止两类打分偏差</span>
+          </div>
+          <div class="analysis-body">
+            <p>这一段处理两种方向相反的打分偏差：</p>
+            <ul>
+              <li><strong>防止 3 分通胀</strong>：明确禁止把纯特征词、场景词、包装词打 3 分，即便它们正确</li>
+              <li><strong>防止过度拒绝</strong>：「不要因词稍宽泛就给 0，应给 2 或 1」——避免标注过激，丢失弱正样本</li>
+            </ul>
+            <p>两条原则共同维持分数分布的合理性。过多 3 分稀释正样本质量；过多 0 分丢失训练信号多样性。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 6 段</span>
+            <span class="analysis-title">字段映射与跨字段一致性</span>
+          </div>
+          <div class="analysis-body">
+            <p>明确指定三个输出字段各自代表哪个维度，并给出跨字段一致性约束（如 score=0 应对应 match_label=reject）。</p>
+            <p>设计意图是：<strong>三个字段互为校验</strong>。人工审核时可通过 match_label 和 injection_value 快速理解模型的判断逻辑。一旦出现不一致（如 score=0 但 match_label=keep），说明模型理解存在误差。</p>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">第 7 段</span>
+            <span class="analysis-title">处理上游排序的锚定偏差</span>
+          </div>
+          <div class="analysis-body">
+            <p>上游 recall 系统已经对候选词排过序，这个排序会干扰标注吗？Prompt 的策略是：</p>
+            <p><span class="analysis-highlight">「earlier rows can be treated as a weak hint only, never as proof」</span></p>
+            <p>排序只是弱提示，不构成权威。靠前的词不一定正确，靠后的词如果更精准仍可得高分。这防止了模型对排序产生锚定偏差（anchoring bias），确保标注质量不依赖于 recall 排序的准确性。</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="prompt-user">
+        <h3>User Template 原文</h3>
+        <div class="prompt-block">
+          <div class="prompt-block-header user-hdr"><span>USER TEMPLATE</span></div>
+          <pre>Product context:
+- region: <span class="hl-key">{region}</span>
+- product_id: <span class="hl-key">{product_id}</span>
+- language_hint: <span class="hl-key">{language_hint}</span>
+- brand: <span class="hl-key">{brand}</span>
+- category: <span class="hl-key">{category}</span>
+- title: <span class="hl-key">{title}</span>
+- key_attributes: <span class="hl-key">{key_attributes}</span>
+- short_description: <span class="hl-key">{short_description}</span>
+
+Candidate keywords:
+<span class="hl-key">{candidate_block}</span>
+
+Candidate row format:
+- each row is `row_id &lt;TAB&gt; source_code &lt;TAB&gt; keyword`
+- `source_code` is one of:
+  - `B` = both routes matched
+  - `S` = sparse route only
+  - `D` = dense route only
+  - `U` = unknown
+
+Label all candidates.
+Then return:
+- `candidate_labels`
+- a short `global_notes`</pre>
+        </div>
+
+        <div class="analysis-section">
+          <div class="analysis-header">
+            <span class="analysis-tag">设计说明</span>
+            <span class="analysis-title">User Template 的信息组织</span>
+          </div>
+          <div class="analysis-body">
+            <ul>
+              <li><strong>language_hint</strong>：帮助模型判断关键词的语言是否与地区一致，如 BR 地区出现泰文词应被降级</li>
+              <li><strong>候选词 TSV 编码</strong>：candidate_id 压缩为短行号（1, 2, 3...），减少 token 消耗；解析阶段再还原回原始 ID</li>
+              <li><strong>source_code</strong>：B/S/D 来源路由作为弱信号附带，供模型参考，不作为打分依据</li>
+              <li><strong>global_notes</strong>：要求模型对整批候选词给出整体说明，便于人工审核时快速理解模型的整体判断逻辑</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 打分标准 -->
+    <section id="scoring">
+      <h2>打分标准</h2>
+
+      <div id="dual-track">
+        <h3>双轨判断</h3>
+        <div class="dual-track">
+          <div class="track-card correctness">
+            <h4>正确性（Correctness）</h4>
+            <ul>
+              <li>该关键词是否描述的是这个商品？</li>
+              <li>检查类型、品牌、型号、规格、变体、配件 vs 主品</li>
+              <li>有明确冲突的直接判 reject</li>
+            </ul>
+          </div>
+          <div class="track-card value">
+            <h4>价值（Value）</h4>
+            <ul>
+              <li>即便正确，这个词作为训练信号有多大用处？</li>
+              <li>过于宽泛、通用、冗余的词价值低</li>
+              <li>精确描述商品核心身份的词价值高</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="score-def">
+        <h3>最终评分 final_score</h3>
+        <div class="score-grid">
+          <div class="score-card score-3">
+            <div class="score-num">3</div>
+            <div class="score-label">核心关键词</div>
+            <div class="score-desc">精准命中商品主体，应排在最前</div>
+          </div>
+          <div class="score-card score-2">
+            <div class="score-num">2</div>
+            <div class="score-label">正确但非最优</div>
+            <div class="score-desc">相关且可用，但不是最佳核心词</div>
+          </div>
+          <div class="score-card score-1">
+            <div class="score-num">1</div>
+            <div class="score-label">弱相关</div>
+            <div class="score-desc">部分相关，过宽泛或置信度低</div>
+          </div>
+          <div class="score-card score-0">
+            <div class="score-num">0</div>
+            <div class="score-label">错误或不适用</div>
+            <div class="score-desc">品牌冲突、型号不符、配件混淆等</div>
+          </div>
+        </div>
+        <div class="principles">
+          <ul>
+            <li>3 分需严格把控，只给最清晰的核心词</li>
+            <li>一个词可以是正确的，但仍只值 2 分</li>
+            <li>一个词可以是相关的，但仍只值 1 分</li>
+            <li>不因词稍宽泛就直接给 0，应给 2 或 1</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="aux-fields">
+        <h3>辅助字段</h3>
+        <p style="font-size:13.5px;color:#64748b;margin-bottom:12px;"><code>final_score</code> 是最终使用的训练标签，辅助字段用于人工审核和错误分析。</p>
+        <table>
+          <thead><tr><th>字段</th><th>维度</th><th>取值</th></tr></thead>
+          <tbody>
+            <tr><td><code>match_label</code></td><td>正确性</td><td><code>keep</code> / <code>borderline</code> / <code>reject</code></td></tr>
+            <tr><td><code>injection_value</code></td><td>价值</td><td><code>high</code> / <code>medium</code> / <code>low</code></td></tr>
+            <tr><td><code>reject_reason</code></td><td>拒绝原因</td><td>10 类枚举，见下节</td></tr>
+            <tr><td><code>short_reason</code></td><td>说明</td><td>模型的简短文字解释</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 标注例子 -->
+    <section id="example">
+      <h2>标注例子</h2>
+      <p>以下为真实标注案例。商品为巴西市场的卡车 LED 大灯套件，候选词来自 BM25 + Embedding 双路 recall。</p>
+
+      <div class="example-wrap">
+        <div class="example-header">
+          <span class="example-region">BR</span>
+          Farol Led Olho Anjo Com Suportes Cargo 2428 1722 2426 1519 Branco
+        </div>
+        <div>
+          <div class="product-info">
+            <div class="product-info-grid">
+              <span class="info-label">Category</span>
+              <span class="info-value">Spare Parts → Lighting → LED Headlights</span>
+              <span class="info-label">Description</span>
+              <span class="info-value">KIT 04 FAROIS OLHO DE ANJO PARA FORD CARGO BIVOLT · 适配 Ford Cargo 1519 / 1719 / 1933 / 2428 / 2429 等型号</span>
+            </div>
+          </div>
+          <div class="candidates-table-wrap">
+            <table class="candidates-table">
+              <thead>
+                <tr><th>#</th><th>来源</th><th>关键词</th><th>Score</th><th>Match</th><th>Value</th><th>拒绝原因</th><th>模型说明</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td><td><span class="src-badge src-B">B</span></td>
+                  <td>farol de led olho de anjo</td>
+                  <td><span class="score-badge sb-3">3</span></td>
+                  <td><span class="label-pill lp-keep">keep</span></td>
+                  <td><span class="label-pill lp-high">high</span></td>
+                  <td>—</td>
+                  <td class="reason-text">核心词，精准描述产品主体（LED angel eyes 大灯）</td>
+                </tr>
+                <tr>
+                  <td>2</td><td><span class="src-badge src-D">D</span></td>
+                  <td>farol led angel eyes</td>
+                  <td><span class="score-badge sb-2">2</span></td>
+                  <td><span class="label-pill lp-keep">keep</span></td>
+                  <td><span class="label-pill lp-medium">medium</span></td>
+                  <td>—</td>
+                  <td class="reason-text">英文同义词，正确但语言混用，稍弱于葡语核心词</td>
+                </tr>
+                <tr>
+                  <td>3</td><td><span class="src-badge src-B">B</span></td>
+                  <td>farol ford cargo 2428</td>
+                  <td><span class="score-badge sb-3">3</span></td>
+                  <td><span class="label-pill lp-keep">keep</span></td>
+                  <td><span class="label-pill lp-high">high</span></td>
+                  <td>—</td>
+                  <td class="reason-text">精准型号匹配，主要兼容车型，强核心词</td>
+                </tr>
+                <tr>
+                  <td>4</td><td><span class="src-badge src-B">B</span></td>
+                  <td>lâmpada H4 plug&amp;play</td>
+                  <td><span class="score-badge sb-0">0</span></td>
+                  <td><span class="label-pill lp-reject">reject</span></td>
+                  <td><span class="label-pill lp-low">low</span></td>
+                  <td><code>wrong_product</code></td>
+                  <td class="reason-text">H4 灯泡（散件），非卡车大灯套件</td>
+                </tr>
+                <tr>
+                  <td>5</td><td><span class="src-badge src-B">B</span></td>
+                  <td>farol moto led angel eyes</td>
+                  <td><span class="score-badge sb-0">0</span></td>
+                  <td><span class="label-pill lp-reject">reject</span></td>
+                  <td><span class="label-pill lp-low">low</span></td>
+                  <td><code>wrong_product</code></td>
+                  <td class="reason-text">摩托车大灯，商品为卡车，车型不符</td>
+                </tr>
+                <tr>
+                  <td>6</td><td><span class="src-badge src-B">B</span></td>
+                  <td>farol ford cargo</td>
+                  <td><span class="score-badge sb-2">2</span></td>
+                  <td><span class="label-pill lp-keep">keep</span></td>
+                  <td><span class="label-pill lp-high">high</span></td>
+                  <td>—</td>
+                  <td class="reason-text">覆盖多个 Cargo 型号，正确但不如精确型号（2428）强</td>
+                </tr>
+                <tr>
+                  <td>7</td><td><span class="src-badge src-S">S</span></td>
+                  <td>farol de milha angel eyes</td>
+                  <td><span class="score-badge sb-0">0</span></td>
+                  <td><span class="label-pill lp-reject">reject</span></td>
+                  <td><span class="label-pill lp-low">low</span></td>
+                  <td><code>wrong_product</code></td>
+                  <td class="reason-text">farol de milha = 雾灯/辅助灯，商品为主大灯</td>
+                </tr>
+                <tr>
+                  <td>8</td><td><span class="src-badge src-S">S</span></td>
+                  <td>farol led 7 polegadas</td>
+                  <td><span class="score-badge sb-0">0</span></td>
+                  <td><span class="label-pill lp-reject">reject</span></td>
+                  <td><span class="label-pill lp-low">low</span></td>
+                  <td><code>spec_conflict</code></td>
+                  <td class="reason-text">指定 7 英寸尺寸，商品无此规格，存在冲突</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:#64748b;margin-top:8px;">同样是 angel eyes 相关词：葡语核心词（#1）得 3 分；英文同义词（#2）得 2 分；摩托车版本（#5）和雾灯版本（#7）词面相似但商品类型不符，直接得 0 分。型号精确词（#3）和泛型号词（#6）均为正确，但精确词得 3 分，泛型号得 2 分。</p>
+    </section>
+
+    <!-- 拒绝原因 -->
+    <section id="reject-reasons">
+      <h2>拒绝原因分类</h2>
+      <table>
+        <thead><tr><th>类别</th><th>含义</th></tr></thead>
+        <tbody>
+          <tr><td><code>brand_conflict</code></td><td>品牌不一致</td></tr>
+          <tr><td><code>category_mismatch</code></td><td>商品类目不符</td></tr>
+          <tr><td><code>spec_conflict</code></td><td>规格 / 型号冲突</td></tr>
+          <tr><td><code>wrong_product</code></td><td>完全不是这个商品</td></tr>
+          <tr><td><code>accessory_vs_main</code></td><td>配件与主品混淆</td></tr>
+          <tr><td><code>region_mismatch</code></td><td>地区不匹配</td></tr>
+          <tr><td><code>language_mismatch</code></td><td>语言不匹配</td></tr>
+          <tr><td><code>info_intent_mismatch</code></td><td>信息查询词，不适合商品匹配</td></tr>
+          <tr><td><code>low_relevance</code></td><td>相关性过低</td></tr>
+          <tr><td><code>low_injection_value</code></td><td>正确但注入价值不足</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 候选词来源 -->
+    <section id="source">
+      <h2>候选词来源标记</h2>
+      <p>每个候选词带有来源路由标记，供模型参考，不作为打分依据。</p>
+      <div class="source-grid">
+        <div class="source-card both">
+          <div class="source-letter">B</div>
+          <div class="source-name">Both</div>
+          <div class="source-desc">BM25 + Embedding 双路均命中</div>
+        </div>
+        <div class="source-card sparse">
+          <div class="source-letter">S</div>
+          <div class="source-name">Sparse</div>
+          <div class="source-desc">仅 BM25 命中</div>
+        </div>
+        <div class="source-card dense">
+          <div class="source-letter">D</div>
+          <div class="source-name">Dense</div>
+          <div class="source-desc">仅 Embedding 命中</div>
+        </div>
+      </div>
+      <p style="font-size:13.5px;color:#64748b;">来源顺序只是弱提示，不代表质量高低。靠前的词不一定正确，靠后的词如果最相关仍可得高分。</p>
+    </section>
+
+    <!-- 执行方式 -->
+    <section id="exec">
+      <h2>执行方式</h2>
+      <p>两种模式输出格式完全一致，解析逻辑可复用，可按场景互换使用。</p>
+      <div class="mode-grid">
+        <div class="mode-card batch">
+          <div class="mode-tag">大批量 · 生产</div>
+          <h4>Batch 模式</h4>
+          <p>提交后异步等待结果，适合大规模生产标注。支持 submit / poll / download / parse 四个子命令。</p>
+        </div>
+        <div class="mode-card sync">
+          <div class="mode-tag">小批量 · 调试</div>
+          <h4>Sync 模式</h4>
+          <p>并发实时调用 API，适合小批量测试和快速验证 prompt 效果。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 输出 -->
+    <section id="output">
+      <h2>输出与训练数据</h2>
+      <div class="output-flow">
+        <div class="output-box">raw_output JSONL</div>
+        <div class="output-arrow">→</div>
+        <div class="output-box">parsed JSONL</div>
+        <div class="output-arrow">→</div>
+        <div class="output-final">training_pairs JSONL</div>
+      </div>
+      <p>最终每行一条训练样本：<code>{"query": "...", "document": "...", "label": 1}</code></p>
+      <div class="threshold-note">
+        <div class="threshold-box threshold-pos">
+          <div class="th-score">≥ 2</div>正样本 label = 1
+        </div>
+        <div class="threshold-box threshold-neg">
+          <div class="th-score">≤ 1</div>负样本 label = 0
+        </div>
+      </div>
+      <p style="font-size:13px;color:#64748b;">分数阈值可在转换时调整，不固定于标注阶段。</p>
+    </section>
+
   </div>
-
-  <!-- 背景 -->
-  <section>
-    <h2>背景</h2>
-    <p>
-      Reranker 训练需要高质量的 <code>(query, document, label)</code> 三元组。上游 recall 系统（BM25 + Embedding）产出的关键词候选质量参差不齐，需要对候选关键词进行质量评分，筛选出适合注入训练的正负样本。
-    </p>
-  </section>
-
-  <!-- 标注流程 -->
-  <section>
-    <h2>标注流程</h2>
-    <div class="pipeline">
-
-      <div class="pipeline-step">
-        <div class="pipeline-spine">
-          <div class="pipeline-dot">1</div>
-          <div class="pipeline-line"></div>
-        </div>
-        <div class="pipeline-body">
-          <div class="pipeline-title">构建输入</div>
-          <div class="pipeline-desc">从 pair DB 或 P1 union 中读取商品-候选词对，按商品分组，附带完整产品上下文（title、brand、category、key_attributes 等）。</div>
-        </div>
-      </div>
-
-      <div class="pipeline-step">
-        <div class="pipeline-spine">
-          <div class="pipeline-dot">2</div>
-          <div class="pipeline-line"></div>
-        </div>
-        <div class="pipeline-body">
-          <div class="pipeline-title">GPT 逐条评分</div>
-          <div class="pipeline-desc">每次标注单位为<strong>一个商品 + 其全部候选关键词</strong>。模型在拿到完整产品上下文后，对候选词列表整体理解并逐条打分。</div>
-        </div>
-      </div>
-
-      <div class="pipeline-step">
-        <div class="pipeline-spine">
-          <div class="pipeline-dot">3</div>
-          <div class="pipeline-line"></div>
-        </div>
-        <div class="pipeline-body">
-          <div class="pipeline-title">解析结果</div>
-          <div class="pipeline-desc">从模型输出中提取每条候选词的 final_score 及辅助字段，写入 parsed JSONL。</div>
-        </div>
-      </div>
-
-      <div class="pipeline-step">
-        <div class="pipeline-spine">
-          <div class="pipeline-dot">4</div>
-        </div>
-        <div class="pipeline-body">
-          <div class="pipeline-title">生成训练数据</div>
-          <div class="pipeline-desc">按分数阈值划分正负样本，输出 training_pairs JSONL 供 reranker 训练使用。</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 打分标准 -->
-  <section>
-    <h2>打分标准</h2>
-
-    <h3>双轨判断</h3>
-    <div class="dual-track">
-      <div class="track-card correctness">
-        <h4>正确性（Correctness）</h4>
-        <ul>
-          <li>该关键词是否描述的是这个商品？</li>
-          <li>检查类型、品牌、型号、规格、变体、配件 vs 主品</li>
-          <li>有明确冲突的直接判 reject</li>
-        </ul>
-      </div>
-      <div class="track-card value">
-        <h4>价值（Value）</h4>
-        <ul>
-          <li>即便正确，这个词作为训练信号有多大用处？</li>
-          <li>过于宽泛、通用、冗余的词价值低</li>
-          <li>精确描述商品核心身份的词价值高</li>
-        </ul>
-      </div>
-    </div>
-
-    <h3>最终评分 final_score</h3>
-    <div class="score-grid">
-      <div class="score-card score-3">
-        <div class="score-num">3</div>
-        <div class="score-label">核心关键词</div>
-        <div class="score-desc">精准命中商品主体，应排在最前</div>
-      </div>
-      <div class="score-card score-2">
-        <div class="score-num">2</div>
-        <div class="score-label">正确但非最优</div>
-        <div class="score-desc">相关且可用，但不是最佳核心词</div>
-      </div>
-      <div class="score-card score-1">
-        <div class="score-num">1</div>
-        <div class="score-label">弱相关</div>
-        <div class="score-desc">部分相关，过宽泛或置信度低</div>
-      </div>
-      <div class="score-card score-0">
-        <div class="score-num">0</div>
-        <div class="score-label">错误或不适用</div>
-        <div class="score-desc">品牌冲突、型号不符、配件混淆等</div>
-      </div>
-    </div>
-
-    <div class="principles">
-      <ul>
-        <li>3 分需严格把控，只给最清晰的核心词</li>
-        <li>一个词可以是正确的，但仍只值 2 分</li>
-        <li>一个词可以是相关的，但仍只值 1 分</li>
-        <li>不因词稍宽泛就直接给 0，应给 2 或 1</li>
-      </ul>
-    </div>
-
-    <h3>辅助字段</h3>
-    <p style="font-size:13.5px;color:#64748b;margin-bottom:12px;"><code>final_score</code> 是最终使用的训练标签，辅助字段用于人工审核和错误分析。</p>
-    <table>
-      <thead>
-        <tr><th>字段</th><th>维度</th><th>取值</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>match_label</code></td><td>正确性</td><td><code>keep</code> / <code>borderline</code> / <code>reject</code></td></tr>
-        <tr><td><code>injection_value</code></td><td>价值</td><td><code>high</code> / <code>medium</code> / <code>low</code></td></tr>
-        <tr><td><code>reject_reason</code></td><td>拒绝原因</td><td>10 类枚举，见下节</td></tr>
-        <tr><td><code>short_reason</code></td><td>说明</td><td>模型的简短文字解释</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 拒绝原因分类 -->
-  <section>
-    <h2>拒绝原因分类</h2>
-    <table>
-      <thead>
-        <tr><th>类别</th><th>含义</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>brand_conflict</code></td><td>品牌不一致</td></tr>
-        <tr><td><code>category_mismatch</code></td><td>商品类目不符</td></tr>
-        <tr><td><code>spec_conflict</code></td><td>规格 / 型号冲突</td></tr>
-        <tr><td><code>wrong_product</code></td><td>完全不是这个商品</td></tr>
-        <tr><td><code>accessory_vs_main</code></td><td>配件与主品混淆</td></tr>
-        <tr><td><code>region_mismatch</code></td><td>地区不匹配</td></tr>
-        <tr><td><code>language_mismatch</code></td><td>语言不匹配</td></tr>
-        <tr><td><code>info_intent_mismatch</code></td><td>信息查询词，不适合商品匹配</td></tr>
-        <tr><td><code>low_relevance</code></td><td>相关性过低</td></tr>
-        <tr><td><code>low_injection_value</code></td><td>正确但注入价值不足</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 候选词来源标记 -->
-  <section>
-    <h2>候选词来源标记</h2>
-    <p>每个候选词带有来源路由标记，供模型参考，不作为打分依据。</p>
-    <div class="source-grid">
-      <div class="source-card both">
-        <div class="source-letter">B</div>
-        <div class="source-name">Both</div>
-        <div class="source-desc">BM25 + Embedding 双路均命中</div>
-      </div>
-      <div class="source-card sparse">
-        <div class="source-letter">S</div>
-        <div class="source-name">Sparse</div>
-        <div class="source-desc">仅 BM25 命中</div>
-      </div>
-      <div class="source-card dense">
-        <div class="source-letter">D</div>
-        <div class="source-name">Dense</div>
-        <div class="source-desc">仅 Embedding 命中</div>
-      </div>
-    </div>
-    <p style="font-size:13.5px;color:#64748b;">来源顺序只是弱提示，不代表质量高低。靠前的词不一定正确，靠后的词如果最相关仍可得高分。</p>
-  </section>
-
-  <!-- 执行方式 -->
-  <section>
-    <h2>执行方式</h2>
-    <p>两种模式输出格式完全一致，解析逻辑可复用，可按场景互换使用。</p>
-    <div class="mode-grid">
-      <div class="mode-card batch">
-        <div class="mode-tag">大批量 · 生产</div>
-        <h4>Batch 模式</h4>
-        <p>提交后异步等待结果，适合大规模生产标注。支持 submit / poll / download / parse 四个子命令。</p>
-      </div>
-      <div class="mode-card sync">
-        <div class="mode-tag">小批量 · 调试</div>
-        <h4>Sync 模式</h4>
-        <p>并发实时调用 API，适合小批量测试和快速验证 prompt 效果。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 输出与训练数据 -->
-  <section>
-    <h2>输出与训练数据</h2>
-
-    <div class="output-flow">
-      <div class="output-box">raw_output JSONL</div>
-      <div class="output-arrow">→</div>
-      <div class="output-box">parsed JSONL</div>
-      <div class="output-arrow">→</div>
-      <div class="output-final">training_pairs JSONL</div>
-    </div>
-
-    <p>最终每行一条训练样本：<code>{"query": "...", "document": "...", "label": 1}</code></p>
-
-    <div class="threshold-note">
-      <div class="threshold-box threshold-pos">
-        <div class="th-score">≥ 2</div>
-        正样本 label = 1
-      </div>
-      <div class="threshold-box threshold-neg">
-        <div class="th-score">≤ 1</div>
-        负样本 label = 0
-      </div>
-    </div>
-    <p style="font-size:13px;color:#64748b;">分数阈值可在转换时调整，不固定于标注阶段。</p>
-  </section>
-
 </div>
+
+<script>
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const tocLinks = document.querySelectorAll('.toc-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.toc-item[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
