@@ -105,6 +105,20 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .b-no   { color: var(--red);   font-weight: 700; font-size: 10px; }
 .b-scan { color: var(--orange); font-weight: 700; font-size: 10px; }
 
+/* 例子块 */
+.examples {
+  margin-top: 8px; padding: 8px 10px; border-radius: 6px;
+  background: #f9fafb; border: 1px dashed var(--border); font-size: 10px; color: #6b7280;
+}
+.examples-title { font-weight: 700; color: var(--muted); margin-bottom: 4px; font-size: 9px; letter-spacing: .5px; }
+.ex-item {
+  display: flex; align-items: baseline; gap: 4px; line-height: 1.5;
+  font-family: 'SF Mono', Consolas, monospace; font-size: 10px;
+}
+.ex-region { color: #94a3b8; font-size: 9px; flex-shrink: 0; font-family: sans-serif; font-weight: 600; }
+.ex-del { color: var(--red); text-decoration: line-through; }
+.ex-kept { color: var(--green); }
+
 /* ═══ Case 卡片 ═══ */
 .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
 .case-card {
@@ -182,6 +196,14 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
       <span class="h-arrow">→</span>
       <div class="h-step">空白规范化</div>
     </div>
+    <div class="examples">
+      <div class="examples-title">实际删除内容示例</div>
+      <div class="ex-item"><span class="ex-region">Emoji</span> <span class="ex-del">💎 ⚠️ 📢 🛒 ⭐ 🔴 💫 🌸 😍 👍</span></div>
+      <div class="ex-item"><span class="ex-region">URL</span> <span class="ex-del">https://shopee.tw/product/9638994/552003...</span></div>
+      <div class="ex-item"><span class="ex-region">Email</span> <span class="ex-del">tinand181@gmail.com</span></div>
+      <div class="ex-item"><span class="ex-region">电话</span> <span class="ex-del">+6016-661 6081</span></div>
+      <div class="ex-item"><span class="ex-region">去重</span> <span class="ex-del">Produk premium 500g</span> <span style="color:#94a3b8">← 第二次出现被删</span></div>
+    </div>
   </div>
 
   <div class="v-arrow">
@@ -233,6 +255,15 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
       <span class="h-arrow">·</span>
       <div class="h-step">⛔ 警告</div>
     </div>
+    <div class="examples">
+      <div class="examples-title">实际整段删除内容</div>
+      <div class="ex-item"><span class="ex-region">📦 TW</span> <span class="ex-del">下定後24h出貨,出貨後最快5-7日左右會送達</span></div>
+      <div class="ex-item"><span class="ex-region">↩ TW</span> <span class="ex-del">退貨須知 猶豫期非試用期,欲退貨的商品請將商品復原至出貨狀態...</span></div>
+      <div class="ex-item"><span class="ex-region">💬 TW</span> <span class="ex-del">客服在線時間:09:00~22:00(休息日,客服會統壹於上班日回覆)</span></div>
+      <div class="ex-item"><span class="ex-region">🏪 TW</span> <span class="ex-del">本賣場為正規公司,可開統編發票</span></div>
+      <div class="ex-item"><span class="ex-region">⚠ BR</span> <span class="ex-del">Imagens meramente ilustrativas.</span></div>
+      <div class="ex-item"><span class="ex-region">⛔ BR</span> <span class="ex-del">ATENÇÃO IMPORTANTE – ANTES DE COMPRAR:</span></div>
+    </div>
   </div>
 
   <div class="v-arrow">
@@ -266,6 +297,15 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
       <div class="h-step h-step-protect">✅ Halal · BPOM</div>
       <span class="h-arrow">·</span>
       <div class="h-step h-step-protect">🌍 Kerinci · 阿里山</div>
+    </div>
+    <div class="examples">
+      <div class="examples-title">实际行级删除 / 保护内容</div>
+      <div class="ex-item"><span class="ex-region">删 TW</span> <span class="ex-del">鑑賞期並非"試用期".</span></div>
+      <div class="ex-item"><span class="ex-region">删 VN</span> <span class="ex-del">Chào Mừng Bạn Đến Với Cửa Hàng Của Chúng Tôi!</span></div>
+      <div class="ex-item"><span class="ex-region">删 ID</span> <span class="ex-del">MEMBELI berarti SETUJU</span></div>
+      <div class="ex-item"><span class="ex-region">删 TW</span> <span class="ex-del">請注意:</span></div>
+      <div class="ex-item"><span class="ex-region">留 TW</span> <span class="ex-kept">尺寸:寬14CM 長20.5CM ← 規格保護</span></div>
+      <div class="ex-item"><span class="ex-region">留 ID</span> <span class="ex-kept">Teh terbaik dari Kerinci, Sumatera ← 產地保護</span></div>
     </div>
   </div>
 
