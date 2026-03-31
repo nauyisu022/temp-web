@@ -70,6 +70,14 @@
   ins.diff-add { background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 2px; padding: 0 1px; }
   del.diff-del { background: #fee2e2; color: #991b1b; text-decoration: line-through; border-radius: 2px; padding: 0 1px; }
 
+  /* 右栏：被删行的占位符，高度与左栏对齐 */
+  .line-placeholder {
+    display: block; padding: 2px 6px; margin: 2px 0;
+    background: #f3f4f6; border-left: 3px solid #e5e7eb;
+    border-radius: 4px; color: transparent; user-select: none;
+    min-height: 22px;
+  }
+
   /* 规则标签 */
   .rtag {
     display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .2px;
@@ -262,8 +270,10 @@ function render() {
   document.getElementById('progressFill').style.width = (done / DATA.length * 100) + '%';
 
   // 左栏：用 lines 数据渲染，显示命中规则标签
+  // 右栏：同步遍历，deleted 行输出等高占位符，kept 行输出正文
   const lines = item.lines || [];
   let origHtml = '';
+  let cleanHtml = '';
 
   let i = 0;
   while (i < lines.length) {
@@ -271,12 +281,13 @@ function render() {
     const txt = (ln.text || '').trim();
 
     if (!txt) {
-      origHtml += '<span class="line-empty"></span>';
+      origHtml  += '<span class="line-empty"></span>';
+      cleanHtml += '<span class="line-empty"></span>';
       i++; continue;
     }
 
     if (ln.action === 'deleted_paragraph') {
-      // 合并连续的段落删除行（同一逻辑段落可能多行）
+      // 合并连续的段落删除块
       const reasonSet = new Set();
       let combined = '';
       while (i < lines.length && lines[i].action === 'deleted_paragraph') {
@@ -286,43 +297,32 @@ function render() {
         i++;
       }
       const tags = [...reasonSet].map(r => reasonTags(r)).join('');
-      origHtml += `<span class="line-removed">${esc(combined)}${tags}</span>`;
+      // 左：红色删除线 + 规则标签
+      origHtml  += `<span class="line-removed">${esc(combined)}${tags}</span>`;
+      // 右：等高灰色占位（高度由 min-height + 内容撑开）
+      cleanHtml += `<span class="line-placeholder">${esc(combined)}</span>`;
 
     } else if (ln.action === 'deleted_sentence') {
-      origHtml += `<span class="line-removed">${esc(txt)}${reasonTags(ln.reason)}</span>`;
+      const tags = reasonTags(ln.reason);
+      origHtml  += `<span class="line-removed">${esc(txt)}${tags}</span>`;
+      cleanHtml += `<span class="line-placeholder">${esc(txt)}</span>`;
       i++;
 
     } else {
-      // kept
-      if (ln.reason === 'fact') {
-        origHtml += `<span class="line-fact">${inlineDiff(txt, item.cleaned)}<span class="rtag rtag-fact">⭐事实</span></span>`;
-      } else {
-        origHtml += `<span class="line-kept">${inlineDiff(txt, item.cleaned)}</span>`;
-      }
+      // kept：左栏显示行内 diff，右栏显示清洗后文本
+      const leftContent = inlineDiff(txt, item.cleaned);
+      const cls = ln.reason === 'fact' ? 'line-fact' : 'line-kept';
+      const factTag = ln.reason === 'fact'
+        ? '<span class="rtag rtag-fact">⭐事实</span>' : '';
+      origHtml  += `<span class="${cls}">${leftContent}${factTag}</span>`;
+      cleanHtml += `<span class="${cls}">${esc(txt)}</span>`;
       i++;
     }
   }
 
-  document.getElementById('origBody').innerHTML = origHtml;
-  document.getElementById('origLen').textContent = `${item.orig_len} chars`;
-
-  // 右栏：用 jsdiff 对全文做词级 diff，高亮删除的词
-  const diffParts = Diff.diffWords(item.original || '', item.cleaned || '');
-  let cleanHtml = '';
-  for (const part of diffParts) {
-    const escaped = esc(part.value);
-    if (part.removed) {
-      // 删除的词在右栏不显示（已被清洗掉）
-    } else if (part.added) {
-      // 右栏新增（理论上不会有，cleaned 是 original 的子集）
-      cleanHtml += `<ins class="diff-add">${escaped}</ins>`;
-    } else {
-      cleanHtml += escaped;
-    }
-  }
-  // 保留换行格式
-  cleanHtml = cleanHtml.replace(/\n/g, '<br>');
-  document.getElementById('cleanBody').innerHTML = `<div style="white-space:pre-wrap;line-height:1.8">${cleanHtml}</div>`;
+  document.getElementById('origBody').innerHTML  = origHtml;
+  document.getElementById('cleanBody').innerHTML = cleanHtml;
+  document.getElementById('origLen').textContent  = `${item.orig_len} chars`;
   document.getElementById('cleanLen').textContent = `${item.clean_len} chars`;
 
   // 恢复标签
