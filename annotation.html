@@ -261,60 +261,43 @@ function render() {
     `${current + 1} / ${DATA.length}（已标 ${done}）`;
   document.getElementById('progressFill').style.width = (done / DATA.length * 100) + '%';
 
-  // 左栏：用 lines 数据渲染，显示命中规则标签
-  // 右栏：同步遍历，deleted 行输出等高占位符，kept 行输出正文
+  // 左栏：diffLines 对比原文 vs 清洗后，逐行标红删除 + 查规则标签
+  // 右栏：直接渲染 item.cleaned 原样
   const lines = item.lines || [];
-  let origHtml = '';
-  let cleanHtml = '';
 
-  let i = 0;
-  while (i < lines.length) {
-    const ln = lines[i];
-    const txt = (ln.text || '').trim();
-
-    // 跳过空条目（理论上不应出现）
-    if (!txt && ln.action !== 'paragraph_break') { i++; continue; }
-
-    if (ln.action === 'paragraph_break') {
-      origHtml  += '<span class="para-break"></span>';
-      cleanHtml += '<span class="para-break"></span>';
-      i++; continue;
-    }
-
-    if (ln.action === 'deleted_paragraph') {
-      const reasonSet = new Set();
-      let combined = '';
-      while (i < lines.length && lines[i].action === 'deleted_paragraph') {
-        if (combined) combined += '\n';
-        combined += lines[i].text;
-        lines[i].reason.split(', ').forEach(r => reasonSet.add(r));
-        i++;
-      }
-      const tags = [...reasonSet].map(r => reasonTags(r)).join('');
-      origHtml += `<span class="line-removed">${esc(combined)}${tags}</span><span class="para-break"></span>`;
-
-    } else if (ln.action === 'deleted_sentence') {
-      origHtml += `<span class="line-removed">${esc(txt)}${reasonTags(ln.reason)}</span>`;
-      i++;
-
-    } else {
-      // kept
-      const leftContent = inlineDiff(txt, item.cleaned);
-      if (ln.reason === 'fact') {
-        const factTag = '<span class="rtag rtag-fact">📐规格保护</span>';
-        origHtml  += `<span class="line-fact">${leftContent}${factTag}</span>`;
-        cleanHtml += `<span class="line-fact">${esc(txt)}</span>`;
-      } else {
-        origHtml  += `<span class="line-kept">${leftContent}</span>`;
-        cleanHtml += `<span class="line-kept">${esc(txt)}</span>`;
-      }
-      i++;
+  // 建立删除文本 → 规则标签的映射（用前几个词做 key）
+  const ruleMap = new Map();
+  for (const ln of lines) {
+    if (ln.action === 'deleted_paragraph' || ln.action === 'deleted_sentence') {
+      const key = (ln.text || '').trim().slice(0, 40);
+      if (key) ruleMap.set(key, ln.reason);
     }
   }
 
-  document.getElementById('origBody').innerHTML  = origHtml;
-  document.getElementById('cleanBody').innerHTML = cleanHtml;
-  document.getElementById('origLen').textContent  = `${item.orig_len} chars`;
+  const diffResult = Diff.diffLines(item.original || '', item.cleaned || '');
+  let origHtml = '';
+  for (const part of diffResult) {
+    const escaped = esc(part.value);
+    if (part.removed) {
+      // 查规则标签
+      const key = part.value.trim().slice(0, 40);
+      let tags = '';
+      for (const [k, reason] of ruleMap) {
+        if (part.value.includes(k)) { tags = reasonTags(reason); break; }
+      }
+      origHtml += `<span class="line-removed">${escaped}${tags}</span>`;
+    } else if (!part.added) {
+      origHtml += `<span class="line-kept">${escaped}</span>`;
+    }
+  }
+
+  document.getElementById('origBody').innerHTML =
+    `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.8">${origHtml}</pre>`;
+  document.getElementById('origLen').textContent = `${item.orig_len} chars`;
+
+  // 右栏：原样显示清洗后文本
+  document.getElementById('cleanBody').innerHTML =
+    `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.8">${esc(item.cleaned || '')}</pre>`;
   document.getElementById('cleanLen').textContent = `${item.clean_len} chars`;
 
   // 恢复标签
