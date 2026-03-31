@@ -65,10 +65,17 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
   padding: 4px 0;
 }
 .h-step {
-  padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
   background: #f9fafb; font-size: 11px; font-weight: 500;
   white-space: nowrap; flex-shrink: 0;
-  display: flex; align-items: center; gap: 4px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.h-step-title { display: flex; align-items: center; gap: 4px; }
+.h-step-ex {
+  font-size: 9px; color: #94a3b8; font-weight: 400;
+  white-space: normal; line-height: 1.4;
+  font-family: 'SF Mono', Consolas, monospace;
+  border-top: 1px dashed #e5e7eb; padding-top: 3px; margin-top: 1px;
 }
 .h-step-accent { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; font-weight: 600; }
 .h-step-new { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; font-weight: 600; }
@@ -182,29 +189,41 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
     <div class="lb-title">预处理 · 结构规范化</div>
     <div class="lb-desc">清理非文本噪音，不涉及语义判断</div>
     <div class="h-chain">
-      <div class="h-step">HTML 标签</div>
+      <div class="h-step">
+        <span class="h-step-title">HTML 标签</span>
+        <span class="h-step-ex">&lt;br&gt; &lt;p&gt; &lt;div&gt;</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step">控制符 / 零宽</div>
+      <div class="h-step">
+        <span class="h-step-title">控制符 / 零宽</span>
+        <span class="h-step-ex">\x00 \ufeff \u200b</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-new">Emoji ✦</div>
+      <div class="h-step h-step-new">
+        <span class="h-step-title">Emoji ✦</span>
+        <span class="h-step-ex">💎 📦 ⚠️ 🛒 ⭐ 🌸</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-new">URL / Email ✦</div>
+      <div class="h-step h-step-new">
+        <span class="h-step-title">URL / Email ✦</span>
+        <span class="h-step-ex">shopee.tw/... · @gmail.com</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-new">电话号码 ✦</div>
+      <div class="h-step h-step-new">
+        <span class="h-step-title">电话号码 ✦</span>
+        <span class="h-step-ex">+6016-661-6081</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-accent">行级去重</div>
+      <div class="h-step h-step-accent">
+        <span class="h-step-title">行级去重</span>
+        <span class="h-step-ex">相同行只保留首次 (729行)</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step">空白规范化</div>
+      <div class="h-step">
+        <span class="h-step-title">空白规范化</span>
+        <span class="h-step-ex">多空格→1 · \n{3+}→\n\n</span>
+      </div>
     </div>
-    <div class="examples">
-      <div class="examples-title">实际删除内容示例</div>
-      <div class="ex-item"><span class="ex-region">Emoji</span> <span class="ex-del">💎 ⚠️ 📢 🛒 ⭐ 🔴 💫 🌸 😍 👍</span></div>
-      <div class="ex-item"><span class="ex-region">URL</span> <span class="ex-del">https://shopee.tw/product/9638994/552003...</span></div>
-      <div class="ex-item"><span class="ex-region">Email</span> <span class="ex-del">tinand181@gmail.com</span></div>
-      <div class="ex-item"><span class="ex-region">电话</span> <span class="ex-del">+6016-661 6081</span></div>
-      <div class="ex-item"><span class="ex-region">去重</span> <span class="ex-del">Produk premium 500g</span> <span style="color:#94a3b8">← 第二次出现被删</span></div>
-    </div>
-  </div>
 
   <div class="v-arrow">
     <svg viewBox="0 0 20 28"><path d="M10 0 L10 20 M5 15 L10 22 L15 15" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg>
@@ -219,13 +238,25 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
     <div class="lb-desc">对每个段落整体判断是否为噪音</div>
 
     <div class="h-chain">
-      <div class="h-step h-step-protect">保护检查</div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">保护检查</span>
+        <span class="h-step-ex">500g / CB300F / Halal / Kerinci</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step">6 类噪音词匹配</div>
+      <div class="h-step">
+        <span class="h-step-title">6 类噪音词匹配</span>
+        <span class="h-step-ex">ongkir · 退貨 · whatsapp · 本店</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step">逐行扫描</div>
+      <div class="h-step">
+        <span class="h-step-title">逐行扫描</span>
+        <span class="h-step-ex">有 fact 行 → 整段留</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-del">全 noise → 删段</div>
+      <div class="h-step h-step-del">
+        <span class="h-step-title">全 noise → 删段</span>
+        <span class="h-step-ex">客服在線09:00~22:00...</span>
+      </div>
     </div>
 
     <div class="decision-row">
@@ -242,27 +273,35 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
     </div>
 
     <div class="h-chain" style="margin-top:8px">
-      <div class="h-step" style="font-size:10px;color:var(--muted)">6 类：</div>
-      <div class="h-step">📦 物流</div>
+      <div class="h-step">
+        <span class="h-step-title">📦 物流</span>
+        <span class="h-step-ex">frete · ongkir · 出貨 · จัดส่ง</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step">↩ 退换</div>
+      <div class="h-step">
+        <span class="h-step-title">↩ 退换</span>
+        <span class="h-step-ex">退貨 · retur · đổi trả</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step">💬 客服</div>
+      <div class="h-step">
+        <span class="h-step-title">💬 客服</span>
+        <span class="h-step-ex">聊聊 · whatsapp · liên hệ</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step">🏪 店铺</div>
+      <div class="h-step">
+        <span class="h-step-title">🏪 店铺</span>
+        <span class="h-step-ex">歡迎光臨 · tentang toko</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step">⚠ 免责</div>
+      <div class="h-step">
+        <span class="h-step-title">⚠ 免责</span>
+        <span class="h-step-ex">圖片僅供參考 · 色差</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step">⛔ 警告</div>
-    </div>
-    <div class="examples">
-      <div class="examples-title">实际整段删除内容</div>
-      <div class="ex-item"><span class="ex-region">📦 TW</span> <span class="ex-del">下定後24h出貨,出貨後最快5-7日左右會送達</span></div>
-      <div class="ex-item"><span class="ex-region">↩ TW</span> <span class="ex-del">退貨須知 猶豫期非試用期,欲退貨的商品請將商品復原至出貨狀態...</span></div>
-      <div class="ex-item"><span class="ex-region">💬 TW</span> <span class="ex-del">客服在線時間:09:00~22:00(休息日,客服會統壹於上班日回覆)</span></div>
-      <div class="ex-item"><span class="ex-region">🏪 TW</span> <span class="ex-del">本賣場為正規公司,可開統編發票</span></div>
-      <div class="ex-item"><span class="ex-region">⚠ BR</span> <span class="ex-del">Imagens meramente ilustrativas.</span></div>
-      <div class="ex-item"><span class="ex-region">⛔ BR</span> <span class="ex-del">ATENÇÃO IMPORTANTE – ANTES DE COMPRAR:</span></div>
+      <div class="h-step">
+        <span class="h-step-title">⛔ 警告</span>
+        <span class="h-step-ex">注意事項 · atenção</span>
+      </div>
     </div>
   </div>
 
@@ -279,33 +318,47 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
     <div class="lb-desc">逐行分类，原样输出保留行</div>
 
     <div class="h-chain">
-      <div class="h-step">逐行遍历</div>
+      <div class="h-step">
+        <span class="h-step-title">逐行遍历</span>
+        <span class="h-step-ex">段落内按 \n 逐行</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-protect">规格/型号/认证/产地？→ fact</div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">规格/型号/认证/产地？→ fact</span>
+        <span class="h-step-ex">尺寸:寬14CM → 保留</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-del">≤60字符 + 噪音词？→ noise</div>
+      <div class="h-step h-step-del">
+        <span class="h-step-title">≤60字符 + 噪音词？→ noise</span>
+        <span class="h-step-ex">請注意: → 删除</span>
+      </div>
       <span class="h-arrow">→</span>
-      <div class="h-step h-step-accent">其余 → keep</div>
+      <div class="h-step h-step-accent">
+        <span class="h-step-title">其余 → keep</span>
+        <span class="h-step-ex">宁可留多</span>
+      </div>
     </div>
 
     <div class="h-chain" style="margin-top:6px">
-      <div class="h-step" style="font-size:10px;color:var(--muted)">4 类保护：</div>
-      <div class="h-step h-step-protect">📐 500g · 14cm</div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">📐 规格单位</span>
+        <span class="h-step-ex">500g · 4000mAh · 14CM</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step h-step-protect">🔖 CB300F</div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">🔖 型号</span>
+        <span class="h-step-ex">CB300F · YH-8004</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step h-step-protect">✅ Halal · BPOM</div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">✅ 认证</span>
+        <span class="h-step-ex">Halal · BPOM · FDA</span>
+      </div>
       <span class="h-arrow">·</span>
-      <div class="h-step h-step-protect">🌍 Kerinci · 阿里山</div>
-    </div>
-    <div class="examples">
-      <div class="examples-title">实际行级删除 / 保护内容</div>
-      <div class="ex-item"><span class="ex-region">删 TW</span> <span class="ex-del">鑑賞期並非"試用期".</span></div>
-      <div class="ex-item"><span class="ex-region">删 VN</span> <span class="ex-del">Chào Mừng Bạn Đến Với Cửa Hàng Của Chúng Tôi!</span></div>
-      <div class="ex-item"><span class="ex-region">删 ID</span> <span class="ex-del">MEMBELI berarti SETUJU</span></div>
-      <div class="ex-item"><span class="ex-region">删 TW</span> <span class="ex-del">請注意:</span></div>
-      <div class="ex-item"><span class="ex-region">留 TW</span> <span class="ex-kept">尺寸:寬14CM 長20.5CM ← 規格保護</span></div>
-      <div class="ex-item"><span class="ex-region">留 ID</span> <span class="ex-kept">Teh terbaik dari Kerinci, Sumatera ← 產地保護</span></div>
+      <div class="h-step h-step-protect">
+        <span class="h-step-title">🌍 产地</span>
+        <span class="h-step-ex">Kerinci · 阿里山 · เชียงราย</span>
+      </div>
     </div>
   </div>
 
