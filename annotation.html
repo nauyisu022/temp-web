@@ -292,12 +292,11 @@ function render() {
   }
 
   document.getElementById('origBody').innerHTML =
-    `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.8">${origHtml}</pre>`;
+    `<div style="white-space:pre-wrap;line-height:1.8">${origHtml}</div>`;
   document.getElementById('origLen').textContent = `${item.orig_len} chars`;
 
-  // 右栏：原样显示清洗后文本
   document.getElementById('cleanBody').innerHTML =
-    `<pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.8">${esc(item.cleaned || '')}</pre>`;
+    `<div style="white-space:pre-wrap;line-height:1.8">${esc(item.cleaned || '')}</div>`;
   document.getElementById('cleanLen').textContent = `${item.clean_len} chars`;
 
   // 恢复标签
