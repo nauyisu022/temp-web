@@ -5,72 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Description 清洗策略</title>
 <style>
-:root {
-  --bg: #fafafa; --card: #fff; --border: #e5e7eb; --text: #1a1a2e;
-  --muted: #6b7280; --accent: #2563eb; --green: #059669; --red: #dc2626;
-  --orange: #d97706; --purple: #7c3aed; --teal: #0d9488;
-}
+:root { --bg: #fafafa; --card: #fff; --border: #e5e7eb; --text: #1a1a2e; --muted: #6b7280; --green: #059669; --red: #dc2626; --orange: #d97706; --purple: #7c3aed; --blue: #2563eb; --teal: #0d9488; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
-.page { max-width: 940px; margin: 0 auto; padding: 48px 24px 60px; }
+.page { max-width: 920px; margin: 0 auto; padding: 48px 24px 60px; }
 h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-.sub { font-size: 12px; color: var(--muted); margin-bottom: 40px; }
-.section-title { font-size: 13px; font-weight: 700; margin-bottom: 16px; padding-bottom: 6px; border-bottom: 2px solid var(--text); }
+.sub { font-size: 12px; color: var(--muted); margin-bottom: 36px; }
+.section-title { font-size: 13px; font-weight: 700; margin: 40px 0 16px; padding-bottom: 6px; border-bottom: 2px solid var(--text); }
 
-/* ═══ 流程图 ═══ */
-.flow { display: flex; flex-direction: column; align-items: center; margin-bottom: 48px; }
+/* 流程图 */
+.flow { display: flex; flex-direction: column; align-items: center; margin-bottom: 48px; gap: 0; }
 .io { padding: 10px 28px; border-radius: 24px; border: 2px solid var(--muted); background: #f9fafb; text-align: center; font-size: 13px; font-weight: 700; }
 .io-out { border-color: var(--teal); color: var(--teal); }
 .io small { font-weight: 400; color: var(--muted); font-size: 11px; display: block; margin-top: 2px; }
-.varr { color: #c0c5ce; padding: 2px 0; display: flex; flex-direction: column; align-items: center; }
-.varr svg { width: 18px; height: 24px; }
-.varr-label { font-size: 9px; color: #94a3b8; font-weight: 600; }
+.varr { padding: 4px 0; display: flex; flex-direction: column; align-items: center; color: #c0c5ce; }
+.varr svg { width: 18px; height: 22px; }
+.varr-lbl { font-size: 9px; color: #94a3b8; font-weight: 600; }
 
-/* Level 框 */
-.lvl { width: 100%; border-radius: 12px; border: 2px solid; padding: 18px 20px; background: var(--card); box-shadow: 0 1px 6px rgba(0,0,0,.04); position: relative; }
-.lvl-l1 { border-color: var(--purple); }
-.lvl-l2 { border-color: var(--orange); }
-.lvl-l3 { border-color: var(--green); }
-.lvl-badge { position: absolute; top: -10px; left: 18px; font-size: 10px; font-weight: 800; letter-spacing: .8px; color: #fff; padding: 2px 10px; border-radius: 10px; }
-.b-l1 { background: var(--purple); }
-.b-l2 { background: var(--orange); }
-.b-l3 { background: var(--green); }
-.lvl-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-.lvl-desc { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-.lvl-stat { font-size: 10px; color: var(--muted); position: absolute; top: 16px; right: 18px; font-weight: 600; }
+/* 阶段框 */
+.stage { width: 100%; border-radius: 12px; border: 2px solid; padding: 18px 20px; background: var(--card); box-shadow: 0 1px 6px rgba(0,0,0,.04); position: relative; }
+.stage-1 { border-color: var(--purple); }
+.stage-2 { border-color: var(--green); }
+.stage-badge { position: absolute; top: -11px; left: 18px; font-size: 10px; font-weight: 800; letter-spacing: .8px; color: #fff; padding: 2px 10px; border-radius: 10px; }
+.b-1 { background: var(--purple); }
+.b-2 { background: var(--green); }
+.stage-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.stage-desc  { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
 
 /* 子步骤网格 */
 .steps { display: grid; gap: 8px; }
 .steps-row { display: flex; align-items: stretch; gap: 6px; }
-.step {
-  flex: 1; min-width: 0;
-  padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
-  background: #f9fafb; font-size: 11px; position: relative;
-}
-.step-title { font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+.step { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #f9fafb; font-size: 11px; }
+.step-title { font-weight: 600; margin-bottom: 3px; }
 .step-ex { font-size: 9.5px; color: #94a3b8; font-family: 'SF Mono', Consolas, monospace; line-height: 1.5; }
-.step-new { background: #dbeafe; border-color: #93c5fd; }
-.step-new .step-title { color: #1d4ed8; }
-.step-accent { background: #eff6ff; border-color: #bfdbfe; }
-.step-accent .step-title { color: #1d4ed8; }
-.step-protect { background: #ecfdf5; border-color: #a7f3d0; }
-.step-protect .step-title { color: var(--green); }
-.step-del { background: #fef2f2; border-color: #fecaca; }
-.step-del .step-title { color: var(--red); }
+.s-new     { background: #dbeafe; border-color: #93c5fd; }
+.s-new .step-title { color: #1d4ed8; }
+.s-accent  { background: #eff6ff; border-color: #bfdbfe; }
+.s-accent .step-title { color: #1d4ed8; }
+.s-protect { background: #ecfdf5; border-color: #a7f3d0; }
+.s-protect .step-title { color: var(--green); }
+.s-del     { background: #fef2f2; border-color: #fecaca; }
+.s-del .step-title { color: var(--red); }
+.s-keep    { background: #f0fdf4; border-color: #bbf7d0; }
+.s-keep .step-title { color: var(--green); }
 
-/* 步骤间箭头 */
+/* 箭头 */
 .arr { display: flex; align-items: center; color: #c0c5ce; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 
-/* 决策行 */
-.decision { display: flex; align-items: stretch; gap: 8px; }
-.dia { width: 90px; min-height: 50px; position: relative; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.dia::before { content: ''; position: absolute; inset: 4px; background: #fffbeb; border: 2px solid var(--orange); transform: rotate(45deg); border-radius: 4px; }
-.dia-t { position: relative; z-index: 1; font-size: 10px; font-weight: 700; text-align: center; color: var(--orange); line-height: 1.3; }
-.branches { display: flex; flex-direction: column; gap: 4px; justify-content: center; flex: 1; }
-.br-item { font-size: 11px; padding: 4px 10px; border-radius: 6px; background: #f9fafb; border: 1px solid var(--border); }
-.by { color: var(--green); font-weight: 700; font-size: 10px; }
-.bn { color: var(--red); font-weight: 700; font-size: 10px; }
-.bs { color: var(--orange); font-weight: 700; font-size: 10px; }
+/* classify_line 决策流 */
+.logic { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 8px; font-size: 12px; }
+.logic-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.logic-row:last-child { border-bottom: none; }
+.logic-num { width: 18px; height: 18px; border-radius: 50%; background: #e5e7eb; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logic-cond { flex: 1; color: var(--muted); }
+.logic-arrow { color: #c0c5ce; }
+.logic-result { font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 8px; flex-shrink: 0; }
+.r-fact  { background: #dcfce7; color: var(--green); }
+.r-noise { background: #fee2e2; color: var(--red); }
+.r-keep  { background: #dbeafe; color: #1d4ed8; }
 
 /* Case 卡片 */
 .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
@@ -85,198 +77,193 @@ h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .cc:first-child { border-right: 1px solid var(--border); }
 .cl { font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; display: block; font-family: sans-serif; }
 .cl-o { color: var(--muted); } .cl-c { color: var(--green); }
-.ld { background: #fee2e2; color: var(--red); text-decoration: line-through; border-radius: 3px; padding: 0 2px; display: block; }
-.lk { display: block; }
-.lf { display: block; background: #f0fdf4; border-left: 2px solid var(--green); padding-left: 5px; }
+.ld  { background: #fee2e2; color: var(--red); text-decoration: line-through; border-radius: 3px; padding: 0 2px; display: block; }
+.lk  { display: block; }
+.lf  { display: block; background: #f0fdf4; border-left: 2px solid var(--green); padding-left: 5px; }
 .ldup { display: block; background: #fef3c7; color: var(--orange); text-decoration: line-through; border-radius: 3px; padding: 0 2px; }
-.note { margin-top:4px; font-size:9px; color:var(--muted); font-family:sans-serif; font-style:italic; }
+.note { margin-top: 4px; font-size: 9px; color: var(--muted); font-family: sans-serif; font-style: italic; }
 
-/* 原则 & 统计 */
-.principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 36px; }
-.principle { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
-.principle-icon { font-size: 18px; margin-bottom: 3px; }
-.principle-title { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
-.principle-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
-.stat-num { font-size: 20px; font-weight: 800; color: var(--accent); }
-.stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+/* 原则 */
+.principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 0; }
+.principle { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.principle-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.principle-desc  { font-size: 11px; color: var(--muted); line-height: 1.5; }
 </style>
 </head>
 <body>
 <div class="page">
 
 <h1>Description 清洗策略</h1>
-<p class="sub">v1.12 · 电商商品描述去噪 · 8 地区多语言</p>
+<p class="sub">v1.13 · 2026-03-31 · 两阶段管线 · 8 地区多语言 · 词库驱动</p>
 
+<!-- ═══ 流程图 ═══ -->
 <div class="flow">
 
   <div class="io">原始 description<small>产品事实 + 运营噪音 + Emoji + HTML + URL</small></div>
-  <div class="varr"><svg viewBox="0 0 18 24"><path d="M9 0 L9 17 M4 13 L9 20 L14 13" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg></div>
+  <div class="varr"><svg viewBox="0 0 18 22"><path d="M9 0L9 15M4 11L9 19L14 11" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg></div>
 
-  <!-- ══ L1 ══ -->
-  <div class="lvl lvl-l1">
-    <span class="lvl-badge b-l1">LEVEL 1</span>
-    <span class="lvl-stat">删除 2.9%</span>
-    <div class="lvl-title">预处理 · 结构规范化</div>
-    <div class="lvl-desc">清理非文本噪音，不涉及语义判断</div>
+  <!-- 阶段一 -->
+  <div class="stage stage-1">
+    <span class="stage-badge b-1">阶段一</span>
+    <div class="stage-title">预处理 · 结构规范化</div>
+    <div class="stage-desc">逐字符清理，不涉及语义判断</div>
     <div class="steps">
       <div class="steps-row">
         <div class="step">
           <div class="step-title">HTML 标签/实体</div>
-          <div class="step-ex">&lt;br&gt; &lt;p&gt; &lt;div&gt; &amp;amp;</div>
+          <div class="step-ex">&lt;br&gt; &lt;p&gt; &amp;amp;</div>
         </div>
         <span class="arr">→</span>
         <div class="step">
           <div class="step-title">控制符 / 零宽字符</div>
-          <div class="step-ex">\x00 \ufeff \u200b \u00ad</div>
+          <div class="step-ex">\x00 \ufeff \u200b</div>
         </div>
         <span class="arr">→</span>
-        <div class="step step-new">
-          <div class="step-title">Emoji 删除 ✦</div>
-          <div class="step-ex">💎 📦 ⚠️ 🛒 ⭐ 🌸 😍 📢</div>
+        <div class="step s-new">
+          <div class="step-title">Emoji 删除</div>
+          <div class="step-ex">💎 📦 ⚠️ 🛒 ⭐ 🌸</div>
         </div>
         <span class="arr">→</span>
-        <div class="step step-new">
-          <div class="step-title">URL / Email ✦</div>
-          <div class="step-ex">https://shopee.tw/...<br>tinand181@gmail.com</div>
+        <div class="step s-new">
+          <div class="step-title">URL / Email</div>
+          <div class="step-ex">https://shopee.tw/...<br>@gmail.com</div>
         </div>
       </div>
       <div class="steps-row">
-        <div class="step step-new">
-          <div class="step-title">电话号码 ✦</div>
-          <div class="step-ex">+6016-661-6081<br>0903366505</div>
+        <div class="step s-new">
+          <div class="step-title">电话号码</div>
+          <div class="step-ex">+6016-661-6081<br><span style="color:#059669">保护 EAN/零件编号</span></div>
         </div>
         <span class="arr">→</span>
-        <div class="step step-accent">
+        <div class="step s-accent">
           <div class="step-title">行级去重</div>
-          <div class="step-ex">相同行只保留首次出现<br>实测去除 729 行</div>
+          <div class="step-ex">相同行只保留首次</div>
         </div>
         <span class="arr">→</span>
         <div class="step">
           <div class="step-title">空白规范化</div>
-          <div class="step-ex">多空格 → 单空格<br>\n{3+} → \n\n</div>
+          <div class="step-ex">多空格→1 · \n{3+}→\n\n</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="varr"><svg viewBox="0 0 18 24"><path d="M9 0 L9 17 M4 13 L9 20 L14 13" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg><span class="varr-label">按 \n\n 分段</span></div>
+  <div class="varr"><svg viewBox="0 0 18 22"><path d="M9 0L9 15M4 11L9 19L14 11" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg><span class="varr-lbl">逐行判断</span></div>
 
-  <!-- ══ L2 ══ -->
-  <div class="lvl lvl-l2">
-    <span class="lvl-badge b-l2">LEVEL 2</span>
-    <span class="lvl-stat">删除 1.2%</span>
-    <div class="lvl-title">段落级过滤</div>
-    <div class="lvl-desc">对每个段落整体判断是否为噪音</div>
-    <div class="steps">
-      <div class="steps-row">
-        <div class="step step-protect">
-          <div class="step-title">🛡 保护检查</div>
-          <div class="step-ex">含规格/型号/认证/产地<br>→ 跳过，整段保留</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step">
-          <div class="step-title">6 类噪音关键词匹配</div>
-          <div class="step-ex">命中 → 进入逐行扫描<br>未命中 → 整段保留</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step">
-          <div class="step-title">逐行扫描</div>
-          <div class="step-ex">有 fact 行 → 整段保留<br>全 noise → 进入删除</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step step-del">
-          <div class="step-title">整段删除</div>
-          <div class="step-ex">客服在線09:00~22:00...<br>退貨須知 猶豫期非試用期...</div>
-        </div>
+  <!-- 阶段二 -->
+  <div class="stage stage-2">
+    <span class="stage-badge b-2">阶段二</span>
+    <div class="stage-title">行级过滤 · classify_line()</div>
+    <div class="stage-desc">对每一行独立分类，依赖保护词库和噪音词库</div>
+
+    <!-- 决策逻辑 -->
+    <div class="logic">
+      <div class="logic-row">
+        <div class="logic-num">1</div>
+        <div class="logic-cond">含 <strong>规格单位</strong>（500g · 14CM · 4000mAh）/ <strong>型号</strong>（CB300F）/ <strong>认证</strong>（Halal · BPOM）/ <strong>产地</strong>（Kerinci · 阿里山）</div>
+        <div class="logic-arrow">→</div>
+        <div class="logic-result r-fact">fact 保留</div>
       </div>
-      <div class="steps-row" style="margin-top:4px">
-        <div class="step"><div class="step-title">📦 物流</div><div class="step-ex">frete · ongkir · 出貨<br>จัดส่ง · giao hàng</div></div>
-        <div class="step"><div class="step-title">↩ 退换</div><div class="step-ex">退貨 · retur · đổi trả<br>devolução · 鑑賞期</div></div>
-        <div class="step"><div class="step-title">💬 客服</div><div class="step-ex">聊聊 · whatsapp<br>hubungi kami · liên hệ</div></div>
-        <div class="step"><div class="step-title">🏪 店铺</div><div class="step-ex">歡迎光臨 · tentang toko<br>welcome to our store</div></div>
-        <div class="step"><div class="step-title">⚠ 免责</div><div class="step-ex">圖片僅供參考<br>imagem ilustrativa</div></div>
-        <div class="step"><div class="step-title">⛔ 警告</div><div class="step-ex">注意事項 · atenção<br>perhatian · lưu ý</div></div>
+      <div class="logic-row">
+        <div class="logic-num">2</div>
+        <div class="logic-cond">行长度 <strong>&gt; 100 字符</strong>（混合内容，宁可留多）</div>
+        <div class="logic-arrow">→</div>
+        <div class="logic-result r-keep">keep 保留</div>
+      </div>
+      <div class="logic-row">
+        <div class="logic-num">3</div>
+        <div class="logic-cond">命中 <strong>噪音关键词库</strong>（6 类 × 8 地区 · 228 短语）</div>
+        <div class="logic-arrow">→</div>
+        <div class="logic-result r-noise">noise 删除</div>
+      </div>
+      <div class="logic-row">
+        <div class="logic-num">4</div>
+        <div class="logic-cond">其余</div>
+        <div class="logic-arrow">→</div>
+        <div class="logic-result r-keep">keep 保留</div>
+      </div>
+    </div>
+
+    <!-- 噪音词 + 保护词 -->
+    <div class="steps-row" style="margin-top:10px">
+      <div class="step">
+        <div class="step-title">📦 物流</div>
+        <div class="step-ex">frete · ongkir · 出貨 · จัดส่ง</div>
+      </div>
+      <div class="step">
+        <div class="step-title">↩ 退换</div>
+        <div class="step-ex">devolução · retur · 退貨</div>
+      </div>
+      <div class="step">
+        <div class="step-title">💬 客服</div>
+        <div class="step-ex">whatsapp · hubungi · 聊聊</div>
+      </div>
+      <div class="step">
+        <div class="step-title">🏪 店铺</div>
+        <div class="step-ex">歡迎光臨 · tentang toko</div>
+      </div>
+      <div class="step">
+        <div class="step-title">⚠ 免责</div>
+        <div class="step-ex">圖片僅供參考 · ilustrativa</div>
+      </div>
+      <div class="step">
+        <div class="step-title">⛔ 警告</div>
+        <div class="step-ex">注意事項 · atenção · lưu ý</div>
+      </div>
+    </div>
+
+    <div class="steps-row" style="margin-top:6px">
+      <div class="step s-protect">
+        <div class="step-title">📐 规格单位（65 个）</div>
+        <div class="step-ex">g · kg · ml · cm · mAh · GB · ℃ · buah · 件 · gramas</div>
+      </div>
+      <div class="step s-protect">
+        <div class="step-title">🔖 型号 · ✅ 认证（8 个）</div>
+        <div class="step-ex">CB300F · YH-8004 · Halal · BPOM · FDA · ISO</div>
+      </div>
+      <div class="step s-protect">
+        <div class="step-title">🌍 产地词（93 个）</div>
+        <div class="step-ex">Kerinci · Sumatera · 阿里山 · เชียงราย · Minas Gerais</div>
       </div>
     </div>
   </div>
 
-  <div class="varr"><svg viewBox="0 0 18 24"><path d="M9 0 L9 17 M4 13 L9 20 L14 13" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg><span class="varr-label">段落内逐行</span></div>
-
-  <!-- ══ L3 ══ -->
-  <div class="lvl lvl-l3">
-    <span class="lvl-badge b-l3">LEVEL 3</span>
-    <span class="lvl-stat">删除 2.4%</span>
-    <div class="lvl-title">行级输出</div>
-    <div class="lvl-desc">逐行分类，原样输出保留行</div>
-    <div class="steps">
-      <div class="steps-row">
-        <div class="step">
-          <div class="step-title">逐行遍历</div>
-          <div class="step-ex">段落内按 \n<br>逐行判断</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step step-protect">
-          <div class="step-title">→ fact（保留）</div>
-          <div class="step-ex">尺寸:寬14CM 長20.5CM<br>Berat bersih 500g<br>Halal certified</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step step-del">
-          <div class="step-title">→ noise（删除）</div>
-          <div class="step-ex">≤60字符 + 噪音关键词<br>請注意: · 聊聊 · Catatan.<br>物流方式可選:</div>
-        </div>
-        <span class="arr">→</span>
-        <div class="step step-accent">
-          <div class="step-title">→ keep（保留）</div>
-          <div class="step-ex">不确定 = 保留<br>Wireless Bluetooth V5.3<br>材質: 不鏽鋼 304</div>
-        </div>
-      </div>
-      <div class="steps-row" style="margin-top:4px">
-        <div class="step step-protect"><div class="step-title">📐 规格单位</div><div class="step-ex">500g · 4000mAh · 14CM<br>128GB · 50ml · 25W</div></div>
-        <div class="step step-protect"><div class="step-title">🔖 型号</div><div class="step-ex">CB300F · YH-8004<br>iPhone 15 · Pop 110i</div></div>
-        <div class="step step-protect"><div class="step-title">✅ 认证</div><div class="step-ex">Halal · BPOM · FDA<br>ISO · SNI · GMP</div></div>
-        <div class="step step-protect"><div class="step-title">🌍 产地</div><div class="step-ex">Kerinci · 阿里山<br>เชียงราย · Đà Lạt<br>Minas Gerais</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="varr"><svg viewBox="0 0 18 24"><path d="M9 0 L9 17 M4 13 L9 20 L14 13" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg><span class="varr-label">原始行格式</span></div>
-  <div class="io io-out">description_cleaned<small>保留产品事实 · 原始行格式 · 总删除 6.5%</small></div>
+  <div class="varr"><svg viewBox="0 0 18 22"><path d="M9 0L9 15M4 11L9 19L14 11" fill="none" stroke="#c0c5ce" stroke-width="2"/></svg><span class="varr-lbl">原始行格式</span></div>
+  <div class="io io-out">description_cleaned<small>保留产品事实 · 无 emoji / URL / 噪音 · 不引入额外换行</small></div>
 
 </div>
 
 <!-- ═══ Case 对比 ═══ -->
 <div class="section-title">清洗策略 Case 对比</div>
 <div class="cases">
-  <div class="ccard"><div class="ch">🎯 Emoji + URL 删除 <span class="ct ct-n">L1</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="ld">💎</span><span class="lk">【寄運說明】</span><span class="ld">💎</span><span class="ld">⚠️</span><span class="lk">超商取貨請參考規定尺寸</span><span class="ld">www.store.com.tw</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">【寄運說明】</span><span class="lk">超商取貨請參考規定尺寸</span></div></div></div>
-  <div class="ccard"><div class="ch">🔁 去重 <span class="ct ct-n">L1</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Produk premium 500g</span><span class="ldup">Produk premium 500g</span><span class="lk">Kualitas terjamin</span><span class="ldup">Kualitas terjamin</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Produk premium 500g</span><span class="lk">Kualitas terjamin</span></div></div></div>
-  <div class="ccard"><div class="ch">📦 物流发货 <span class="ct ct-d">L2/L3</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Berat bersih 500g</span><span class="ld">Gratis ongkir se-Indonesia</span><span class="ld">Dikirim dari Jakarta</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Berat bersih 500g</span><div class="note">↑ 500g 规格保护</div></div></div></div>
-  <div class="ccard"><div class="ch">↩ 退换货 <span class="ct ct-d">L3</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="lk">材質: 不鏽鋼 304</span><span class="ld">退貨請在7天內申請</span><span class="lf">尺寸: 25cm x 15cm</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">材質: 不鏽鋼 304</span><span class="lf">尺寸: 25cm x 15cm</span></div></div></div>
-  <div class="ccard"><div class="ch">💬 客服联系 <span class="ct ct-d">L3</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [SG]</span><span class="lk">Wireless Bluetooth V5.3</span><span class="lf">40mm Driver</span><span class="ld">Contact us via whatsapp</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">Wireless Bluetooth V5.3</span><span class="lf">40mm Driver</span></div></div></div>
-  <div class="ccard"><div class="ch">📐 规格保护 <span class="ct ct-k">免死</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="lk">商品規格</span><span class="lf">尺寸:寬14CM 長20.5CM</span><span class="lf">可承受重量:5KG以下</span><span class="ld">歡迎光臨本店</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">商品規格</span><span class="lf">尺寸:寬14CM 長20.5CM</span><span class="lf">可承受重量:5KG以下</span></div></div></div>
-  <div class="ccard"><div class="ch">🌍 产地保护 <span class="ct ct-k">免死</span><span class="ct ct-n" style="margin-left:4px">NEW</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Teh <u>terbaik</u> dari perkebunan <b>Kerinci, Sumatera</b></span><span class="lk">Harga murah meriah</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Teh terbaik dari perkebunan Kerinci, Sumatera</span><span class="lk">Harga murah meriah</span><div class="note">↑ 产地词保护，terbaik 不影响</div></div></div></div>
-  <div class="ccard"><div class="ch">🏪 店铺介绍 <span class="ct ct-d">L2</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [VN]</span><span class="ld">Chào mừng bạn đến với cửa hàng</span><span class="lf">Kem chống nắng SPF50 50ml</span><span class="lk">Chiết xuất từ thiên nhiên</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Kem chống nắng SPF50 50ml</span><span class="lk">Chiết xuất từ thiên nhiên</span></div></div></div>
+  <div class="ccard"><div class="ch">🎯 Emoji + URL <span class="ct ct-n">阶段一</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="ld">💎</span><span class="lk">【寄運說明】</span><span class="ld">💎</span><span class="ld">⚠️</span><span class="lk">超商取貨請參考規定尺寸</span><span class="ld">www.store.com.tw</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">【寄運說明】</span><span class="lk">超商取貨請參考規定尺寸</span></div></div></div>
+
+  <div class="ccard"><div class="ch">🔁 去重 <span class="ct ct-n">阶段一</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Produk premium 500g</span><span class="ldup">Produk premium 500g</span><span class="lk">Kualitas terjamin</span><span class="ldup">Kualitas terjamin</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Produk premium 500g</span><span class="lk">Kualitas terjamin</span></div></div></div>
+
+  <div class="ccard"><div class="ch">📦 物流发货 <span class="ct ct-d">阶段二</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Berat bersih 500g</span><span class="ld">Gratis ongkir se-Indonesia</span><span class="ld">Dikirim dari Jakarta</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Berat bersih 500g</span><div class="note">↑ 500g 规格保护</div></div></div></div>
+
+  <div class="ccard"><div class="ch">↩ 退换货 <span class="ct ct-d">阶段二</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="lk">材質: 不鏽鋼 304</span><span class="ld">退貨請在7天內申請</span><span class="lf">尺寸: 25cm x 15cm</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">材質: 不鏽鋼 304</span><span class="lf">尺寸: 25cm x 15cm</span></div></div></div>
+
+  <div class="ccard"><div class="ch">💬 客服联系 <span class="ct ct-d">阶段二</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [SG]</span><span class="lk">Wireless Bluetooth V5.3</span><span class="lf">40mm Driver</span><span class="ld">Contact us via whatsapp</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">Wireless Bluetooth V5.3</span><span class="lf">40mm Driver</span></div></div></div>
+
+  <div class="ccard"><div class="ch">📐 规格保护 <span class="ct ct-k">fact</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [TW]</span><span class="lk">商品規格</span><span class="lf">尺寸:寬14CM 長20.5CM</span><span class="lf">可承受重量:5KG以下</span><span class="ld">歡迎光臨本店</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">商品規格</span><span class="lf">尺寸:寬14CM 長20.5CM</span><span class="lf">可承受重量:5KG以下</span></div></div></div>
+
+  <div class="ccard"><div class="ch">🌍 产地保护 <span class="ct ct-k">fact</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]</span><span class="lf">Teh <u>terbaik</u> dari perkebunan <b>Kerinci, Sumatera</b></span><span class="ld">Gratis ongkir se-Indonesia</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lf">Teh terbaik dari perkebunan Kerinci, Sumatera</span><div class="note">↑ 产地词保护，terbaik 不影响</div></div></div></div>
+
+  <div class="ccard"><div class="ch">📏 长度保护 <span class="ct ct-k">keep</span></div><div class="cb"><div class="cc"><span class="cl cl-o">原文 [ID]（419字符单行）</span><span class="lk">KEJU OLAHAN DENGAN AROMA EDAM, SANGAT BAIK UNTUK TOPING KUE... DISARANKAN PENGIRIMAN MENGGUNAKAN KURIR...</span></div><div class="cc"><span class="cl cl-c">清洗后</span><span class="lk">KEJU OLAHAN DENGAN AROMA EDAM, SANGAT BAIK UNTUK TOPING KUE... DISARANKAN PENGIRIMAN MENGGUNAKAN KURIR...</span><div class="note">↑ &gt;100字符，含产品用途+物流，整行保留</div></div></div></div>
 </div>
 
-<!-- ═══ 原则 ═══ -->
+<!-- ═══ 设计原则 ═══ -->
 <div class="section-title">设计原则</div>
 <div class="principles">
-  <div class="principle"><div class="principle-icon">🛡</div><div class="principle-title">宁可留多</div><div class="principle-desc">默认 keep，只删高置信度噪音</div></div>
-  <div class="principle"><div class="principle-icon">📐</div><div class="principle-title">规格单位免死</div><div class="principle-desc">含规格单位强制保留<br>纯数字不豁免</div></div>
-  <div class="principle"><div class="principle-icon">🌍</div><div class="principle-title">产地保护</div><div class="principle-desc">含产地词，即使有主观词也保留</div></div>
-  <div class="principle"><div class="principle-icon">📏</div><div class="principle-title">短行才删</div><div class="principle-desc">≤60字符 + 噪音关键词才触发</div></div>
-  <div class="principle"><div class="principle-icon">📋</div><div class="principle-title">行级输出</div><div class="principle-desc">不拆句不重组，保持原始格式</div></div>
-  <div class="principle"><div class="principle-icon">🌏</div><div class="principle-title">MY 双规则</div><div class="principle-desc">EN + ID 并行覆盖双语</div></div>
-</div>
-
-<!-- ═══ 统计 ═══ -->
-<div class="section-title">验证结果（1966 条 · 8 地区）</div>
-<div class="stats">
-  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">规格保留率 (3993/3993)</div></div>
-  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">认证保留率 (58/58)</div></div>
-  <div class="stat"><div class="stat-num">0</div><div class="stat-label">引入额外换行</div></div>
-  <div class="stat"><div class="stat-num">6.5%</div><div class="stat-label">总删除率 (L1+L2+L3)</div></div>
+  <div class="principle">
+    <div class="principle-title">保守优先</div>
+    <div class="principle-desc">只删除高置信度噪音，不确定内容一律保留。长行（&gt;100字符）直接保留，不做语义判断。</div>
+  </div>
+  <div class="principle">
+    <div class="principle-title">保护规则优先于删除规则</div>
+    <div class="principle-desc">含规格单位、型号、认证词、产地词的行，无论是否同时命中噪音关键词，强制保留。</div>
+  </div>
 </div>
 
 </div>
