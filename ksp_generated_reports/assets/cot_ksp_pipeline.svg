@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAF7F0"/>
+      <stop offset="1" stop-color="#F2ECE1"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#8A6C3E" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5D7FBE"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8FCF74"/>
+    </marker>
+    <marker id="arrowGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D7B764"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#C77676"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="820" rx="30" fill="url(#bg)"/>
+
+  <text x="700" y="68" text-anchor="middle" font-size="34" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#171717">
+    CoT 商品卖点逐级推理提取流程
+  </text>
+
+  <g filter="url(#shadow)">
+    <rect x="34" y="105" width="560" height="170" rx="20" fill="#E7E7E7" stroke="#BDBDBD" stroke-width="3"/>
+    <text x="62" y="200" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#222">输入</text>
+
+    <g>
+      <rect x="120" y="138" width="150" height="52" rx="26" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="3"/>
+      <text x="195" y="172" text-anchor="middle" font-size="20" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#303030">📄 Title</text>
+    </g>
+    <g>
+      <rect x="296" y="138" width="212" height="52" rx="26" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="3"/>
+      <text x="402" y="172" text-anchor="middle" font-size="20" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#303030">📝 Description</text>
+    </g>
+    <g>
+      <rect x="120" y="205" width="212" height="52" rx="26" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="3"/>
+      <text x="226" y="239" text-anchor="middle" font-size="20" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#303030">🏷️ L1-L3 Category</text>
+    </g>
+    <g>
+      <rect x="346" y="205" width="148" height="52" rx="26" fill="#FFFFFF" stroke="#C8C8C8" stroke-width="3"/>
+      <text x="420" y="239" text-anchor="middle" font-size="20" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#303030">🌎 Region</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="38" y="325" width="555" height="112" rx="18" fill="#F8F8F8" stroke="#BEBEBE" stroke-width="3"/>
+    <text x="316" y="374" text-anchor="middle" font-size="26" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#242424">步骤 0：获取基础 Schema</text>
+    <text x="316" y="412" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#4F4F4F">动作：根据类目和地区获取完整 Schema</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="36" y="486" width="560" height="148" rx="18" fill="#CFE0F8" stroke="#8DB0DE" stroke-width="3"/>
+    <text x="316" y="540" text-anchor="middle" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#1E2A36">步骤 1：推理画像 &amp; 选定 Schema</text>
+    <text x="316" y="582" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#354555">核心动作：基于输入推理用户画像；</text>
+    <text x="316" y="610" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#354555">依据 AIGC 卖点体系规则 v2.0 筛选关键 Schema 属性</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="38" y="682" width="556" height="96" rx="18" fill="#DCEAD8" stroke="#9ABB91" stroke-width="3"/>
+    <text x="316" y="726" text-anchor="middle" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#203322">步骤 2：关键词提取</text>
+    <text x="316" y="760" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#415743">核心动作：从 Title + Description 中严格提取对应 Schema 的关键词</text>
+  </g>
+
+  <g>
+    <ellipse cx="462" cy="461" rx="98" ry="28" fill="#FFF4CC" stroke="#E0BF62" stroke-width="3"/>
+    <text x="462" y="468" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#5D4B12">完整 Schema</text>
+  </g>
+  <g>
+    <ellipse cx="462" cy="658" rx="140" ry="28" fill="#FFF4CC" stroke="#E0BF62" stroke-width="3"/>
+    <text x="462" y="665" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#5D4B12">用户画像 + 选中 Schema</text>
+  </g>
+
+  <line x1="316" y1="275" x2="316" y2="325" stroke="#5D7FBE" stroke-width="10" marker-end="url(#arrowBlue)"/>
+  <line x1="316" y1="437" x2="316" y2="486" stroke="#5D7FBE" stroke-width="10" marker-end="url(#arrowBlue)"/>
+  <line x1="316" y1="634" x2="316" y2="682" stroke="#5D7FBE" stroke-width="10" marker-end="url(#arrowBlue)"/>
+
+  <path d="M 670 675 C 650 675 640 662 640 640 L 640 168 C 640 144 656 130 682 130 L 1082 130 C 1108 130 1124 144 1124 168 L 1124 216"
+        stroke="#8FCF74" stroke-width="10" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="648" y="548" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#2F5132">（关键词集合）</text>
+
+  <g filter="url(#shadow)">
+    <rect x="780" y="228" width="548" height="122" rx="18" fill="#FFF1BF" stroke="#E0BF62" stroke-width="3"/>
+    <text x="1054" y="277" text-anchor="middle" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#463919">步骤 3：生成多组 KSP 候选</text>
+    <text x="1054" y="314" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#61511F">核心动作：并行生成 5 组独立的 KSP 候选方案</text>
+  </g>
+
+  <g>
+    <ellipse cx="1054" cy="398" rx="92" ry="28" fill="#FFF4CC" stroke="#E0BF62" stroke-width="3"/>
+    <text x="1054" y="405" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#5D4B12">5 组 KSP 候选集</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="796" y="468" width="516" height="120" rx="18" fill="#FFF4D6" stroke="#E0B763" stroke-width="3"/>
+    <text x="1054" y="515" text-anchor="middle" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#463919">步骤 4：评估并优选 Final KSP</text>
+    <text x="1054" y="553" text-anchor="middle" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#61511F">核心动作：对 5 组候选进行评估，选出最佳的一组作为 Final KSP</text>
+  </g>
+
+  <line x1="1054" y1="350" x2="1054" y2="370" stroke="#D7B764" stroke-width="6"/>
+  <line x1="974" y1="350" x2="1008" y2="382" stroke="#D7B764" stroke-width="4"/>
+  <line x1="1134" y1="350" x2="1100" y2="382" stroke="#D7B764" stroke-width="4"/>
+  <line x1="1054" y1="426" x2="1054" y2="468" stroke="#C77676" stroke-width="10" marker-end="url(#arrowRed)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="758" y="646" width="612" height="134" rx="18" fill="#E5DCF3" stroke="#B7A4D7" stroke-width="3"/>
+    <text x="1064" y="692" text-anchor="middle" font-size="28" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" fill="#40315D">最终输出：三层吸引力体系</text>
+    <line x1="786" y1="714" x2="1338" y2="714" stroke="#B7A4D7" stroke-width="2"/>
+    <text x="818" y="744" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#33284A">• Level 1：Product Type、Brand（若配件标明适配型号）</text>
+    <text x="818" y="772" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#33284A">• Level 2：Final KSPs（优选关键卖点）</text>
+    <text x="818" y="800" font-size="18" font-family="'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" fill="#33284A">• Level 3：Long tail keywords（精准搜索长尾词）</text>
+  </g>
+
+  <line x1="1054" y1="588" x2="1054" y2="646" stroke="#B55D54" stroke-width="10" marker-end="url(#arrowRed)"/>
+</svg>
