@@ -68,7 +68,7 @@
       line-height: 1.8;
       font-size: 15px;
     }
-    .meta-row, .metric-grid, .rule-grid, .two-col, .case-grid {
+    .meta-row, .metric-grid, .rule-grid, .two-col, .case-grid, .output-grid {
       display: grid;
       gap: 14px;
     }
@@ -89,10 +89,20 @@
       grid-template-columns: 1fr 1fr;
       margin-top: 14px;
     }
+    .output-grid {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 14px;
+    }
     .card, .panel, .rule-card, .case-card, .side-panel {
       border: 1px solid var(--line);
       border-radius: 18px;
       background: var(--panel-strong);
+    }
+    .output-panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffaf3;
+      overflow: hidden;
     }
     .card { padding: 14px 16px; }
     .label {
@@ -342,6 +352,19 @@
       line-height: 1.8;
       font-size: 14px;
     }
+    .output-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(157, 75, 50, 0.06);
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .output-panel pre {
+      max-height: 420px;
+      background: #fffaf3;
+    }
     .empty {
       color: var(--muted);
       font-size: 14px;
@@ -353,7 +376,7 @@
       line-height: 1.7;
     }
     @media (max-width: 1100px) {
-      .two-col, .case-grid {
+      .two-col, .case-grid, .output-grid {
         grid-template-columns: 1fr;
       }
       .case-head {
@@ -826,6 +849,133 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;姜糖護唇&quot;,
+    &quot;睡前護唇&quot;,
+    &quot;日常護唇&quot;,
+    &quot;干燥天氣護唇&quot;,
+    &quot;韓國製造&quot;,
+    &quot;23g唇膜&quot;,
+    &quot;隔夜護唇&quot;,
+    &quot;姜橙護唇&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;ginger sugar lip care&quot;,
+    &quot;overnight lip care&quot;,
+    &quot;daily lip care&quot;,
+    &quot;dry weather lip care&quot;,
+    &quot;made in korea&quot;,
+    &quot;23g lip mask&quot;,
+    &quot;overnight lip treatment&quot;,
+    &quot;ginger orange lip care&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;隔夜唇膜&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;overnight lip mask&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;滋润保湿&quot;: [
+      &quot;保濕&quot;,
+      &quot;滋润&quot;,
+      &quot;保湿&quot;
+    ],
+    &quot;滋润保湿_en&quot;: [
+      &quot;moisturizing&quot;,
+      &quot;hydration&quot;,
+      &quot;moisture retention&quot;
+    ],
+    &quot;舒緩修復&quot;: [
+      &quot;舒緩&quot;,
+      &quot;修復&quot;,
+      &quot;鎮定&quot;
+    ],
+    &quot;舒緩修復_en&quot;: [
+      &quot;relaxation&quot;,
+      &quot;repair&quot;,
+      &quot;calming&quot;
+    ],
+    &quot;適用群體&quot;: [
+      &quot;女性&quot;,
+      &quot;愛護唇部的人&quot;,
+      &quot;需要護唇的人&quot;
+    ],
+    &quot;適用群體_en&quot;: [
+      &quot;women&quot;,
+      &quot;lip care enthusiasts&quot;,
+      &quot;people who need lip care&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;生姜蜂蜜面膜&quot;,
+    &quot;晚安唇霜&quot;,
+    &quot;滋养修护唇膜&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;隔夜唇膜&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Overnight Lip Mask&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;夜间护肤&quot;: [
+      &quot;可用于晚间滋润护唇&quot;,
+      &quot;每日涂抹更新配方&quot;
+    ],
+    &quot;夜间护肤_en&quot;: [
+      &quot;Suitable for Nighttime Moisturizing Care&quot;,
+      &quot;Daily Application with Fresh Formula Update&quot;
+    ],
+    &quot;天然成分&quot;: [
+      &quot;含姜+橙油成分&quot;,
+      &quot;含糖+乳木果油成分&quot;
+    ],
+    &quot;天然成分_en&quot;: [
+      &quot;Contains Ginger + Orange Oil Ingredients&quot;,
+      &quot;Contains Sugar + Shea Butter Components&quot;
+    ],
+    &quot;舒缓护理&quot;: [
+      &quot;稳定身心&quot;,
+      &quot;呵护干燥细胞&quot;
+    ],
+    &quot;舒缓护理_en&quot;: [
+      &quot;Stabilizes Mind and Body&quot;,
+      &quot;Nurtures Dry Cells&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -896,6 +1046,119 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>部分长尾搜索词和独特卖点（如适用场景）是推断而非直接来源于原文，存在轻微编造。</li><li>`_en`字段中存在简体中文，语言混杂。</li><li>部分卖点存在轻微重复（如防水防潮）。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;幽默装饰贴画&quot;,
+    &quot;防水创意标签&quot;,
+    &quot;美国神话主题贴纸&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;American Mountain and Sea Classic&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;American Mountain and Sea Classic&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;Sticker Pack&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Sticker Pack&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;工艺特点&quot;: [
+      &quot;搞笑抽象沙雕图案&quot;,
+      &quot;防水设计&quot;
+    ],
+    &quot;工艺特点_en&quot;: [
+      &quot;Humorous Abstract Sand Sculpture Design&quot;,
+      &quot;Waterproof Protection&quot;
+    ],
+    &quot;数量优势&quot;: [
+      &quot;216张&quot;,
+      &quot;意义不明创意贴纸&quot;
+    ],
+    &quot;数量优势_en&quot;: [
+      &quot;216 Sheets&quot;,
+      &quot;Meaningful Creative Stickers&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;搞笑貼紙&quot;,
+    &quot;抽象沙雕貼紙&quot;,
+    &quot;美國山海經貼紙&quot;,
+    &quot;創意趣味貼紙&quot;,
+    &quot;室內裝飾貼紙&quot;,
+    &quot;兒童房裝飾&quot;,
+    &quot;辦公室裝飾&quot;,
+    &quot;防水貼紙&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;funny stickers&quot;,
+    &quot;abstract sand sculpture stickers&quot;,
+    &quot;American mountain and sea classic stickers&quot;,
+    &quot;creative fun stickers&quot;,
+    &quot;室内装饰贴纸&quot;,
+    &quot;儿童房装饰&quot;,
+    &quot;办公室装饰&quot;,
+    &quot;waterproof stickers&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;貼紙&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;sticker&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;數量與包裝&quot;: [
+      &quot;216張&quot;,
+      &quot;大量貼紙&quot;,
+      &quot;一包&quot;
+    ],
+    &quot;數量與包裝_en&quot;: [
+      &quot;216 pieces&quot;,
+      &quot;large quantity&quot;,
+      &quot;one package&quot;
+    ],
+    &quot;適用場景&quot;: [
+      &quot;室內裝飾&quot;,
+      &quot;兒童房&quot;,
+      &quot;辦公室裝飾&quot;
+    ],
+    &quot;適用場景_en&quot;: [
+      &quot;室内装饰&quot;,
+      &quot;儿童房&quot;,
+      &quot;办公室装饰&quot;
+    ],
+    &quot;防水防潮&quot;: [
+      &quot;防水貼紙&quot;,
+      &quot;防潮貼紙&quot;,
+      &quot;防水貼&quot;
+    ],
+    &quot;防水防潮_en&quot;: [
+      &quot;waterproof sticker&quot;,
+      &quot;moisture-proof sticker&quot;,
+      &quot;waterproof&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -972,6 +1235,179 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;生日蛋糕&quot;,
+    &quot;慶祝蛋糕&quot;,
+    &quot;客製蛋糕&quot;,
+    &quot;人偶蛋糕&quot;,
+    &quot;小小兵蛋糕&quot;,
+    &quot;巧克力蛋糕&quot;,
+    &quot;香草蛋糕&quot;,
+    &quot;生日派對蛋糕&quot;,
+    &quot;慶祝活動蛋糕&quot;,
+    &quot;自取蛋糕&quot;,
+    &quot;客製化蛋糕&quot;,
+    &quot;蛋糕訂製&quot;,
+    &quot;蛋糕配送&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;birthday cake&quot;,
+    &quot;celebration cake&quot;,
+    &quot;custom cake&quot;,
+    &quot;doll cake&quot;,
+    &quot;mini soldier cake&quot;,
+    &quot;chocolate cake&quot;,
+    &quot;vanilla cake&quot;,
+    &quot;birthday party cake&quot;,
+    &quot;celebration event cake&quot;,
+    &quot;pick up cake&quot;,
+    &quot;customized cake&quot;,
+    &quot;cake customization&quot;,
+    &quot;cake delivery&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;寇比&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Kopi&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;造型蛋糕&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;customized cake&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;保存方式&quot;: [
+      &quot;-18度急凍保鮮&quot;,
+      &quot;客製化&quot;,
+      &quot;可自取&quot;
+    ],
+    &quot;保存方式_en&quot;: [
+      &quot;-18 degree frozen preservation&quot;,
+      &quot;customized&quot;,
+      &quot;pick up available&quot;
+    ],
+    &quot;口味多樣&quot;: [
+      &quot;小小兵&quot;,
+      &quot;客製化&quot;,
+      &quot;人偶蛋糕&quot;,
+      &quot;巧克力&quot;,
+      &quot;香草&quot;,
+      &quot;蔓越莓&quot;,
+      &quot;抹茶&quot;,
+      &quot;奶油&quot;,
+      &quot;香草卡士達&quot;,
+      &quot;巧克力卡士達&quot;,
+      &quot;oreo卡士達醬&quot;,
+      &quot;巧克力香蕉餡&quot;,
+      &quot;香草奶油&quot;,
+      &quot;四果果醬&quot;,
+      &quot;香蕉夾餡&quot;,
+      &quot;伯爵紅茶餡&quot;,
+      &quot;檸檬餡&quot;
+    ],
+    &quot;口味多樣_en&quot;: [
+      &quot;mini soldier&quot;,
+      &quot;customized&quot;,
+      &quot;doll cake&quot;,
+      &quot;chocolate&quot;,
+      &quot;vanilla&quot;,
+      &quot;cranberry&quot;,
+      &quot;matcha&quot;,
+      &quot;cream&quot;,
+      &quot;vanilla custard&quot;,
+      &quot;chocolate custard&quot;,
+      &quot;oreo custard&quot;,
+      &quot;chocolate banana filling&quot;,
+      &quot;vanilla cream&quot;,
+      &quot;four fruit jam&quot;,
+      &quot;banana filling&quot;,
+      &quot;earl grey tea filling&quot;,
+      &quot;lemon filling&quot;
+    ],
+    &quot;食品工藝&quot;: [
+      &quot;戚風蛋糕&quot;,
+      &quot;自製鮮奶卡士達&quot;,
+      &quot;奶霜&quot;,
+      &quot;蛋奶素&quot;
+    ],
+    &quot;食品工藝_en&quot;: [
+      &quot;muffin cake&quot;,
+      &quot;homemade fresh milk custard&quot;,
+      &quot;cream&quot;,
+      &quot;egg and dairy free&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;小小兵蛋糕&quot;,
+    &quot;生日派對蛋糕&quot;,
+    &quot;個人化禮物&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;寇比&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Kobi&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;造型蛋糕&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Customized Cake&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;健康友好&quot;: [
+      &quot;蛋糕是蛋奶素&quot;,
+      &quot;不含添加剂&quot;
+    ],
+    &quot;健康友好_en&quot;: [
+      &quot;Egg and Milk-Based&quot;,
+      &quot;No Additives Added&quot;
+    ],
+    &quot;创新口感&quot;: [
+      &quot;自製鲜奶卡士达及奶霜&quot;,
+      &quot;多款创意配方&quot;
+    ],
+    &quot;创新口感_en&quot;: [
+      &quot;Homemade Fresh Cream Cheese&quot;,
+      &quot;Multiple Creative Flavors&quot;
+    ],
+    &quot;定制能力&quot;: [
+      &quot;可客製各式造型&quot;,
+      &quot;可量身调整成份&quot;
+    ],
+    &quot;定制能力_en&quot;: [
+      &quot;Various Custom Shapes&quot;,
+      &quot;Tailored Ingredients Adjustment&quot;
+    ],
+    &quot;物流保障&quot;: [
+      &quot;-18度急冻保鮮送出&quot;
+    ],
+    &quot;物流保障_en&quot;: [
+      &quot;Frozen Delivery at -18°C&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1042,6 +1478,160 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>品牌错误，将&#x27;PTCG&#x27;作为品牌，而非&#x27;寶可夢&#x27;。</li><li>语言不符合目标地区，使用简体中文而非繁体中文。</li><li>独特卖点中&#x27;限量预购&#x27;下的&#x27;现货保障&#x27;与原文描述相悖，属于编造。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;寶可夢卡牌&quot;,
+    &quot;PTCG卡片&quot;,
+    &quot;可達鴨卡&quot;,
+    &quot;AR卡牌&quot;,
+    &quot;限量版寶可夢卡&quot;,
+    &quot;寶可夢收藏品&quot;,
+    &quot;寶可夢遊戲卡&quot;,
+    &quot;寶可夢卡交易&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Pokémon card&quot;,
+    &quot;PTCG card&quot;,
+    &quot;Pikachu card&quot;,
+    &quot;AR card&quot;,
+    &quot;limited edition Pokémon card&quot;,
+    &quot;Pokémon collectible&quot;,
+    &quot;Pokémon game card&quot;,
+    &quot;Pokémon card trading&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;寶可夢&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Pokémon&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;PTCG卡片&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;PTCG card&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;收藏&quot;: [
+      &quot;收藏品&quot;,
+      &quot;卡牌收藏&quot;,
+      &quot;PTCG卡片&quot;
+    ],
+    &quot;收藏_en&quot;: [
+      &quot;collectible&quot;,
+      &quot;card collection&quot;,
+      &quot;PTCG card&quot;
+    ],
+    &quot;数量与包装&quot;: [
+      &quot;一包&quot;,
+      &quot;一盒&quot;,
+      &quot;一套&quot;
+    ],
+    &quot;数量与包装_en&quot;: [
+      &quot;one pack&quot;,
+      &quot;one box&quot;,
+      &quot;one set&quot;
+    ],
+    &quot;用途&quot;: [
+      &quot;遊戲&quot;,
+      &quot;收藏&quot;,
+      &quot;交易&quot;
+    ],
+    &quot;用途_en&quot;: [
+      &quot;game&quot;,
+      &quot;collection&quot;,
+      &quot;trading&quot;
+    ],
+    &quot;知名IP&quot;: [
+      &quot;寶可夢&quot;,
+      &quot;Pikachu&quot;,
+      &quot;神奇寶貝&quot;
+    ],
+    &quot;知名IP_en&quot;: [
+      &quot;Pokémon&quot;,
+      &quot;Pikachu&quot;,
+      &quot;神奇寶貝&quot;
+    ],
+    &quot;适配型号/品牌&quot;: [
+      &quot;PTCG&quot;,
+      &quot;寶可夢卡牌&quot;,
+      &quot;寶可夢遊戲&quot;
+    ],
+    &quot;适配型号/品牌_en&quot;: [
+      &quot;PTCG&quot;,
+      &quot;Pokémon card&quot;,
+      &quot;Pokémon game&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;超级梦想X&quot;,
+    &quot;可达鸭AR&quot;,
+    &quot;MEGA进化&quot;,
+    &quot;日语原版&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;PTCG&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;PTCG&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;宝可梦卡片&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Pokémon Cards&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;日语原版&quot;: [
+      &quot;日本官方发行&quot;,
+      &quot;日语文案&quot;
+    ],
+    &quot;日语原版_en&quot;: [
+      &quot;Official Japanese Release&quot;,
+      &quot;Japanese Text&quot;
+    ],
+    &quot;瑕疵容忍&quot;: [
+      &quot;轻微损伤允许&quot;
+    ],
+    &quot;瑕疵容忍_en&quot;: [
+      &quot;Allow Minor Damage&quot;
+    ],
+    &quot;稀缺收藏价值&quot;: [
+      &quot;超级梦想X系列&quot;,
+      &quot;MEGA进化&quot;
+    ],
+    &quot;稀缺收藏价值_en&quot;: [
+      &quot;Super Dream X Series&quot;,
+      &quot;MEGA Evolution&quot;
+    ],
+    &quot;限量预购&quot;: [
+      &quot;秒杀预售&quot;,
+      &quot;现货保障&quot;
+    ],
+    &quot;限量预购_en&quot;: [
+      &quot;Limited Pre-sale&quot;,
+      &quot;In Stock Guarantee&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1118,6 +1708,147 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;面膜刮勺&quot;,
+    &quot;分裝刮勺&quot;,
+    &quot;面膜挖勺&quot;,
+    &quot;分裝勺&quot;,
+    &quot;面膜勺&quot;,
+    &quot;調膜棒&quot;,
+    &quot;面霜勺&quot;,
+    &quot;美妝工具&quot;,
+    &quot;化妝品刮勺&quot;,
+    &quot;面膜分裝工具&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;mask scraper&quot;,
+    &quot;portioning scraper&quot;,
+    &quot;mask digger&quot;,
+    &quot;portioning spoon&quot;,
+    &quot;mask spoon&quot;,
+    &quot;adjustment rod&quot;,
+    &quot;cream spoon&quot;,
+    &quot;beauty tool&quot;,
+    &quot;cosmetic scraper&quot;,
+    &quot;mask portioning tool&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;刮勺&quot;,
+      &quot;挖勺&quot;,
+      &quot;面膜挖勺&quot;,
+      &quot;分裝勺&quot;,
+      &quot;分裝棒&quot;,
+      &quot;面膜勺&quot;,
+      &quot;調膜棒&quot;,
+      &quot;面霜勺&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;scraper&quot;,
+      &quot;spoon&quot;,
+      &quot;mask scraper&quot;,
+      &quot;portioning spoon&quot;,
+      &quot;portioning rod&quot;,
+      &quot;mask spoon&quot;,
+      &quot;adjustment rod&quot;,
+      &quot;cream spoon&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;功能描述&quot;: [
+      &quot;方便分裝&quot;,
+      &quot;易清洗&quot;,
+      &quot;耐用&quot;,
+      &quot;多功能&quot;
+    ],
+    &quot;功能描述_en&quot;: [
+      &quot;convenient portioning&quot;,
+      &quot;easy to clean&quot;,
+      &quot;durable&quot;,
+      &quot;multi-functional&quot;
+    ],
+    &quot;適用人群&quot;: [
+      &quot;美妝愛好者&quot;,
+      &quot;化妝品使用者&quot;,
+      &quot;面膜愛用者&quot;
+    ],
+    &quot;適用人群_en&quot;: [
+      &quot;beauty enthusiasts&quot;,
+      &quot;cosmetic users&quot;,
+      &quot;mask users&quot;
+    ],
+    &quot;適用場景&quot;: [
+      &quot;分裝面膜&quot;,
+      &quot;分裝化妝品&quot;,
+      &quot;美妝工具&quot;
+    ],
+    &quot;適用場景_en&quot;: [
+      &quot;portioning masks&quot;,
+      &quot;portioning cosmetics&quot;,
+      &quot;beauty tools&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;分裝刮勺&quot;,
+    &quot;面膜挖勺&quot;,
+    &quot;調整薄膜工具&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Color me&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Color me&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;分裝刮勺&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Packaging Spatula&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便携性/轻便性&quot;: [
+      &quot;美妝工具&quot;,
+      &quot;輕巧設計&quot;
+    ],
+    &quot;便携性/轻便性_en&quot;: [
+      &quot;Makeup Tool&quot;,
+      &quot;Lightweight Design&quot;
+    ],
+    &quot;多功能性&quot;: [
+      &quot;面膜挖勺&quot;,
+      &quot;調膜棒&quot;
+    ],
+    &quot;多功能性_en&quot;: [
+      &quot;Mask Scoop&quot;,
+      &quot;Film Adjuster&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;機器製程&quot;,
+      &quot;運送時造成的刮痕或小掉漆難免會有&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;Machine Processed&quot;,
+      &quot;Scratches from Transportation&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1188,6 +1919,125 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <div class="empty">无</div>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;隔音棉套装&quot;,
+    &quot;防火隔音垫片&quot;,
+    &quot;办公噪音隔离板&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;聚丙烯&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Polypropylene&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;隔音棉&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Soundproof Cotton&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;多功能应用&quot;: [
+      &quot;汽车办公室录音室等多种场合适用&quot;,
+      &quot;多种尺寸配置&quot;
+    ],
+    &quot;多功能应用_en&quot;: [
+      &quot;Multiple Scenarios Such as Cars Offices Recording Rooms Etc.&quot;,
+      &quot;Various Size Configurations Available&quot;
+    ],
+    &quot;安装便捷&quot;: [
+      &quot;自带背胶贴粘&quot;,
+      &quot;快速安装&quot;
+    ],
+    &quot;安装便捷_en&quot;: [
+      &quot;Self-adhesive Backing&quot;,
+      &quot;Quick Installation&quot;
+    ],
+    &quot;防护性能&quot;: [
+      &quot;防火阻燃材料&quot;,
+      &quot;四门隔音底盘隔音&quot;
+    ],
+    &quot;防护性能_en&quot;: [
+      &quot;Fire Retardant Material&quot;,
+      &quot;Four Door Soundproof Bottom Frame Soundproofing&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;汽車隔音棉&quot;,
+    &quot;辦公室隔音&quot;,
+    &quot;KTV隔音&quot;,
+    &quot;錄音室隔音&quot;,
+    &quot;四門隔音&quot;,
+    &quot;底盤隔音&quot;,
+    &quot;防火隔音棉&quot;,
+    &quot;吸音棉&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;car soundproof cotton&quot;,
+    &quot;office soundproof&quot;,
+    &quot;KTV soundproof&quot;,
+    &quot;recording room soundproof&quot;,
+    &quot;four-door soundproof&quot;,
+    &quot;chassis soundproof&quot;,
+    &quot;fire retardant soundproof cotton&quot;,
+    &quot;absorbent cotton&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [],
+    &quot;brand_en&quot;: [],
+    &quot;product_type&quot;: [
+      &quot;隔音棉&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;soundproof cotton&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;安裝方式&quot;: [
+      &quot;自帶背膠&quot;,
+      &quot;快速安裝&quot;
+    ],
+    &quot;安裝方式_en&quot;: [
+      &quot;self-adhesive&quot;,
+      &quot;quick installation&quot;
+    ],
+    &quot;尺寸&quot;: [
+      &quot;25x40cm&quot;,
+      &quot;40x50cm&quot;,
+      &quot;50x80cm&quot;
+    ],
+    &quot;尺寸_en&quot;: [
+      &quot;25x40cm&quot;,
+      &quot;40x50cm&quot;,
+      &quot;50x80cm&quot;
+    ],
+    &quot;材質安全&quot;: [
+      &quot;防火阻燃&quot;,
+      &quot;PP聚丙烯&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;fire retardant&quot;,
+      &quot;PP polypropylene&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1264,6 +2114,109 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;手拿包&quot;,
+    &quot;化妆收纳&quot;,
+    &quot;旅行用品&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;YSL&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;YSL&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;化妆包&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;make-up bag&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;数量优势&quot;: [
+      &quot;全新&quot;,
+      &quot;太多不用出售&quot;
+    ],
+    &quot;数量优势_en&quot;: [
+      &quot;New Condition&quot;,
+      &quot;Too Many for Personal Use Selling Off&quot;
+    ],
+    &quot;正品保障&quot;: [
+      &quot;专柜购入&quot;
+    ],
+    &quot;正品保障_en&quot;: [
+      &quot;Authentic from Official Store&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;YSL 化妝包&quot;,
+    &quot;YSL 手拿包&quot;,
+    &quot;YSL 化妝品包&quot;,
+    &quot;YSL 化妝袋&quot;,
+    &quot;YSL 化妝品手拿包&quot;,
+    &quot;YSL 化妝品袋&quot;,
+    &quot;YSL 化妝品收纳包&quot;,
+    &quot;YSL 化妝品收纳袋&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;YSL makeup bag&quot;,
+    &quot;YSL handbag&quot;,
+    &quot;YSL makeup case&quot;,
+    &quot;YSL cosmetic bag&quot;,
+    &quot;YSL cosmetic handbag&quot;,
+    &quot;YSL cosmetic case&quot;,
+    &quot;YSL cosmetic storage bag&quot;,
+    &quot;YSL cosmetic storage case&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;YSL&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;YSL&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;手拿包&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;handbag&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便攜性/輕便性&quot;: [
+      &quot;便攜&quot;,
+      &quot;輕便&quot;
+    ],
+    &quot;便攜性/輕便性_en&quot;: [
+      &quot;portable&quot;,
+      &quot;lightweight&quot;
+    ],
+    &quot;防水防潮&quot;: [
+      &quot;防水&quot;,
+      &quot;防潮&quot;
+    ],
+    &quot;防水防潮_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;dustproof&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1334,6 +2287,137 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>将店铺名“圻媽杂货铺”错误识别为品牌，且使用简体字</li><li>明显编造“彈力手柄”卖点，原文为“彈力水桶”</li><li>长尾词“家用塑料容器”、“商用储物箱”与原文“水桶”不符，且使用简体字</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;台灣製彈力水桶&quot;,
+    &quot;塑膠水桶&quot;,
+    &quot;家用彈力水桶&quot;,
+    &quot;商店用彈力水桶&quot;,
+    &quot;戶外活動彈力水桶&quot;,
+    &quot;耐用彈力水桶&quot;,
+    &quot;便攜彈力水桶&quot;,
+    &quot;七種尺寸彈力水桶&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Taiwan-made elastic water bucket&quot;,
+    &quot;plastic water bucket&quot;,
+    &quot;home-use elastic water bucket&quot;,
+    &quot;store-use elastic water bucket&quot;,
+    &quot;outdoor activity elastic water bucket&quot;,
+    &quot;durable elastic water bucket&quot;,
+    &quot;portable elastic water bucket&quot;,
+    &quot;seven sizes elastic water bucket&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;圻媽雜貨舖&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;KeMa杂货铺&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;彈力水桶&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;elastic water bucket&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便攜設計&quot;: [
+      &quot;貼合掌面設計提把&quot;,
+      &quot;省力好輕鬆&quot;,
+      &quot;方便搬運&quot;
+    ],
+    &quot;便攜設計_en&quot;: [
+      &quot;hand-friendly handle design&quot;,
+      &quot;easy to carry&quot;,
+      &quot;convenient to move&quot;
+    ],
+    &quot;材質安全&quot;: [
+      &quot;HDPE&quot;,
+      &quot;高密度聚乙烯&quot;,
+      &quot;塑膠&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;HDPE&quot;,
+      &quot;high-density polyethylene&quot;,
+      &quot;plastic&quot;
+    ],
+    &quot;耐用性能&quot;: [
+      &quot;韌性強大&quot;,
+      &quot;堅韌耐用&quot;,
+      &quot;長時間使用&quot;
+    ],
+    &quot;耐用性能_en&quot;: [
+      &quot;strong and durable&quot;,
+      &quot;long-lasting&quot;,
+      &quot;for long-term use&quot;
+    ],
+    &quot;適用場景&quot;: [
+      &quot;家中&quot;,
+      &quot;商店&quot;,
+      &quot;辦公室&quot;,
+      &quot;戶外活動&quot;
+    ],
+    &quot;適用場景_en&quot;: [
+      &quot;home&quot;,
+      &quot;store&quot;,
+      &quot;office&quot;,
+      &quot;outdoor activities&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;彈力水桶&quot;,
+    &quot;家用塑料容器&quot;,
+    &quot;商用储物箱&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;圻媽杂货铺&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;KeMa Zaogu Pao&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;塑膠水桶&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Plastic Bucket&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;material_strength_en&quot;: [
+      &quot;HDPE(High Density Polyethylene)&quot;
+    ],
+    &quot;multi_use_scenarios_en&quot;: [
+      &quot;Suitable for Home and Store Scenarios&quot;
+    ],
+    &quot;人体工程学设计&quot;: [
+      &quot;彈力手柄&quot;,
+      &quot;貼合掌面設計&quot;
+    ],
+    &quot;多功能应用&quot;: [
+      &quot;適用於家庭與商店場景&quot;
+    ],
+    &quot;材料强度&quot;: [
+      &quot;HDPE(高密度聚乙烯)&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1410,6 +2494,143 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;人造石水槽&quot;,
+    &quot;彩色水槽&quot;,
+    &quot;多色水槽&quot;,
+    &quot;厨房水槽&quot;,
+    &quot;衛浴水槽&quot;,
+    &quot;家庭裝修水槽&quot;,
+    &quot;壓克力水槽&quot;,
+    &quot;免運水槽&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;artificial stone sink&quot;,
+    &quot;colored sink&quot;,
+    &quot;multi-color sink&quot;,
+    &quot;kitchen sink&quot;,
+    &quot;bathroom sink&quot;,
+    &quot;home renovation sink&quot;,
+    &quot;acrylic sink&quot;,
+    &quot;free shipping sink&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;富爾康&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Fulang&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;人造石水槽&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;artificial stone sink&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;材質安全&quot;: [
+      &quot;防水&quot;,
+      &quot;防潮&quot;,
+      &quot;耐水&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;moisture resistant&quot;,
+      &quot;water resistant&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;耐用&quot;,
+      &quot;長壽命&quot;,
+      &quot;不易損壞&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;durable&quot;,
+      &quot;long-lasting&quot;,
+      &quot;not easily damaged&quot;
+    ],
+    &quot;適用場景&quot;: [
+      &quot;廚房&quot;,
+      &quot;衛浴&quot;,
+      &quot;家庭裝修&quot;
+    ],
+    &quot;適用場景_en&quot;: [
+      &quot;kitchen&quot;,
+      &quot;bathroom&quot;,
+      &quot;home renovation&quot;
+    ],
+    &quot;顏色選擇&quot;: [
+      &quot;6色可選&quot;,
+      &quot;多色可選&quot;,
+      &quot;多彩&quot;
+    ],
+    &quot;顏色選擇_en&quot;: [
+      &quot;6 colors to choose from&quot;,
+      &quot;multiple color options&quot;,
+      &quot;multicolored&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;6色可选&quot;,
+    &quot;压克力气泡底板&quot;,
+    &quot;防水防潮&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;富爾康&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Fulang&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;人造石水槽&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Artificial Stone Sink&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;外观色彩&quot;: [
+      &quot;6色可选&quot;,
+      &quot;彩色人造石&quot;
+    ],
+    &quot;外观色彩_en&quot;: [
+      &quot;6 Colors Available&quot;,
+      &quot;Colored Artificial Stone&quot;
+    ],
+    &quot;工艺品质&quot;: [
+      &quot;压克力气泡底板&quot;,
+      &quot;专业安装建议&quot;
+    ],
+    &quot;工艺品质_en&quot;: [
+      &quot;Pressure-Cured Bubble Bottom Board&quot;,
+      &quot;Expert Installation Recommendation&quot;
+    ],
+    &quot;防水性能&quot;: [
+      &quot;防水防潮&quot;,
+      &quot;耐用材料&quot;
+    ],
+    &quot;防水性能_en&quot;: [
+      &quot;Waterproof and Moisture Resistant&quot;,
+      &quot;Durable Material&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1480,6 +2701,151 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>主要内容（如product_type, unique_selling_points）使用简体中文，不符合目标地区（TW）的繁体中文要求。</li><li>长尾搜索词中&#x27;Speeder&#x27;和&#x27;Rainproof Windshield Cover&#x27;属于明显编造或严重误解产品类型。</li><li>compatible_models中的&#x27;VD&#x27;与原文&#x27;5D 四代&#x27;不符。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;速霸陸SUBARU OUTBACK 5D 四代&quot;,
+    &quot;速霸陸OUTBACK 5D 四代&quot;,
+    &quot;內崁式晴雨窗&quot;,
+    &quot;嵌入式晴雨窗&quot;,
+    &quot;車窗防曬罩&quot;,
+    &quot;車窗防曬&quot;,
+    &quot;車窗防霧&quot;,
+    &quot;車窗防刮&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;SUBARU OUTBACK 5D 四代&quot;,
+    &quot;OUTBACK 5D 四代&quot;,
+    &quot;inset rain shade&quot;,
+    &quot;inset window shade&quot;,
+    &quot;car sunshade&quot;,
+    &quot;car sun protection&quot;,
+    &quot;car fog protection&quot;,
+    &quot;car scratch protection&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;比德堡&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Bidebao&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;嵌入式晴雨窗&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;inset rain shade&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;品質認證&quot;: [
+      &quot;ISO 9001 2008&quot;,
+      &quot;SGS驗證&quot;,
+      &quot;TUV德國萊因驗證&quot;,
+      &quot;ARTC(車輛研究測試中心)驗證&quot;
+    ],
+    &quot;品質認證_en&quot;: [
+      &quot;ISO 9001 2008&quot;,
+      &quot;SGS certification&quot;,
+      &quot;TUV Germany certification&quot;,
+      &quot;ARTC vehicle testing center certification&quot;
+    ],
+    &quot;安裝簡易&quot;: [
+      &quot;內崁式&quot;,
+      &quot;短截式&quot;,
+      &quot;DIY好上手&quot;
+    ],
+    &quot;安裝簡易_en&quot;: [
+      &quot;inset installation&quot;,
+      &quot;short cut installation&quot;,
+      &quot;easy DIY&quot;
+    ],
+    &quot;材質安全&quot;: [
+      &quot;PMMA全新材料&quot;,
+      &quot;100%高透視&quot;,
+      &quot;耐用&quot;,
+      &quot;十年不霧化&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;PMMA new material&quot;,
+      &quot;100% high transparency&quot;,
+      &quot;durable&quot;,
+      &quot;non-fogging for 10 years&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;Speeder Subaru Outback IV&quot;,
+    &quot;Rainproof Windshield Cover&quot;,
+    &quot;Customized Automotive Parts&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;比德堡&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Bidberg&quot;
+    ],
+    &quot;compatible_models&quot;: [
+      &quot;Speeder Subaru Outback IV (2009-2014)&quot;,
+      &quot;Subaru Outback VD&quot;
+    ],
+    &quot;compatible_models_en&quot;: [
+      &quot;Speeder Subaru Outback IV (2009-2014)&quot;,
+      &quot;Subaru Outback VD&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;内嵌式晴雨窗&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Embedded Rain and Sun Window&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;创新工艺&quot;: [
+      &quot;专利研究根部到自由端斜率加工&quot;,
+      &quot;业界最薄镶嵌片0.35～0.6毫米&quot;
+    ],
+    &quot;创新工艺_en&quot;: [
+      &quot;Patented Root-to-Free End Slope Processing Technology&quot;,
+      &quot;Industry&#x27;s Thinnest Embedded Sheet at 0.35 to 0.6 mm Thickness&quot;
+    ],
+    &quot;品质验证&quot;: [
+      &quot;通过国际质量管理体系认证 ISO 9001 2008&quot;,
+      &quot;获得国内外多项权威机构检测报告&quot;
+    ],
+    &quot;品质验证_en&quot;: [
+      &quot;Certified Under International Quality Management System ISO 9001 2008 Standards&quot;,
+      &quot;Passed Multiple Authoritative Institution Testing Reports Both Domestic &amp; Overseas&quot;
+    ],
+    &quot;安全性&quot;: [
+      &quot;不会损伤车身、窗户轨道&quot;
+    ],
+    &quot;安全性_en&quot;: [
+      &quot;Will Not Damage Vehicle Body or Window Track&quot;
+    ],
+    &quot;安装便捷&quot;: [
+      &quot;自带颜色图解安装教程&quot;,
+      &quot;视频教学演示&quot;
+    ],
+    &quot;安装便捷_en&quot;: [
+      &quot;Includes Color Installation Guide with Diagrams&quot;,
+      &quot;Video Teaching Demonstration Available Online&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1556,6 +2922,129 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;日本山葵種子&quot;,
+    &quot;多年生蔬菜種子&quot;,
+    &quot;四季蔬菜種子&quot;,
+    &quot;家庭菜園種子&quot;,
+    &quot;園藝愛好者種子&quot;,
+    &quot;種植愛好者種子&quot;,
+    &quot;發芽率高的種子&quot;,
+    &quot;秋季種子&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Japanese horseradish seeds&quot;,
+    &quot;perennial vegetable seeds&quot;,
+    &quot;four-season vegetable seeds&quot;,
+    &quot;home garden seeds&quot;,
+    &quot;gardening enthusiast seeds&quot;,
+    &quot;garden lover seeds&quot;,
+    &quot;high germination rate seeds&quot;,
+    &quot;autumn seeds&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;秦川園藝&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Qin Chuan Garden&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;山葵種子&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;horseradish seeds&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;天然&quot;: [
+      &quot;天然無毒&quot;,
+      &quot;無添加&quot;,
+      &quot;純天然&quot;
+    ],
+    &quot;天然_en&quot;: [
+      &quot;natural and toxin-free&quot;,
+      &quot;no additives&quot;,
+      &quot;pure natural&quot;
+    ],
+    &quot;發芽率&quot;: [
+      &quot;發芽率高&quot;,
+      &quot;發芽率好&quot;,
+      &quot;發芽率佳&quot;
+    ],
+    &quot;發芽率_en&quot;: [
+      &quot;high germination rate&quot;,
+      &quot;good germination rate&quot;,
+      &quot;excellent germination rate&quot;
+    ],
+    &quot;適用種植時間&quot;: [
+      &quot;秋季&quot;,
+      &quot;9月至11月&quot;,
+      &quot;秋季播種&quot;
+    ],
+    &quot;適用種植時間_en&quot;: [
+      &quot;autumn planting&quot;,
+      &quot;September to November&quot;,
+      &quot;autumn season&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;多樣季節適用&quot;,
+    &quot;科學育苗技術&quot;,
+    &quot;健康食用植物&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;嘉義現貨&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Jia Yi Present&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;多年生四季蔬菜種子&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Perennial Four Seasons Vegetable Seeds&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;专业检测&quot;: [
+      &quot;專業通過檢測防疫及測試成功發芽率&quot;
+    ],
+    &quot;专业检测_en&quot;: [
+      &quot;Professionally Tested and Successful Germination Rate&quot;
+    ],
+    &quot;季节适应&quot;: [
+      &quot;多年生四季&quot;
+    ],
+    &quot;季节适应_en&quot;: [
+      &quot;Multi-season Perennials&quot;
+    ],
+    &quot;科学种植&quot;: [
+      &quot;冷凍處理&quot;,
+      &quot;藥劑處理&quot;
+    ],
+    &quot;科学种植_en&quot;: [
+      &quot;Freezing Treatment&quot;,
+      &quot;Pharmaceutical Processing&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1626,6 +3115,141 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>“加热即食”下包含“直接食用”和“無需加熱”是编造，与原文强调烤制最佳的描述相悖。</li><li>结果中包含冗余的英文翻译字段（如long_tail_keywords_en，unique_selling_points中的_en字段），在中文结果中不必要。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;250g大份装&quot;,
+    &quot;户外野餐糖果&quot;,
+    &quot;家庭烘焙用品&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Hothing&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Hothing&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;GIGA超大棉花糖&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Giga Cotton Candy&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;健康友好&quot;: [
+      &quot;响应环保&quot;,
+      &quot;使用回收再利用纸箱&quot;
+    ],
+    &quot;健康友好_en&quot;: [
+      &quot;Eco-friendly Packaging&quot;,
+      &quot;Recycled Paper Box Usage&quot;
+    ],
+    &quot;口感体验&quot;: [
+      &quot;烤到金黃酥脆的外表&quot;,
+      &quot;软绵甜蜜的内里&quot;
+    ],
+    &quot;口感体验_en&quot;: [
+      &quot;Golden Crispy Exterior&quot;,
+      &quot;Soft and Sweet Interior&quot;
+    ],
+    &quot;适用场景&quot;: [
+      &quot;烤肉聚会&quot;
+    ],
+    &quot;适用场景_en&quot;: [
+      &quot;BBQ Party&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;蜜意坊棉花糖&quot;,
+    &quot;超大棉花糖&quot;,
+    &quot;250g棉花糖&quot;,
+    &quot;烤肉甜點&quot;,
+    &quot;野餐甜點&quot;,
+    &quot;家庭聚會甜點&quot;,
+    &quot;金黃酥脆棉花糖&quot;,
+    &quot;軟綿甜蜜棉花糖&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Miteyi坊棉花糖&quot;,
+    &quot;super large marshmallow&quot;,
+    &quot;250g marshmallow&quot;,
+    &quot;barbecue dessert&quot;,
+    &quot;picnic dessert&quot;,
+    &quot;family gathering dessert&quot;,
+    &quot;golden crispy marshmallow&quot;,
+    &quot;soft and sweet marshmallow&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Hothing&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Hothing&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;棉花糖&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;marshmallow&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;加热即食&quot;: [
+      &quot;烤到金黃酥脆&quot;,
+      &quot;直接食用&quot;,
+      &quot;無需加熱&quot;
+    ],
+    &quot;加热即食_en&quot;: [
+      &quot;roasted golden crispy&quot;,
+      &quot;ready to eat&quot;,
+      &quot;no need to heat&quot;
+    ],
+    &quot;口味/风味&quot;: [
+      &quot;金黃酥脆&quot;,
+      &quot;軟綿甜蜜&quot;,
+      &quot;香甜可口&quot;
+    ],
+    &quot;口味/风味_en&quot;: [
+      &quot;golden crispy&quot;,
+      &quot;soft and sweet&quot;,
+      &quot;sweet and fragrant&quot;
+    ],
+    &quot;尺寸&quot;: [
+      &quot;5公分大小&quot;,
+      &quot;250g&quot;,
+      &quot;超大&quot;
+    ],
+    &quot;尺寸_en&quot;: [
+      &quot;5cm size&quot;,
+      &quot;250g&quot;,
+      &quot;super large&quot;
+    ],
+    &quot;适用场景&quot;: [
+      &quot;烤肉聚會&quot;,
+      &quot;野餐&quot;,
+      &quot;家庭聚會&quot;
+    ],
+    &quot;适用场景_en&quot;: [
+      &quot;barbecue party&quot;,
+      &quot;picnic&quot;,
+      &quot;family gathering&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1702,6 +3326,134 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;台湾优选用品&quot;,
+    &quot;木质梳子套装&quot;,
+    &quot;顺发工具箱&quot;,
+    &quot;家庭美容用品&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Mr.green&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Mr.green&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;气垫梳&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Padded Comb&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;健康护理&quot;: [
+      &quot;天然木材&quot;,
+      &quot;温和梳理&quot;
+    ],
+    &quot;健康护理_en&quot;: [
+      &quot;Natural Wood&quot;,
+      &quot;Gentle Grooming&quot;
+    ],
+    &quot;实用便捷&quot;: [
+      &quot;多角度调节&quot;,
+      &quot;易于携带&quot;
+    ],
+    &quot;实用便捷_en&quot;: [
+      &quot;Adjustable Angles&quot;,
+      &quot;Easy to Carry&quot;
+    ],
+    &quot;舒适体验&quot;: [
+      &quot;空气填充头&quot;,
+      &quot;柔软触感&quot;
+    ],
+    &quot;舒适体验_en&quot;: [
+      &quot;Air-Filled Head&quot;,
+      &quot;Soft Touch&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;氣墊梳子&quot;,
+    &quot;木質梳子&quot;,
+    &quot;順發梳子&quot;,
+    &quot;護理頭皮梳子&quot;,
+    &quot;女士梳子&quot;,
+    &quot;美髮梳子&quot;,
+    &quot;天然木梳&quot;,
+    &quot;減壓梳子&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;padded comb&quot;,
+    &quot;wooden comb&quot;,
+    &quot;smooth hair comb&quot;,
+    &quot;scalp care comb&quot;,
+    &quot;ladies comb&quot;,
+    &quot;hair care comb&quot;,
+    &quot;natural wooden comb&quot;,
+    &quot;pressure relief comb&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Mr.green&quot;,
+      &quot;格林先生&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Mr.green&quot;,
+      &quot;Green Mr.&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;氣墊梳&quot;,
+      &quot;木質梳子&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;padded comb&quot;,
+      &quot;wooden comb&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;材質安全&quot;: [
+      &quot;天然木質&quot;,
+      &quot;無毒安全&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;natural wood&quot;,
+      &quot;non-toxic and safe&quot;
+    ],
+    &quot;舒適設計&quot;: [
+      &quot;氣墊設計&quot;,
+      &quot;減壓舒適&quot;
+    ],
+    &quot;舒適設計_en&quot;: [
+      &quot;padded design&quot;,
+      &quot;pressure relief comfortable&quot;
+    ],
+    &quot;適用人群&quot;: [
+      &quot;女性&quot;,
+      &quot;美髮愛好者&quot;,
+      &quot;護理頭皮&quot;
+    ],
+    &quot;適用人群_en&quot;: [
+      &quot;females&quot;,
+      &quot;hair enthusiasts&quot;,
+      &quot;scalp care users&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1772,6 +3524,127 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <div class="empty">无</div>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;幼兒洗手法&quot;,
+    &quot;果香泡沫&quot;,
+    &quot;按壓式設計&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;KAO 花王&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;KAO Kao Shokuhin Co., Ltd.&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;泡沫洗手乳&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Foaming Hand Wash&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;创新设计&quot;: [
+      &quot;按壓式&quot;,
+      &quot;花型泡泡&quot;
+    ],
+    &quot;创新设计_en&quot;: [
+      &quot;Push Button Design&quot;,
+      &quot;Flower-shaped Bubbles&quot;
+    ],
+    &quot;清洁效果&quot;: [
+      &quot;细小气泡分解脏物&quot;,
+      &quot;干干净净除异味&quot;
+    ],
+    &quot;清洁效果_en&quot;: [
+      &quot;Fine Bubble Decomposition of Dirt&quot;,
+      &quot;Thorough Odor Removal Cleanliness&quot;
+    ],
+    &quot;温和配方&quot;: [
+      &quot;弱酸性&quot;,
+      &quot;柑橘香味&quot;
+    ],
+    &quot;温和配方_en&quot;: [
+      &quot;Weakly Acidic Formula&quot;,
+      &quot;Citrus Fragrance&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;KAO 花王泡沫洗手乳&quot;,
+    &quot;幼兒用泡沫洗手乳&quot;,
+    &quot;兒童用泡沫洗手乳&quot;,
+    &quot;果香泡沫洗手乳&quot;,
+    &quot;按壓式泡沫洗手乳&quot;,
+    &quot;花型泡泡洗手乳&quot;,
+    &quot;弱酸性泡沫洗手乳&quot;,
+    &quot;溫和泡沫洗手乳&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;KAO foaming hand wash&quot;,
+    &quot;children&#x27;s foaming hand wash&quot;,
+    &quot;young children&#x27;s foaming hand wash&quot;,
+    &quot;fruit-scented foaming hand wash&quot;,
+    &quot;push-button foaming hand wash&quot;,
+    &quot;flower-shaped foam hand wash&quot;,
+    &quot;weakly acidic foaming hand wash&quot;,
+    &quot;gentle foaming hand wash&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;KAO 花王&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;KAO&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;泡沫洗手乳&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;foaming hand wash&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;安全無刺激&quot;: [
+      &quot;弱酸性&quot;,
+      &quot;溫和的柑橘香味&quot;
+    ],
+    &quot;安全無刺激_en&quot;: [
+      &quot;weakly acidic&quot;,
+      &quot;gentle citrus fragrance&quot;
+    ],
+    &quot;清潔效果&quot;: [
+      &quot;細小的氣泡分解髒污&quot;,
+      &quot;乾淨地去除污垢與異味&quot;
+    ],
+    &quot;清潔效果_en&quot;: [
+      &quot;tiny bubbles break down dirt&quot;,
+      &quot;effectively removes dirt and odors&quot;
+    ],
+    &quot;適用對象&quot;: [
+      &quot;幼兒&quot;,
+      &quot;兒童&quot;
+    ],
+    &quot;適用對象_en&quot;: [
+      &quot;children&quot;,
+      &quot;young children&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1848,6 +3721,127 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;玫瑰比菲达&quot;,
+    &quot;美容护理液&quot;,
+    &quot;皮肤紧致精华&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Abib&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Abib&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;精华紧致滴剂&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Essence for Tightening Skin&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;正品保障&quot;: [
+      &quot;100%授权产品&quot;,
+      &quot;最近制造的产品&quot;
+    ],
+    &quot;正品保障_en&quot;: [
+      &quot;Official Product Guarantee&quot;,
+      &quot;Recently Manufactured Products&quot;
+    ],
+    &quot;物流优势&quot;: [
+      &quot;韩国直发&quot;,
+      &quot;快速配送&quot;
+    ],
+    &quot;物流优势_en&quot;: [
+      &quot;Direct Shipping from Korea&quot;,
+      &quot;Fast Delivery Service&quot;
+    ],
+    &quot;赠品福利&quot;: [
+      &quot;免费赠送礼品&quot;
+    ],
+    &quot;赠品福利_en&quot;: [
+      &quot;Free Gift with Purchase&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;韓國緊緻滴劑&quot;,
+    &quot;抗老緊緻滴劑&quot;,
+    &quot;50ml緊緻滴劑&quot;,
+    &quot;韓國抗老滴劑&quot;,
+    &quot;玫瑰比菲達滴劑&quot;,
+    &quot;緊緻毛孔滴劑&quot;,
+    &quot;韓國美容滴劑&quot;,
+    &quot;抗皺滴劑&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Korean tightening serum&quot;,
+    &quot;anti-aging tightening serum&quot;,
+    &quot;50ml tightening serum&quot;,
+    &quot;Korean anti-aging serum&quot;,
+    &quot;rose bifida serum&quot;,
+    &quot;tightening pores serum&quot;,
+    &quot;Korean beauty serum&quot;,
+    &quot;anti-wrinkle serum&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Abib&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Abib&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;緊緻滴劑&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;tightening serum&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;原產國&quot;: [
+      &quot;韓國&quot;,
+      &quot;韓國製造&quot;
+    ],
+    &quot;原產國_en&quot;: [
+      &quot;Korea&quot;,
+      &quot;made in Korea&quot;
+    ],
+    &quot;抗老抗皺&quot;: [
+      &quot;抗老&quot;,
+      &quot;抗皺&quot;,
+      &quot;緊緻&quot;
+    ],
+    &quot;抗老抗皺_en&quot;: [
+      &quot;anti-aging&quot;,
+      &quot;anti-wrinkle&quot;,
+      &quot;tightening&quot;
+    ],
+    &quot;數量與包裝&quot;: [
+      &quot;50ml&quot;,
+      &quot;50毫升&quot;
+    ],
+    &quot;數量與包裝_en&quot;: [
+      &quot;50ml&quot;,
+      &quot;50 milliliters&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -1918,6 +3912,121 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>unique_selling_points中的所有卖点（便携性、材质安全、用途）均属凭空编造，原文无任何支持信息。</li><li>long_tail_keywords中包含大量编造信息（如“輕便雨傘”、“210x120公分雨傘”）。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;雨伞赠送&quot;,
+    &quot;户外防水伞&quot;,
+    &quot;旅行折叠伞&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Herschel&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Herschel&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;Rain Umbrella&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Rain Umbrella&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;正品保障&quot;: [
+      &quot;Official Store&quot;,
+      &quot;Brand Authenticity&quot;
+    ],
+    &quot;正品保障_en&quot;: [
+      &quot;Official Store&quot;,
+      &quot;Brand Authenticity&quot;
+    ],
+    &quot;赠品服务&quot;: [
+      &quot;Free Gift with Purchase&quot;,
+      &quot;Gift Included&quot;
+    ],
+    &quot;赠品服务_en&quot;: [
+      &quot;Free Gift with Purchase&quot;,
+      &quot;Gift Included&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;Herschel 雨傘&quot;,
+    &quot;戶外防水雨傘&quot;,
+    &quot;輕便雨傘&quot;,
+    &quot;210x120公分雨傘&quot;,
+    &quot;Herschel 防水雨傘&quot;,
+    &quot;戶外用雨傘&quot;,
+    &quot;210公分x120公分雨傘&quot;,
+    &quot;Herschel 雨具&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Herschel umbrella&quot;,
+    &quot;outdoor waterproof umbrella&quot;,
+    &quot;lightweight umbrella&quot;,
+    &quot;210x120cm umbrella&quot;,
+    &quot;Herschel waterproof umbrella&quot;,
+    &quot;outdoor umbrella&quot;,
+    &quot;210cm x 120cm umbrella&quot;,
+    &quot;Herschel rain gear&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Herschel&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Herschel&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;雨傘&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;umbrella&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便攜性&quot;: [
+      &quot;輕便&quot;,
+      &quot;易攜帶&quot;
+    ],
+    &quot;便攜性_en&quot;: [
+      &quot;lightweight&quot;,
+      &quot;portable&quot;
+    ],
+    &quot;材質安全&quot;: [
+      &quot;PVC材質&quot;,
+      &quot;耐用&quot;,
+      &quot;防水&quot;
+    ],
+    &quot;材質安全_en&quot;: [
+      &quot;PVC material&quot;,
+      &quot;durable&quot;,
+      &quot;waterproof&quot;
+    ],
+    &quot;用途&quot;: [
+      &quot;戶外活動&quot;,
+      &quot;雨天出行&quot;
+    ],
+    &quot;用途_en&quot;: [
+      &quot;outdoor activities&quot;,
+      &quot;rainy day travel&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -1994,6 +4103,142 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;家庭健身器材&quot;,
+    &quot;居家健身機&quot;,
+    &quot;全身健身機&quot;,
+    &quot;多功能健身器材&quot;,
+    &quot;家庭用健身機&quot;,
+    &quot;家庭健身設備&quot;,
+    &quot;家庭用健身器材&quot;,
+    &quot;家庭健身機器&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;home fitness equipment&quot;,
+    &quot;home fitness machine&quot;,
+    &quot;full-body fitness machine&quot;,
+    &quot;multi-functional fitness equipment&quot;,
+    &quot;home use fitness machine&quot;,
+    &quot;home fitness device&quot;,
+    &quot;home use fitness equipment&quot;,
+    &quot;home fitness machine&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;萬達康&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Wandakan&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;全能塑體健身機&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;all-in-one fitness machine&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便携性/轻便性&quot;: [
+      &quot;直立式摺疊收納&quot;,
+      &quot;輕鬆收納&quot;,
+      &quot;不佔用空間&quot;
+    ],
+    &quot;便携性/轻便性_en&quot;: [
+      &quot;upright folding storage&quot;,
+      &quot;easy to store&quot;,
+      &quot;space-saving&quot;
+    ],
+    &quot;多功能性&quot;: [
+      &quot;7合1全方位健身&quot;,
+      &quot;多功能健身機&quot;,
+      &quot;一機多用&quot;
+    ],
+    &quot;多功能性_en&quot;: [
+      &quot;7-in-1 full-body fitness&quot;,
+      &quot;multi-functional fitness machine&quot;,
+      &quot;one machine for all&quot;
+    ],
+    &quot;安装方式&quot;: [
+      &quot;三段背靠調整&quot;,
+      &quot;三段調整&quot;,
+      &quot;可調整不同寬度&quot;
+    ],
+    &quot;安装方式_en&quot;: [
+      &quot;three-segment back adjustment&quot;,
+      &quot;three-segment adjustment&quot;,
+      &quot;adjustable width&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;三段背靠調整&quot;,
+      &quot;三段調整&quot;,
+      &quot;耐用設計&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;three-segment back adjustment&quot;,
+      &quot;three-segment adjustment&quot;,
+      &quot;durable design&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;家庭健身房设备&quot;,
+    &quot;全身锻炼器材&quot;,
+    &quot;家用综合训练器&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;WONDER CORE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;WONDER CORE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;全能塑体健身机&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;All-in-One Fitness Machine&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;多功能训练&quot;: [
+      &quot;7合1全方位健身&quot;,
+      &quot;抬腿/扭腰运动、肌力训练、划船运动、完美收腹、伏地挺身、伸展拉筋&quot;
+    ],
+    &quot;多功能训练_en&quot;: [
+      &quot;7 in One Full-body Training&quot;,
+      &quot;Leg Lift/Twist Exercise, Strength Training, Rowing Movement, Perfect Abdominal Workout, Push-ups, Stretching and Relaxation&quot;
+    ],
+    &quot;安全性保障&quot;: [
+      &quot;防止金属过热触碰警告&quot;,
+      &quot;获得多国专利于证认证&quot;
+    ],
+    &quot;安全性保障_en&quot;: [
+      &quot;Heat Warning for Metal Parts During Operation, Multi-Country Patent Certification&quot;
+    ],
+    &quot;空间节省&quot;: [
+      &quot;减少占用空间、提高运动效率&quot;,
+      &quot;直立式折叠收纳&quot;
+    ],
+    &quot;空间节省_en&quot;: [
+      &quot;Space Saving Design, Efficient Space Utilization&quot;,
+      &quot;Upright Folding Storage System&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -2064,6 +4309,162 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>将商品型号/系列名错误地识别为品牌。</li><li>存在多处内容编造，例如&#x27;Tree Branch Style Storage Aid&#x27;和&#x27;Real Tree Branch Structure&#x27;在原文中无依据。</li><li>主要输出语言为英文，不符合目标地区（TW）的繁体中文要求。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;兒童房衣架&quot;,
+    &quot;防滑兒童衣架&quot;,
+    &quot;實木兒童衣架&quot;,
+    &quot;客製化兒童衣架&quot;,
+    &quot;防滑實木衣架&quot;,
+    &quot;兒童房衣撐&quot;,
+    &quot;實木衣撐&quot;,
+    &quot;防滑衣撐&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;children&#x27;s room hanger&quot;,
+    &quot;anti-slip children&#x27;s hanger&quot;,
+    &quot;wooden children&#x27;s hanger&quot;,
+    &quot;customized children&#x27;s hanger&quot;,
+    &quot;anti-slip wooden hanger&quot;,
+    &quot;children&#x27;s room hanger&quot;,
+    &quot;wooden hanger&quot;,
+    &quot;anti-slip hanger&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;兒童衣架&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;children&#x27;s hanger&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;定制&quot;: [
+      &quot;客製化&quot;,
+      &quot;訂製&quot;,
+      &quot;個人化&quot;
+    ],
+    &quot;定制_en&quot;: [
+      &quot;customized&quot;,
+      &quot;tailored&quot;,
+      &quot;personalized&quot;
+    ],
+    &quot;尺寸&quot;: [
+      &quot;36CM&quot;,
+      &quot;32CM&quot;,
+      &quot;30CM&quot;,
+      &quot;28CM&quot;,
+      &quot;26CM&quot;
+    ],
+    &quot;尺寸_en&quot;: [
+      &quot;36CM&quot;,
+      &quot;32CM&quot;,
+      &quot;30CM&quot;,
+      &quot;28CM&quot;,
+      &quot;26CM&quot;
+    ],
+    &quot;适用对象&quot;: [
+      &quot;兒童&quot;,
+      &quot;寶寶&quot;,
+      &quot;大童&quot;
+    ],
+    &quot;适用对象_en&quot;: [
+      &quot;children&quot;,
+      &quot;babies&quot;,
+      &quot;big kids&quot;
+    ],
+    &quot;防滑&quot;: [
+      &quot;防滑&quot;,
+      &quot;無痕&quot;,
+      &quot;防滑設計&quot;
+    ],
+    &quot;防滑_en&quot;: [
+      &quot;anti-slip&quot;,
+      &quot;mark-free&quot;,
+      &quot;slip-resistant design&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;Wooden Baby Hanger&quot;,
+    &quot;Antislip Kid’s Closet Organizer&quot;,
+    &quot;Multi-size Children’s Hookset&quot;,
+    &quot;Tree Branch Style Storage Aid&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;W10 Children&#x27;s Unpainted Hanger Set&quot;,
+      &quot;WF8 Square Head Children&#x27;s Hanger Set&quot;,
+      &quot;W7 Anti-Slip Children&#x27;s Hanger Set&quot;,
+      &quot;V3 One Piece Pants Clamp Set&quot;,
+      &quot;W29 Child&#x27;s Hanger Set&quot;,
+      &quot;W28 Anti-slip Children&#x27;s Hanger Set&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;W10 Children&#x27;s Unpainted Hanger Set&quot;,
+      &quot;WF8 Square Head Children&#x27;s Hanger Set&quot;,
+      &quot;W7 Anti-Slip Children&#x27;s Hanger Set&quot;,
+      &quot;V3 One Piece Pants Clamp Set&quot;,
+      &quot;W29 Child&#x27;s Hanger Set&quot;,
+      &quot;W28 Anti-slip Children&#x27;s Hanger Set&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;Children&#x27;s Wooden Clothes Rack&quot;,
+      &quot;Anti-slip Clothing Supporter for Kids&#x27; Wardrobe&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Children&#x27;s Wooden Clothes Rack&quot;,
+      &quot;Kids&#x27; Anti-slip Clothing Supporter&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;多功能配置&quot;: [
+      &quot;Multiple Size Options (36CM to 26CM)&quot;,
+      &quot;Versatile Hanging Hooks from Small to Large Sizes&quot;
+    ],
+    &quot;多功能配置_en&quot;: [
+      &quot;Multiple Size Options (36CM to 26CM)&quot;,
+      &quot;Versatile Hanging Hooks from Small to Large Sizes&quot;
+    ],
+    &quot;天然材料&quot;: [
+      &quot;Natural Solid Wood Material&quot;,
+      &quot;Real Tree Branch Structure&quot;
+    ],
+    &quot;天然材料_en&quot;: [
+      &quot;Natural Solid Wood Material&quot;,
+      &quot;Real Tree Branch Structure&quot;
+    ],
+    &quot;安全性保障&quot;: [
+      &quot;Non-toxic Painted Surface&quot;,
+      &quot;Child-friendly Safety Standards&quot;
+    ],
+    &quot;安全性保障_en&quot;: [
+      &quot;Non-toxic Painted Surface&quot;,
+      &quot;Child-friendly Safety Standards&quot;
+    ],
+    &quot;定制工艺&quot;: [
+      &quot;Customized Design&quot;,
+      &quot;Personalized Woodwork&quot;
+    ],
+    &quot;定制工艺_en&quot;: [
+      &quot;Customized Design&quot;,
+      &quot;Personalized Woodwork&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
@@ -2140,6 +4541,119 @@ Beauty|Skincare|Lip Treatment
       </div>
     
         </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;家庭运动设备套装&quot;,
+    &quot;普拉提核心锻炼工具包&quot;,
+    &quot;瑜伽馆必备器材&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;Pratice Bed Set&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Pilates Core Training Kit&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;专业健身设施&quot;: [
+      &quot;Gym and Home Use&quot;,
+      &quot;Professional Fitness Center&quot;
+    ],
+    &quot;专业健身设施_en&quot;: [
+      &quot;Gym and Home Use&quot;,
+      &quot;Professional Gym Setup&quot;
+    ],
+    &quot;多功能训练&quot;: [
+      &quot;Core Strengthening Equipment&quot;,
+      &quot;Five-Piece System&quot;
+    ],
+    &quot;多功能训练_en&quot;: [
+      &quot;Core Strengthening Tools&quot;,
+      &quot;Five-In-One System&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;普拉提床&quot;,
+    &quot;瑜伽床&quot;,
+    &quot;核心床&quot;,
+    &quot;家庭普拉提床&quot;,
+    &quot;家用瑜伽床&quot;,
+    &quot;普拉提训练床&quot;,
+    &quot;瑜伽训练床&quot;,
+    &quot;家庭健身床&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Pilates bed&quot;,
+    &quot;yoga bed&quot;,
+    &quot;core bed&quot;,
+    &quot;home Pilates bed&quot;,
+    &quot;home yoga bed&quot;,
+    &quot;Pilates training bed&quot;,
+    &quot;yoga training bed&quot;,
+    &quot;home fitness bed&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;普拉提床&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Pilates bed&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;尺寸&quot;: [
+      &quot;180x100cm&quot;,
+      &quot;1.8x1m&quot;,
+      &quot;180x100公分&quot;,
+      &quot;1.8x1公分&quot;
+    ],
+    &quot;尺寸_en&quot;: [
+      &quot;180x100cm&quot;,
+      &quot;1.8x1m&quot;,
+      &quot;180x100cm&quot;,
+      &quot;1.8x1m&quot;
+    ],
+    &quot;材质&quot;: [
+      &quot;PVC&quot;,
+      &quot;EVA&quot;,
+      &quot;TPU&quot;,
+      &quot;高彈力布料&quot;
+    ],
+    &quot;材质_en&quot;: [
+      &quot;PVC&quot;,
+      &quot;EVA&quot;,
+      &quot;TPU&quot;,
+      &quot;high elasticity fabric&quot;
+    ],
+    &quot;用途&quot;: [
+      &quot;普拉提&quot;,
+      &quot;瑜伽&quot;,
+      &quot;核心訓練&quot;,
+      &quot;家庭健身&quot;
+    ],
+    &quot;用途_en&quot;: [
+      &quot;Pilates&quot;,
+      &quot;yoga&quot;,
+      &quot;core training&quot;,
+      &quot;home fitness&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
       </article>
     
 
@@ -2210,6 +4724,147 @@ Beauty|Skincare|Lip Treatment
           <div class="issues-title">关键问题</div>
           <ul><li>独特卖点中包含多处明显编造信息，如“防水”、“防潮”、“防漏”等原文未提及的功能。</li><li>独特卖点中包含多处轻微编造或过度推断，如“輕便”、“私人訂製”、“移動方便”、“耐用”、“長壽命”等。</li><li>独特卖点中存在冗余信息，例如“便携性/轻便性”和“机械工学”的描述有重叠。</li></ul>
         </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;廚房桶架&quot;,
+    &quot;食堂保溫桶架&quot;,
+    &quot;開水桶推車架&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;帶滑輪支架&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Wheeled Bucket Stand&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便捷移动&quot;: [
+      &quot;可移動水桶架&quot;,
+      &quot;带滑轮支架&quot;
+    ],
+    &quot;便捷移动_en&quot;: [
+      &quot;Portable Water Bucket Frame with Wheels&quot;,
+      &quot;Rolling Bucket Support System&quot;
+    ],
+    &quot;多功能应用&quot;: [
+      &quot;湯桶架&quot;,
+      &quot;奶茶桶架&quot;
+    ],
+    &quot;多功能应用_en&quot;: [
+      &quot;Soup Bucket Rack&quot;,
+      &quot;Tea Milk Bottle Holder&quot;
+    ],
+    &quot;定制能力&quot;: [
+      &quot;可定製水桶架&quot;
+    ],
+    &quot;定制能力_en&quot;: [
+      &quot;Customizable Water Bucket Frame&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;廚房水桶架&quot;,
+    &quot;移動水桶架&quot;,
+    &quot;湯桶架&quot;,
+    &quot;奶茶桶架&quot;,
+    &quot;保溫桶架&quot;,
+    &quot;帶滑輪水桶架&quot;,
+    &quot;可定製水桶架&quot;,
+    &quot;食堂水桶架&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;kitchen water bucket rack&quot;,
+    &quot;movable water bucket rack&quot;,
+    &quot;soup bucket rack&quot;,
+    &quot;milk tea bucket rack&quot;,
+    &quot;insulated bucket rack&quot;,
+    &quot;wheel water bucket rack&quot;,
+    &quot;customizable water bucket rack&quot;,
+    &quot;canteen water bucket rack&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;水桶架&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;water bucket rack&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便携性/轻便性&quot;: [
+      &quot;可移動&quot;,
+      &quot;帶滑輪&quot;,
+      &quot;輕便&quot;
+    ],
+    &quot;便携性/轻便性_en&quot;: [
+      &quot;movable&quot;,
+      &quot;with wheels&quot;,
+      &quot;lightweight&quot;
+    ],
+    &quot;多功能性&quot;: [
+      &quot;湯桶架&quot;,
+      &quot;奶茶桶架&quot;,
+      &quot;保溫桶架&quot;
+    ],
+    &quot;多功能性_en&quot;: [
+      &quot;soup bucket rack&quot;,
+      &quot;milk tea bucket rack&quot;,
+      &quot;insulated bucket rack&quot;
+    ],
+    &quot;定制&quot;: [
+      &quot;可定製&quot;,
+      &quot;私人訂製&quot;
+    ],
+    &quot;定制_en&quot;: [
+      &quot;customizable&quot;,
+      &quot;private customization&quot;
+    ],
+    &quot;机械工学&quot;: [
+      &quot;可移動&quot;,
+      &quot;帶滑輪&quot;,
+      &quot;移動方便&quot;
+    ],
+    &quot;机械工学_en&quot;: [
+      &quot;movable&quot;,
+      &quot;with wheels&quot;,
+      &quot;convenient to move&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;加厚不鏽鋼&quot;,
+      &quot;耐用&quot;,
+      &quot;長壽命&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;thick stainless steel&quot;,
+      &quot;durable&quot;,
+      &quot;long-lasting&quot;
+    ],
+    &quot;防水防潮&quot;: [
+      &quot;防水&quot;,
+      &quot;防潮&quot;,
+      &quot;防漏&quot;
+    ],
+    &quot;防水防潮_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;moisture-proof&quot;,
+      &quot;leak-proof&quot;
+    ]
+  }
+}</pre>
       </div>
     
         </div>
