@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KSP 页面目录</title>
+  <style>
+    :root {
+      --bg: #f5f2ea;
+      --panel: rgba(255, 252, 245, 0.92);
+      --ink: #182126;
+      --muted: #5d676d;
+      --line: rgba(24, 33, 38, 0.12);
+      --accent: #b44c2f;
+      --accent-soft: rgba(180, 76, 47, 0.12);
+      --shadow: 0 18px 50px rgba(56, 42, 20, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(180, 76, 47, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(54, 101, 93, 0.12), transparent 26%),
+        linear-gradient(180deg, #f8f5ee 0%, var(--bg) 100%);
+    }
+
+    .shell {
+      width: min(1120px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 40px 0 64px;
+    }
+
+    .hero {
+      padding: 28px 30px 30px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.05;
+      font-weight: 700;
+    }
+
+    .intro {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .meta-card {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .meta-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .meta-card .value {
+      margin-top: 6px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .card .tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(24, 33, 38, 0.06);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .card h3 {
+      margin: 14px 0 8px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .card .path {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(24, 33, 38, 0.04);
+      color: #2d363b;
+      font-size: 12px;
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .card a {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fffdf9;
+      text-decoration: none;
+      font-size: 14px;
+      transition: transform 120ms ease, opacity 120ms ease;
+    }
+
+    .card a:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100vw - 24px, 1120px);
+        padding-top: 20px;
+      }
+
+      .hero {
+        padding: 22px 18px 20px;
+        border-radius: 22px;
+      }
+
+      .card {
+        min-height: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">KSP Reports</span>
+      <h1>页面目录</h1>
+      <p class="intro">
+        这里把这次已经生成出来、适合直接浏览的页面单独整理到一个目录里。
+        主要分成三类：模型对比、训练评估、清洗与规则分析。每张卡片都可以直接打开对应页面。
+      </p>
+      <div class="meta">
+        <div class="meta-card">
+          <div class="label">页面数量</div>
+          <div class="value">7</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">目录位置</div>
+          <div class="value">temp-web</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">主题</div>
+          <div class="value">KSP / Cleaning</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>模型对比</h2>
+        <p>重点看新旧模型在同批样本上的差异。</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag">Model Compare</span>
+          <h3>台湾 v6 vs new v9</h3>
+          <p>台湾样本的逐条对比页，包含指标差值、原始描述和两边的生成结果。</p>
+          <div class="path">tw_v6_vs_v9_compare.html</div>
+          <a href="tw_v6_vs_v9_compare.html">打开页面</a>
+        </article>
+
+        <article class="card">
+          <span class="tag">Prompt Compare</span>
+          <h3>P4 Prompt 对比</h3>
+          <p>更早一轮的提示词页面，用来看不同提示词版本的表现差异。</p>
+          <div class="path">p4_prompt_comparison.html</div>
+          <a href="p4_prompt_comparison.html">打开页面</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>训练评估</h2>
+        <p>主要是这轮 SFT 训练后的推理和评估页面。</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag">SFT Eval</span>
+          <h3>5k Remote Eval</h3>
+          <p>这次 5k 远端推理的主评估页，汇总了标签对齐和样本级别的展示。</p>
+          <div class="path">ksp_sft_eval_5k_remote.html</div>
+          <a href="ksp_sft_eval_5k_remote.html">打开页面</a>
+        </article>
+
+        <article class="card">
+          <span class="tag">SFT Smoke</span>
+          <h3>Smoke Eval</h3>
+          <p>小样本冒烟页，适合快速看 prompt、label 和 prediction 的对应关系。</p>
+          <div class="path">ksp_sft_eval_smoke_5.html</div>
+          <a href="ksp_sft_eval_smoke_5.html">打开页面</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>清洗与规则分析</h2>
+        <p>这里是更早的清洗和 judge 页面，方便一起回看。</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag">Cleaning</span>
+          <h3>TW KSP AB Compare</h3>
+          <p>台湾清洗前后 `baseline/treatment` 的 AB 页面，重点是 `factscore` 和样本差异。</p>
+          <div class="path">tw_ksp_ab_compare_factscore.html</div>
+          <a href="tw_ksp_ab_compare_factscore.html">打开页面</a>
+        </article>
+
+        <article class="card">
+          <span class="tag">Judge</span>
+          <h3>Judge Cases 512</h3>
+          <p>一组 judge 样本页，用来看案例级别的质量判断和分布。</p>
+          <div class="path">judge_cases_512_e2e.html</div>
+          <a href="judge_cases_512_e2e.html">打开页面</a>
+        </article>
+
+        <article class="card">
+          <span class="tag">Judge</span>
+          <h3>Reranker Judge Cases</h3>
+          <p>更偏 reranker 的 judge 对照页，适合回看判断口径。</p>
+          <div class="path">reranker_judge_cases.html</div>
+          <a href="reranker_judge_cases.html">打开页面</a>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer">
+      当前目录页位置：
+      <strong>/home/work/opa_common_mx/wsy/temp-web/ksp_generated_reports/index.html</strong>
+      <br>
+      页面文件已经复制到同目录下，后面你只用从这里点进去看，不用再记原始生成路径。
+    </div>
+  </main>
+</body>
+</html>

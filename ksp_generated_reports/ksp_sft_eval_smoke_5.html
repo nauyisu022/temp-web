@@ -1,0 +1,1974 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KSP SFT Smoke Eval Report</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #fffdf8;
+      --line: #d9d0c2;
+      --text: #1d1a17;
+      --muted: #6f665d;
+      --accent: #9f4027;
+      --accent-soft: #f1dfd8;
+      --good: #1f6f4a;
+      --font-sans: "Iowan Old Style", "Palatino Linotype", "Noto Serif CJK SC", serif;
+      --font-mono: "SFMono-Regular", "JetBrains Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(159, 64, 39, 0.09), transparent 28rem),
+        linear-gradient(180deg, #f6f2eb 0%, #f1ece4 100%);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+    .wrap {
+      width: min(1500px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+    .hero {
+      padding: 18px 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 253, 248, 0.94);
+      box-shadow: 0 18px 40px rgba(80, 58, 34, 0.08);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .checkpoint {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-all;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 18px 0 22px;
+    }
+    .metric-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+    }
+    .metric-title {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .metric-value {
+      margin-top: 6px;
+      font-size: 24px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .metric-note {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .case-card {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 253, 248, 0.97);
+      box-shadow: 0 12px 30px rgba(80, 58, 34, 0.06);
+    }
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .case-kicker {
+      color: var(--accent);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h2 {
+      margin: 4px 0 0;
+      font-size: 22px;
+    }
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .case-meta span {
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .prompt-box {
+      margin-top: 12px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #faf6ef;
+    }
+    .prompt-box summary {
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .two-col {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fffdfa;
+      overflow: hidden;
+    }
+    .panel h3 {
+      margin: 0;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8f2e9;
+      font-size: 14px;
+    }
+    pre {
+      margin: 0;
+      padding: 12px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      line-height: 1.5;
+      font-family: var(--font-mono);
+    }
+    @media (max-width: 960px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .case-head {
+        flex-direction: column;
+      }
+      .case-meta {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>KSP SFT Smoke Eval Report</h1>
+      <p class="sub">这页展示的是 `smoke eval`（小样本推理检查）结果：上面先看训练过程里的验证集损失，下面逐条对比 `label`（标注答案）和 `prediction`（模型输出）。</p>
+      <div class="checkpoint">/home/work/opa_common_mx/wsy/reranker/reranker_v2_swift/artifacts/output/ksp_sft_qwen25_7b_ais_5k_4gpu/v0-20260407-200711/checkpoint-626</div>
+    </section>
+    <section class="grid">
+      
+    <div class="metric-card">
+      <div class="metric-title">Smoke Samples</div>
+      <div class="metric-value">5</div>
+      <div class="metric-note">当前这页展示的小样本数量</div>
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Analysis Parse</div>
+      <div class="metric-value">100.0%</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Final Parse</div>
+      <div class="metric-value">100.0%</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Schema F1</div>
+      <div class="metric-value">0.600</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Final Token F1</div>
+      <div class="metric-value">0.280</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Schema Exact</div>
+      <div class="metric-value">20.0%</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Final Exact</div>
+      <div class="metric-value">0.0%</div>
+      
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Val Eval Loss</div>
+      <div class="metric-value">0.17386</div>
+      <div class="metric-note">step 626/626</div>
+    </div>
+    
+    <div class="metric-card">
+      <div class="metric-title">Val Token Acc</div>
+      <div class="metric-value">0.9430</div>
+      
+    </div>
+    
+    </section>
+    
+            <section class="case-card">
+              <div class="case-head">
+                <div>
+                  <div class="case-kicker">Case 1</div>
+                  <h2>22697603323</h2>
+                </div>
+                <div class="case-meta">
+                  <span>BR</span>
+                  <span>high</span>
+                  <span>schema_f1=0.600</span>
+                  <span>final_f1=0.324</span>
+                </div>
+              </div>
+              <div class="two-col prompt-row">
+                <div class="panel">
+                  <h3>System Prompt</h3>
+                  <pre>你是电商搜索优化专家。
+
+请根据商品信息和可用Schema属性，先输出 &lt;analysis&gt; JSON，再输出 &lt;final&gt; JSON。
+
+要求：
+1. analysis 必须包含 target_language、selected_schema、keyword_plan，可选 search_intent_summary。
+2. final 必须是结构化 KSP JSON，包含 top_attractiveness、unique_selling_points、long_tail_keywords。
+3. 只能保留商品本身有证据支持的信息，不得编造功能、认证、材质、适配关系。
+4. 过滤物流、售后、退换货、免责声明、客服引导、店铺介绍等非产品信息。
+5. value 字段必须使用目标市场语言；品牌名、型号名、规格数字、通用英文技术词可保留原文。
+6. 只输出标签化结果，不要输出额外解释文字。</pre>
+                </div>
+                <div class="panel">
+                  <h3>User Prompt</h3>
+                  <pre>商品标题：Tapete Carpete Verniz Fosco Assoalho Ford Ka Hatch  Novo
+商品描述：Tapete Carpete Verniz Fosco Assoalho Ford Ka Hatch Novo
+Tapete assoalho + (LIGEIRINHA COM LOGOMARCA BORDADO)
+
+&#x27;&#x27;Deixando o interior do seu veiculo com seu estilo&#x27;&#x27;
+
+OBS: VEJAM NOSSO VIDEO DE APRESENTAÇÃO DO PRODUTO QUE VOCÊ ESTA COMPRANDO, DISPONIVEL NO CAMPO DE FOTOS
+
+Descrição:
+
+.Material VINIL VERNIZ FOSCO
+.Cobrem todo o assoalho do carro até o banco traseiro
+.Impermeável
+.Tapete liso encerado
+.Facilita a limpeza
+.Antialérgico
+-Feito sob medida
+- Acabamento na costura dupla reforçada
+.Durável
+.Protege o carpete original de desgastes
+.Com velcro REFORÇADO PARA FIXAÇÃO, TODOS NOSSOS
+
+OBS: O tapete é fabricado em sendo 1 ou 2 partes, dependendo do modelo pois seguimos os desenhos do assoalho original.
+
+Dicas de montagem:
+-Manual básico de instruções.
+-Colocar o item ao Sol para que ele fique flexível antes da montagem.
+
+1- Retire os bancos do assoalho ( OS MODELOS QUE CONTEM 2 PARTES NÃO E NECESSSARIO)
+2- Desconecte os fios debaixo do banco
+3- Retire os parafusos ou presilhas que fixam o console central
+4- Retire as soleiras das portas
+5- Veículos que o banco traseiro levanta, não é necessário a remoção
+6- Coloque o tapete sobre o assoalho e aperte os cantos juntamente com os velcros encaixando e grudando no carpete
+7- Passe os fios que conectam ao banco por cima do tapete
+8- Ajustando,Faça um pequeno furo permitindo que seja parafusado o banco
+9- Coloque as soleiras do veículo
+10- Coloque os bancos na posição e aperte os parafusos
+11- Aperte os parafusos ou presilhas do console central
+商品一级类目：Spare Parts and Accessories for Vehicles
+商品类目：Spare Parts and Accessories for Vehicles|Internal Accessories for Automobiles|Car Mat
+目标地区：BR
+目标市场语言：Português (Brasil)
+可用Schema属性：产地, 原装正版/原产</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;适配型号&quot;,
+    &quot;材质&quot;,
+    &quot;特性&quot;,
+    &quot;用途&quot;,
+    &quot;原装正版/原产&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;Ford Ka Hatch&quot;
+    ],
+    &quot;Material&quot;: [
+      &quot;vinil verniz fosco&quot;,
+      &quot;vinil&quot;,
+      &quot;vinil antialérgico&quot;
+    ],
+    &quot;特性&quot;: [
+      &quot;impermeável&quot;,
+      &quot;liso encerado&quot;,
+      &quot;antialérgico&quot;,
+      &quot;durável&quot;,
+      &quot;feito sob medida&quot;,
+      &quot;acabamento na costura dupla reforçada&quot;
+    ],
+    &quot;用途&quot;: [
+      &quot;proteção do assoalho&quot;,
+      &quot;tapetes de assoalho&quot;,
+      &quot;tapetes de assoalho Ford Ka&quot;,
+      &quot;tapetes de assoalho de vinil&quot;,
+      &quot;tapetes de assoalho verniz fosco&quot;,
+      &quot;tapetes de assoalho anti-alérgicos&quot;,
+      &quot;tapetes de assoalho impermeáveis&quot;
+    ],
+    &quot;原装正版/原产&quot;: [
+      &quot;feito sob medida&quot;,
+      &quot;acabamento na costura dupla reforçada&quot;,
+      &quot;tapete liso encerado&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Compradores de veículos Ford Ka Hatch procurando tapetes de assoalho de qualidade, com intenção de proteger o assoalho do carro e melhorar a estética interna. Pesquisam por tapetes de assoalho, proteção do assoalho, tapetes de assoalho Ford Ka e tapetes de assoalho de vinil.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;product type&quot;,
+    &quot;material&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;,
+    &quot;brand&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;适配型号&quot;,
+    &quot;材质&quot;,
+    &quot;颜色&quot;,
+    &quot;原装正版/原产&quot;,
+    &quot;耐用性&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;Ford Ka Hatch&quot;,
+      &quot;Ford Ka&quot;,
+      &quot;Ka Hatch&quot;
+    ],
+    &quot;材质&quot;: [
+      &quot;vinil verniz fosco&quot;,
+      &quot;vinil&quot;,
+      &quot;vinil fosco&quot;
+    ],
+    &quot;颜色&quot;: [
+      &quot;novo&quot;,
+      &quot;original&quot;,
+      &quot;assossalho original&quot;
+    ],
+    &quot;原装正版/原产&quot;: [
+      &quot;feito sob medida&quot;,
+      &quot;feita sob medida&quot;,
+      &quot;original&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;durável&quot;,
+      &quot;duração&quot;,
+      &quot;resistente&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Donos de Ford Ka Hatch procurando tapetes de assoalho de qualidade, buscando proteção para o interior do carro e facilidade na limpeza.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Ford&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Ford&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;tapetes de assoalho&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;floor mats&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;Ford Ka Hatch&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;Ford Ka Hatch&quot;
+    ],
+    &quot;材质&quot;: [
+      &quot;vinil verniz fosco&quot;,
+      &quot;vinil antialérgico&quot;
+    ],
+    &quot;材质_en&quot;: [
+      &quot;vinyl matte gloss&quot;,
+      &quot;anti-allergy vinyl&quot;
+    ],
+    &quot;特性&quot;: [
+      &quot;impermeável&quot;,
+      &quot;liso encerado&quot;,
+      &quot;antialérgico&quot;,
+      &quot;durável&quot;,
+      &quot;feito sob medida&quot;,
+      &quot;acabamento na costura dupla reforçada&quot;
+    ],
+    &quot;特性_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;smooth and polished&quot;,
+      &quot;anti-allergy&quot;,
+      &quot;durable&quot;,
+      &quot;custom-made&quot;,
+      &quot;double-stitched reinforced finish&quot;
+    ],
+    &quot;用途&quot;: [
+      &quot;proteção do assoalho&quot;,
+      &quot;tapetes de assoalho&quot;,
+      &quot;tapetes de assoalho Ford Ka&quot;,
+      &quot;tapetes de assoalho de vinil&quot;,
+      &quot;tapetes de assoalho verniz fosco&quot;,
+      &quot;tapetes de assoalho anti-alérgicos&quot;,
+      &quot;tapetes de assoalho impermeáveis&quot;
+    ],
+    &quot;用途_en&quot;: [
+      &quot;floor protection&quot;,
+      &quot;car floor mats&quot;,
+      &quot;Ford Ka floor mats&quot;,
+      &quot;vinyl floor mats&quot;,
+      &quot;glossy floor mats&quot;,
+      &quot;anti-allergy floor mats&quot;,
+      &quot;waterproof floor mats&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;tapete assoalho Ford Ka&quot;,
+    &quot;tapete de assoalho antialérgico&quot;,
+    &quot;tapete de assoalho impermeável&quot;,
+    &quot;tapete de assoalho de vinil&quot;,
+    &quot;tapete de assoalho Ford Ka Hatch&quot;,
+    &quot;tapete de assoalho ford&quot;,
+    &quot;tapete de assoalho para carro&quot;,
+    &quot;tapete de assoalho de alta qualidade&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Ford Ka floor mat&quot;,
+    &quot;anti-allergy car floor mat&quot;,
+    &quot;waterproof car floor mat&quot;,
+    &quot;vinyl car floor mat&quot;,
+    &quot;Ford Ka Hatch floor mat&quot;,
+    &quot;Ford floor mat&quot;,
+    &quot;car floor mat&quot;,
+    &quot;high quality car floor mat&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Ford&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Ford&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;tapete de assoalho&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;car floor mat&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;Ford Ka Hatch&quot;,
+      &quot;Ford Ka&quot;,
+      &quot;Ka Hatch&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;Ford Ka Hatch&quot;,
+      &quot;Ford Ka&quot;,
+      &quot;Ka Hatch&quot;
+    ],
+    &quot;材质&quot;: [
+      &quot;vinil verniz fosco&quot;,
+      &quot;vinil&quot;,
+      &quot;vinil fosco&quot;
+    ],
+    &quot;材质_en&quot;: [
+      &quot;vinyl gloss finish&quot;,
+      &quot;vinyl&quot;,
+      &quot;vinyl matte&quot;
+    ],
+    &quot;颜色&quot;: [
+      &quot;novo&quot;,
+      &quot;original&quot;,
+      &quot;assossalho original&quot;
+    ],
+    &quot;颜色_en&quot;: [
+      &quot;new&quot;,
+      &quot;original&quot;,
+      &quot;floor mat original&quot;
+    ],
+    &quot;原装正版/原产&quot;: [
+      &quot;feito sob medida&quot;,
+      &quot;feita sob medida&quot;,
+      &quot;original&quot;
+    ],
+    &quot;原装正版/原产_en&quot;: [
+      &quot;custom made&quot;,
+      &quot;custom made&quot;,
+      &quot;original&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;durável&quot;,
+      &quot;duração&quot;,
+      &quot;resistente&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;durable&quot;,
+      &quot;durability&quot;,
+      &quot;resistant&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;tapete de assoalho ford ka hatch&quot;,
+    &quot;tapete de assoalho ford ka&quot;,
+    &quot;tapete de assoalho hatch&quot;,
+    &quot;tapete de assoalho proteção&quot;,
+    &quot;tapete de assoalho fácil de limpar&quot;,
+    &quot;tapete de assoalho antialérgico&quot;,
+    &quot;tapete de assoalho feito sob medida&quot;,
+    &quot;tapete de assoalho vinil fosco&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;ford ka hatch floor mat&quot;,
+    &quot;ford ka floor mat&quot;,
+    &quot;hatch floor mat&quot;,
+    &quot;floor mat protection&quot;,
+    &quot;easy to clean floor mat&quot;,
+    &quot;allergen resistant floor mat&quot;,
+    &quot;custom made floor mat&quot;,
+    &quot;vinyl matte floor mat&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+            </section>
+            
+            <section class="case-card">
+              <div class="case-head">
+                <div>
+                  <div class="case-kicker">Case 2</div>
+                  <h2>20998188754</h2>
+                </div>
+                <div class="case-meta">
+                  <span>BR</span>
+                  <span>high</span>
+                  <span>schema_f1=0.200</span>
+                  <span>final_f1=0.208</span>
+                </div>
+              </div>
+              <div class="two-col prompt-row">
+                <div class="panel">
+                  <h3>System Prompt</h3>
+                  <pre>你是电商搜索优化专家。
+
+请根据商品信息和可用Schema属性，先输出 &lt;analysis&gt; JSON，再输出 &lt;final&gt; JSON。
+
+要求：
+1. analysis 必须包含 target_language、selected_schema、keyword_plan，可选 search_intent_summary。
+2. final 必须是结构化 KSP JSON，包含 top_attractiveness、unique_selling_points、long_tail_keywords。
+3. 只能保留商品本身有证据支持的信息，不得编造功能、认证、材质、适配关系。
+4. 过滤物流、售后、退换货、免责声明、客服引导、店铺介绍等非产品信息。
+5. value 字段必须使用目标市场语言；品牌名、型号名、规格数字、通用英文技术词可保留原文。
+6. 只输出标签化结果，不要输出额外解释文字。</pre>
+                </div>
+                <div class="panel">
+                  <h3>User Prompt</h3>
+                  <pre>商品标题：Engate Strada Removivel 2010 2011 2012 2013 2014 2015 1000kg
+商品描述：Engate Strada Removivel 2010 2011 2012 2013 2014 2015 1000kg
+ENGATE REMOVÍVEL - TRAÇÃO 1.000Kg
+
+COMPATIVEL:
+
+FIAT STRADA - ANO: 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 e 2020 (TODOS AS VERSÕES).
+
+Marca: BRUCKE COM MAIS DE 20 ANOS NO MERCADO
+
+ENGATE RESISTENTE, ARROJADO E SEGURO - “O melhor engate do Brasil”
+
+- ENGATE HOMOLOGADO PELO INMETRO COM CERTIFICAÇÃO - Produto analisado, testado e aprovado em todas as etapas de avaliação, garantindo total segurança para você e sua família. Nosso engate possui um padrão a ser seguido e suporta até 1.000kg de tração.
+- TESTE DE FADIGA DE 1.000Kg DE RESISTÊNCIA
+
+- PINTURA ELETROSTÁTICA “EPÓXI”
+Maior resistência à corrosão, umidade, produtos químicos e à exposição ao sol, além de possuir baixo impacto ambiental.
+
+DICA IMPORTANTE – Nosso produto foi desenvolvido sob medida para A FIAT STRADA 98/20, e será fixo nos pontos originais. Se estiver duvidas com a instalação, nos chame pelo chat de sua compra que iremos auxiliar.
+
+TECNOLOGIA para garantir SEGURANÇA - A cabeça do engate é moldada inteira de forma a evitar soldas, transformando em uma única peça, proporcionando maior resistência.
+
+CONTEUDO DA EMBALAGEM:
+
+- 01 ENGATE REMOVIVEL - DESENVOLVIDO COM AÇO DE ALTA DUREZA E HIPER RESISTENTE (FERRAGEM) E TAMBÉM UM KIT COMPLETO CONTENDO:
+
+- 01 BOLA CROMADA (PINO ESFÉRICO 50mm)
+
+- 01 TOMADA PLÁSTICA (FÊMEA)
+
+- 01 KIT DE PARAFUSOS, PORCAS E ARRUELAS
+
+- 01 FIO 4 VIAS - (P/ REALIZAR A INSTALAÇÃO DA PARTE ELÉTRICA) -
+
+ATENÇÃO - O ENGATE REMOVÍVEL NÃO ACOMPANHA CAPA DE ACABAMENTO EM INOX
+
+INFORMAÇÕES ADICIONAIS:
+
+- TODAS AS MENSAGENS/PERGUNTAS FEITAS ABAIXO NOS COMENTÁRIOS OU PELO CHAT DA COMPRA, SERÁ RESPONDIDA POR NOSSA EQUIPE O MAIS RÁPIDO POSSÍVEL – POR FAVOR AGUARDE
+
+- ATUALIZE SEU CADASTRO/ENDEREÇO ANTES DE FINALIZAR A COMPRA
+- DESPACHAMOS NOSSAS VENDAS TODOS OS DIAS VIA ENVIOS (EXCETO FERIADO, SAB/DOM)
+
+- O PRAZO DE ENTREGA É FORNECIDO PELO PRÓPRIO SISTEMA DO , PODE SIMULAR SUA COMPRA QUE O SISTEMA IRÁ FORNECER O PRAZO DE ENTREGA ESTIMADO
+
+- PRODUTO HOMOLOGADO COM GARANTIA E NOTA FISCAL
+
+*CUIDADOS*
+- Não ultrapassar o peso e a tração máxima admissível indicada na placa de identificação do engate.
+
+- Verificar se todos os parafusos estão apertados. Após sete dias, reaperte se necessário.
+
+- Verificar e reapertar o conjunto de porcas e parafusos a cada 1000Km ou 06 meses de uso.
+
+- Verificar se a porca da esfera está devidamente apertada com o torque recompensando de 200 a 240N m.
+
+- É obrigatório o uso da corrente da argola de segurança, localizada na parte inferior do Engate.
+
+- NÃO ULTRAPASSAR A VELOCIDADE DE 80Km/hora.
+
+Garantia do vendedor: 1 meses
+商品一级类目：Spare Parts and Accessories for Vehicles
+商品类目：Spare Parts and Accessories for Vehicles|External Accessories for Automobiles|Others
+目标地区：BR
+目标市场语言：Português (Brasil)
+可用Schema属性：产地, 原装正版/原产</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;品牌&quot;,
+    &quot;产品类型&quot;,
+    &quot;适配型号&quot;,
+    &quot;功能描述&quot;,
+    &quot;使用场景&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;品牌&quot;: [
+      &quot;BRUCKE&quot;,
+      &quot;BRUCKE COM MAIS DE 20 ANOS NO MERCADO&quot;
+    ],
+    &quot;产品类型&quot;: [
+      &quot;engate removível&quot;,
+      &quot;engate&quot;,
+      &quot;engate removível para veículos&quot;
+    ],
+    &quot;适配型号&quot;: [
+      &quot;FIAT STRADA - ANO: 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 e 2020&quot;
+    ],
+    &quot;功能描述&quot;: [
+      &quot;engate resistente&quot;,
+      &quot;engate homologado pelo INMETRO&quot;,
+      &quot;engate com certificação&quot;,
+      &quot;engate com teste de fadiga&quot;,
+      &quot;engate resistente a corrosão&quot;,
+      &quot;engate com pintura eletrostática epóxi&quot;,
+      &quot;engate desenvolvido sob medida&quot;,
+      &quot;engate com cabeça moldada inteira&quot;,
+      &quot;engate com kit de parafusos, porcas e arruelas&quot;,
+      &quot;engate com fio 4 vias&quot;
+    ],
+    &quot;使用场景&quot;: [
+      &quot;segurança na condução&quot;,
+      &quot;transporte de cargas&quot;,
+      &quot;atividades ao ar livre&quot;,
+      &quot;viagens familiares&quot;,
+      &quot;trabalho rural&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Proprietários de Fiat Strada buscando engates removíveis seguros e resistentes, pesquisando engates de alta tração para veículos, engates FIAT homologados e engates resistentes a corrosão&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;compatibility&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;适配型号&quot;,
+    &quot;承载能力&quot;,
+    &quot;材质&quot;,
+    &quot;安装方式&quot;,
+    &quot;原装正版/原产&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;Adaptabilidade&quot;: [
+      &quot;compatível&quot;,
+      &quot;fiat strada&quot;,
+      &quot;todos os anos&quot;
+    ],
+    &quot;Capacidade de Tração&quot;: [
+      &quot;1.000kg&quot;,
+      &quot;1000kg&quot;,
+      &quot;1 tonelada&quot;
+    ],
+    &quot;Material&quot;: [
+      &quot;aço de alta dureza&quot;,
+      &quot;aço&quot;,
+      &quot;aço resistente&quot;
+    ],
+    &quot;Instalação&quot;: [
+      &quot;instalação fácil&quot;,
+      &quot;instalar&quot;,
+      &quot;fixo nos pontos originais&quot;
+    ],
+    &quot;Segurança&quot;: [
+      &quot;seguro&quot;,
+      &quot;homologado pelo inmetro&quot;,
+      &quot;certificado&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Motoristas de Fiat Strada procurando um engate removível seguro e resistente, pesquisando engates para Fiat Strada, engates resistentes, engates homologados e engates para tração&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;BRUCKE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;BRUCKE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;engate removível&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;removable hitch&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;功能描述&quot;: [
+      &quot;engate resistente&quot;,
+      &quot;engate homologado pelo INMETRO&quot;,
+      &quot;engate com certificação&quot;,
+      &quot;engate com teste de fadiga&quot;,
+      &quot;engate resistente a corrosão&quot;,
+      &quot;engate com pintura eletrostática epóxi&quot;,
+      &quot;engate desenvolvido sob medida&quot;,
+      &quot;engate com cabeça moldada inteira&quot;,
+      &quot;engate com kit de parafusos, porcas e arruelas&quot;,
+      &quot;engate com fio 4 vias&quot;
+    ],
+    &quot;功能描述_en&quot;: [
+      &quot;resistant hitch&quot;,
+      &quot;INMETRO certified hitch&quot;,
+      &quot;certified hitch&quot;,
+      &quot;fatigue test hitch&quot;,
+      &quot;corrosion-resistant hitch&quot;,
+      &quot;epoxy electrostatic painting hitch&quot;,
+      &quot;custom-designed hitch&quot;,
+      &quot;integrated head hitch&quot;,
+      &quot;kit of screws, nuts and washers hitch&quot;,
+      &quot;4-wire connection hitch&quot;
+    ],
+    &quot;适配型号&quot;: [
+      &quot;FIAT STRADA - ANO: 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 e 2020&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;FIAT STRADA - YEARS: 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 and 2020&quot;
+    ],
+    &quot;使用场景&quot;: [
+      &quot;segurança na condução&quot;,
+      &quot;transporte de cargas&quot;,
+      &quot;atividades ao ar livre&quot;,
+      &quot;viagens familiares&quot;,
+      &quot;trabalho rural&quot;
+    ],
+    &quot;使用场景_en&quot;: [
+      &quot;driving safety&quot;,
+      &quot;cargo transportation&quot;,
+      &quot;outdoor activities&quot;,
+      &quot;family trips&quot;,
+      &quot;rural work&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;engate removível fiat strada&quot;,
+    &quot;engate resistente fiat strada&quot;,
+    &quot;engate homologado inmetro&quot;,
+    &quot;engate com certificação&quot;,
+    &quot;engate resistente corrosão&quot;,
+    &quot;engate pintura eletrostática&quot;,
+    &quot;engate customizado&quot;,
+    &quot;engate cabeça moldada&quot;,
+    &quot;engate kit parafusos&quot;,
+    &quot;engate 4 vias&quot;,
+    &quot;segurança viagem&quot;,
+    &quot;transporte carga&quot;,
+    &quot;atividades ao ar livre&quot;,
+    &quot;família viagem&quot;,
+    &quot;trabalho rural&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;removable hitch fiat strada&quot;,
+    &quot;resistant hitch&quot;,
+    &quot;INMETRO certified hitch&quot;,
+    &quot;certified hitch&quot;,
+    &quot;corrosion-resistant hitch&quot;,
+    &quot;epoxy electrostatic painting hitch&quot;,
+    &quot;custom-designed hitch&quot;,
+    &quot;integrated head hitch&quot;,
+    &quot;kit of screws hitch&quot;,
+    &quot;4-wire connection hitch&quot;,
+    &quot;driving safety&quot;,
+    &quot;cargo transportation&quot;,
+    &quot;outdoor activities&quot;,
+    &quot;family trips&quot;,
+    &quot;rural work&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;BRUCKE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;BRUCKE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;engate removível&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;removable hitch&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;compatível&quot;,
+      &quot;fiat strada&quot;,
+      &quot;todos os anos&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;compatible&quot;,
+      &quot;fiat strada&quot;,
+      &quot;all years&quot;
+    ],
+    &quot;承载能力&quot;: [
+      &quot;1.000kg&quot;,
+      &quot;1000kg&quot;,
+      &quot;1 tonelada&quot;
+    ],
+    &quot;承载能力_en&quot;: [
+      &quot;1.000kg&quot;,
+      &quot;1000kg&quot;,
+      &quot;1 ton&quot;
+    ],
+    &quot;材质&quot;: [
+      &quot;aço de alta dureza&quot;,
+      &quot;aço resistente&quot;
+    ],
+    &quot;材质_en&quot;: [
+      &quot;high-strength steel&quot;,
+      &quot;resistant steel&quot;
+    ],
+    &quot;安装方式&quot;: [
+      &quot;instalação fácil&quot;,
+      &quot;fixo nos pontos originais&quot;
+    ],
+    &quot;安装方式_en&quot;: [
+      &quot;easy installation&quot;,
+      &quot;fixed at original points&quot;
+    ],
+    &quot;安全性&quot;: [
+      &quot;seguro&quot;,
+      &quot;homologado pelo inmetro&quot;,
+      &quot;certificado&quot;
+    ],
+    &quot;安全性_en&quot;: [
+      &quot;safe&quot;,
+      &quot;inmetro certified&quot;,
+      &quot;certified&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;engate removível fiat strada&quot;,
+    &quot;engate removível 1000kg&quot;,
+    &quot;engate removível seguro&quot;,
+    &quot;engate removível homologado&quot;,
+    &quot;engate removível para fiat strada&quot;,
+    &quot;engate removível resistente&quot;,
+    &quot;engate removível para tração&quot;,
+    &quot;engate removível fiata strada&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;removable hitch for fiat strada&quot;,
+    &quot;removable hitch 1000kg&quot;,
+    &quot;safe removable hitch&quot;,
+    &quot;inmetro certified removable hitch&quot;,
+    &quot;removable hitch for fiat strada&quot;,
+    &quot;resistant removable hitch&quot;,
+    &quot;removable hitch for towing&quot;,
+    &quot;removable hitch for fiata strada&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+            </section>
+            
+            <section class="case-card">
+              <div class="case-head">
+                <div>
+                  <div class="case-kicker">Case 3</div>
+                  <h2>19998314691</h2>
+                </div>
+                <div class="case-meta">
+                  <span>BR</span>
+                  <span>high</span>
+                  <span>schema_f1=1.000</span>
+                  <span>final_f1=0.245</span>
+                </div>
+              </div>
+              <div class="two-col prompt-row">
+                <div class="panel">
+                  <h3>System Prompt</h3>
+                  <pre>你是电商搜索优化专家。
+
+请根据商品信息和可用Schema属性，先输出 &lt;analysis&gt; JSON，再输出 &lt;final&gt; JSON。
+
+要求：
+1. analysis 必须包含 target_language、selected_schema、keyword_plan，可选 search_intent_summary。
+2. final 必须是结构化 KSP JSON，包含 top_attractiveness、unique_selling_points、long_tail_keywords。
+3. 只能保留商品本身有证据支持的信息，不得编造功能、认证、材质、适配关系。
+4. 过滤物流、售后、退换货、免责声明、客服引导、店铺介绍等非产品信息。
+5. value 字段必须使用目标市场语言；品牌名、型号名、规格数字、通用英文技术词可保留原文。
+6. 只输出标签化结果，不要输出额外解释文字。</pre>
+                </div>
+                <div class="panel">
+                  <h3>User Prompt</h3>
+                  <pre>商品标题：Carburador Weber 460 Cht Gol/parati/saveiro 1.6 Gasolina
+商品描述：Carburador Weber 460 Cht Gol/parati/saveiro 1.6 Gasolina
+Carburador Weber 460 Gol Parati Logus Voyage CHT Gasolina
+
+CHT Gasolina
+
+Código do Fabricante: CN05264
+
+VEÍCULOS COMPATÍVEIS
+
+FORD
+Escort Europeu(Sapão) 1.6 8v (Weber 460 Gasolina) a partir de 93
+
+VOLKSWAGEN
+Gol CHT 1.6 8v (Weber 460 Gasolina) a partir de 91
+Logus CHT 1.6 8v (Weber 460 Gasolina) a partir de 91
+Parati CHT 1.6 8v (Weber 460 Gasolina) a partir de 91
+Saveiro CHT 1.6 8v (Weber 460 Gasolina) a partir de 91
+Voyage CHT 1.6 8v (Weber 460 Gasolina) a partir de 91
+
+ORIENTAÇÕES
+- Enviaremos exatamente o(s) produto(s) que constam nesta página.
+- Antes de comprar, verifique se o produto é compatível com seu veículo. Se tiver dúvidas é só nos perguntar.
+- A instalação do produto é de responsabilidade do consumidor e deve ser executada por um profissional.
+- A garantia não é válida em caso de mau uso do produto.
+
+Marca: JDMSPEED
+
+Garantia do produto:
+O produto possui 90 dias de garantia contra defeito de fabricação diretamente com o fornecedor.
+Suporte:
+Oferecemos suporte especializado para ajudar com quaisquer dúvidas ou informações adicionais que você possa precisar.
+
+A EMPRESA não se responsabiliza pelo mau uso ou instalação indevida do produto, sempre recomendamos que a instalação seja feita por um profissional especializado.
+
+Todos os itens são novos
+商品一级类目：Spare Parts and Accessories for Vehicles
+商品类目：Spare Parts and Accessories for Vehicles|Spare Parts for Automobiles|Engine
+目标地区：BR
+目标市场语言：Português (Brasil)
+可用Schema属性：产地, 原装正版/原产</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;品牌&quot;,
+    &quot;适配型号&quot;,
+    &quot;产品类型&quot;,
+    &quot;产地&quot;,
+    &quot;原装正版/原产&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;品牌&quot;: [
+      &quot;JDMSPEED&quot;,
+      &quot;JDMSPEED&quot;
+    ],
+    &quot;适配型号&quot;: [
+      &quot;Escort Europeu&quot;,
+      &quot;Escort Europeu(Sapão)&quot;,
+      &quot;Gol CHT&quot;,
+      &quot;Logus CHT&quot;,
+      &quot;Parati CHT&quot;,
+      &quot;Saveiro CHT&quot;,
+      &quot;Voyage CHT&quot;
+    ],
+    &quot;产品类型&quot;: [
+      &quot;carburador&quot;,
+      &quot;carburador weber 460&quot;,
+      &quot;carburador cht&quot;
+    ],
+    &quot;产地&quot;: [
+      &quot;fabricado no Brasil&quot;,
+      &quot;fabricado no brasil&quot;,
+      &quot;fabricado no Brasil&quot;
+    ],
+    &quot;原装正版/原产&quot;: [
+      &quot;original&quot;,
+      &quot;original weber 460&quot;,
+      &quot;original weber&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Pessoas que possuem veículos como Ford Escort, Volkswagen Gol, Parati, Saveiro, Logus e Voyage CHT 1.6 8v a partir de 1991, buscando carburadores Weber 460 para melhorar a performance do veículo.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;vehicle model&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;适配型号&quot;,
+    &quot;品牌&quot;,
+    &quot;产品类型&quot;,
+    &quot;原装正版/原产&quot;,
+    &quot;产地&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;Brand&quot;: [
+      &quot;JDMSPEED&quot;,
+      &quot;JDMS&quot;
+    ],
+    &quot;Product Type&quot;: [
+      &quot;carburador&quot;,
+      &quot;carburador weber&quot;,
+      &quot;carburador cht&quot;
+    ],
+    &quot;Compatibility&quot;: [
+      &quot;ford escort europeu&quot;,
+      &quot;ford escort sapão&quot;,
+      &quot;volkswagen gol cht&quot;,
+      &quot;volkswagen logus cht&quot;,
+      &quot;volkswagen parati cht&quot;,
+      &quot;volkswagen saveiro cht&quot;,
+      &quot;volkswagen voyage cht&quot;
+    ],
+    &quot;Feature&quot;: [
+      &quot;weber 460&quot;,
+      &quot;cht gasolina&quot;,
+      &quot;1.6 8v&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Motoristas de veículos como Ford Escort, Volkswagen Gol, Parati, Saveiro e Voyage procurando melhorar a performance do motor, pesquisando carburadores Weber compatíveis com seus modelos.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;compatibility&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;JDMSPEED&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;JDMSPEED&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;carburador weber 460&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;weber 460 carburetor&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;Escort Europeu&quot;,
+      &quot;Gol CHT&quot;,
+      &quot;Logus CHT&quot;,
+      &quot;Parati CHT&quot;,
+      &quot;Saveiro CHT&quot;,
+      &quot;Voyage CHT&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;Escort Europeu&quot;,
+      &quot;Gol CHT&quot;,
+      &quot;Logus CHT&quot;,
+      &quot;Parati CHT&quot;,
+      &quot;Saveiro CHT&quot;,
+      &quot;Voyage CHT&quot;
+    ],
+    &quot;产品类型&quot;: [
+      &quot;carburador weber 460&quot;,
+      &quot;carburador cht&quot;
+    ],
+    &quot;产品类型_en&quot;: [
+      &quot;weber 460 carburetor&quot;,
+      &quot;cht carburetor&quot;
+    ],
+    &quot;原装正版/原产&quot;: [
+      &quot;original weber 460&quot;,
+      &quot;fabricado no Brasil&quot;
+    ],
+    &quot;原装正版/原产_en&quot;: [
+      &quot;original weber 460&quot;,
+      &quot;manufactured in Brazil&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;carburador weber 460 gol&quot;,
+    &quot;carburador para gol cht&quot;,
+    &quot;carburador weber 460 saveiro&quot;,
+    &quot;carburador para saveiro cht&quot;,
+    &quot;carburador weber 460 para ford escort&quot;,
+    &quot;carburador weber 460 para volkswagen&quot;,
+    &quot;carburador weber 460 cht&quot;,
+    &quot;carburador weber 460 para veículos&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;weber 460 carburetor for gol&quot;,
+    &quot;weber 460 carburetor for golf cht&quot;,
+    &quot;weber 460 carburetor for saveiro&quot;,
+    &quot;weber 460 carburetor for saveiro cht&quot;,
+    &quot;weber 460 carburetor for ford escort&quot;,
+    &quot;weber 460 carburetor for volkswagen&quot;,
+    &quot;weber 460 carburetor cht&quot;,
+    &quot;weber 460 carburetor for vehicles&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;JDMSPEED&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;JDMSPEED&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;carburador weber&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;weber carburetor&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;ford escort europeu&quot;,
+      &quot;ford escort sapão&quot;,
+      &quot;volkswagen gol cht&quot;,
+      &quot;volkswagen logus cht&quot;,
+      &quot;volkswagen parati cht&quot;,
+      &quot;volkswagen saveiro cht&quot;,
+      &quot;volkswagen voyage cht&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;ford escort europeu&quot;,
+      &quot;ford escort sapão&quot;,
+      &quot;volkswagen gol cht&quot;,
+      &quot;volkswagen logus cht&quot;,
+      &quot;volkswagen parati cht&quot;,
+      &quot;volkswagen saveiro cht&quot;,
+      &quot;volkswagen voyage cht&quot;
+    ],
+    &quot;性能提升&quot;: [
+      &quot;weber 460&quot;,
+      &quot;cht gasolina&quot;,
+      &quot;1.6 8v&quot;
+    ],
+    &quot;性能提升_en&quot;: [
+      &quot;weber 460&quot;,
+      &quot;cht gasolina&quot;,
+      &quot;1.6 8v&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;carburador weber 460&quot;,
+    &quot;carburador cht gasolina&quot;,
+    &quot;carburador para ford escort&quot;,
+    &quot;carburador para volkswagen gol&quot;,
+    &quot;carburador para volkswagen parati&quot;,
+    &quot;carburador para volkswagen saveiro&quot;,
+    &quot;carburador para volkswagen voyage&quot;,
+    &quot;carburador weber compatível&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;weber carburetor 460&quot;,
+    &quot;weber carburetor cht gasolina&quot;,
+    &quot;weber carburetor for ford escort&quot;,
+    &quot;weber carburetor for volkswagen gol&quot;,
+    &quot;weber carburetor for volkswagen parati&quot;,
+    &quot;weber carburetor for volkswagen saveiro&quot;,
+    &quot;weber carburetor for volkswagen voyage&quot;,
+    &quot;weber carburetor compatible&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+            </section>
+            
+            <section class="case-card">
+              <div class="case-head">
+                <div>
+                  <div class="case-kicker">Case 4</div>
+                  <h2>20299758221</h2>
+                </div>
+                <div class="case-meta">
+                  <span>BR</span>
+                  <span>high</span>
+                  <span>schema_f1=0.600</span>
+                  <span>final_f1=0.220</span>
+                </div>
+              </div>
+              <div class="two-col prompt-row">
+                <div class="panel">
+                  <h3>System Prompt</h3>
+                  <pre>你是电商搜索优化专家。
+
+请根据商品信息和可用Schema属性，先输出 &lt;analysis&gt; JSON，再输出 &lt;final&gt; JSON。
+
+要求：
+1. analysis 必须包含 target_language、selected_schema、keyword_plan，可选 search_intent_summary。
+2. final 必须是结构化 KSP JSON，包含 top_attractiveness、unique_selling_points、long_tail_keywords。
+3. 只能保留商品本身有证据支持的信息，不得编造功能、认证、材质、适配关系。
+4. 过滤物流、售后、退换货、免责声明、客服引导、店铺介绍等非产品信息。
+5. value 字段必须使用目标市场语言；品牌名、型号名、规格数字、通用英文技术词可保留原文。
+6. 只输出标签化结果，不要输出额外解释文字。</pre>
+                </div>
+                <div class="panel">
+                  <h3>User Prompt</h3>
+                  <pre>商品标题：Amortecedor Honda Biz 125 Biz125 Unidade Original Cofap
+商品描述：Amortecedor Honda Biz 125 Biz125 Unidade Original Cofap
+ENVIAREMOS :
+
+1 AMORTECEDOR COFAP
+
+APLICAÇÃO:
+
+HONDA/ BIZ 100 Ks/Es TODOS OS ANOS!! (1999a2015)
+
+HONDA/ BIZ 110i TODOS OS ANOS!! (2016a2021)
+
+HONDA/ BIZ 125 Ks/Es/Ex TODOS OS ANOS!! (2005a2022)
+
+HONDA/ BIZ 125 Ex TODOS OS ANOS!! (2005a2022)
+
+HONDA/ BIZ 125 Es TODOS OS ANOS!! (2005a2022)
+
+HONDA/ POP 100 2007 A 2013
+
+Marca: Cofap
+
+Cod Referencia: CR22624M
+
+Amortecedor: traseiro
+
+!!! DESPACHAREMOS SEU PRODUTO EM ATE DOIS DIAS UTEIS !!!
+
+COMPRE COM TRANQUILIDADE
+
+-Empresa séria e correta
+-Com loja física
+-Nossos produtos acompanham Nota Fiscal
+-Garantia de todos os produtos
+-Ótima reputação e clientes satisfeitos
+
+-Antes de efetuar a compra nos informe o ano de sua moto
+-Antes de comprar o produto verifique se o mesmo é compatível com a marca, modelo e ano da moto.
+-O prazo de entrega do produto é ESTIPULADO PELAS TRANSPORTADORAS
+-As compras que precisam de confirmação de pagamento (por meio de boletos) só serão postadas após a devida confirmação.
+-Em caso de dúvidas estaremos a disposição.
+
+!!! A PODIO MOTO PEÇAS AGRADECE PELA PEFERENCIA !!!
+!!! TENHA UMA OTIMA COMPRA E UM BELO DIA !!!
+!!! TEMOS ATE DOIS DIAS UTEIS PARA DESPACHAR SEU PRODUTO !!!
+商品一级类目：Spare Parts and Accessories for Vehicles
+商品类目：Spare Parts and Accessories for Vehicles|Spare Parts for Motorcycles|Chassis
+目标地区：BR
+目标市场语言：Português (Brasil)
+可用Schema属性：产地, 原装正版/原产</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;原装正版/原产&quot;,
+    &quot;适配型号&quot;,
+    &quot;品牌&quot;,
+    &quot;产品类型&quot;,
+    &quot;兼容性&quot;,
+    &quot;适用年份&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;brand&quot;: [
+      &quot;Honda&quot;,
+      &quot;Honda Biz&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;amortecedor&quot;,
+      &quot;amortecedor traseiro&quot;
+    ],
+    &quot;model&quot;: [
+      &quot;Biz 125&quot;,
+      &quot;Biz125&quot;
+    ],
+    &quot;compatibility&quot;: [
+      &quot;HONDA&quot;,
+      &quot;HONDA BIZ 100 Ks/Es&quot;,
+      &quot;HONDA BIZ 110i&quot;,
+      &quot;HONDA BIZ 125 Ks/Es/Ex&quot;,
+      &quot;HONDA BIZ 125 Ex&quot;,
+      &quot;HONDA BIZ 125 Es&quot;,
+      &quot;HONDA POP 100&quot;
+    ],
+    &quot;year&quot;: [
+      &quot;1999a2015&quot;,
+      &quot;2016a2021&quot;,
+      &quot;2005a2022&quot;,
+      &quot;2007a2013&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Motoristas de motocicletas procurando peças originais para manutenção ou substituição, buscando por amortecedores Honda Biz 125 e modelos compatíveis com diferentes anos de produção&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;model&quot;,
+    &quot;compatibility&quot;,
+    &quot;year&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;品牌&quot;,
+    &quot;适配型号&quot;,
+    &quot;原装正版/原产&quot;,
+    &quot;产地&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;marca&quot;: [
+      &quot;Honda&quot;,
+      &quot;HONDA&quot;
+    ],
+    &quot;modelo&quot;: [
+      &quot;Biz 125&quot;,
+      &quot;Biz 110i&quot;,
+      &quot;Biz 100&quot;,
+      &quot;Pop 100&quot;
+    ],
+    &quot;ano&quot;: [
+      &quot;1999a2015&quot;,
+      &quot;2016a2021&quot;,
+      &quot;2005a2022&quot;,
+      &quot;2007a2013&quot;
+    ],
+    &quot;compatibilidade&quot;: [
+      &quot;HONDA/ BIZ 100&quot;,
+      &quot;HONDA/ BIZ 110i&quot;,
+      &quot;HONDA/ BIZ 125&quot;,
+      &quot;HONDA/ BIZ 125 Ex&quot;,
+      &quot;HONDA/ BIZ 125 Es&quot;,
+      &quot;HONDA/ POP 100&quot;
+    ],
+    &quot;tipo de peça&quot;: [
+      &quot;amortecedor traseiro&quot;,
+      &quot;amortecedor&quot;
+    ],
+    &quot;original&quot;: [
+      &quot;unidade original&quot;,
+      &quot;original&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Motoristas de motocicletas procurando por amortecedores originais para suas Biz 125, Biz 110i, Biz 100 e Pop 100, buscando peças compatíveis e de alta qualidade.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;model&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Honda&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Honda&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;amortecedor traseiro&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;rear shock absorber&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;适配型号&quot;: [
+      &quot;HONDA BIZ 125&quot;,
+      &quot;HONDA BIZ 100&quot;,
+      &quot;HONDA BIZ 110i&quot;,
+      &quot;HONDA BIZ 125 Ks/Es/Ex&quot;,
+      &quot;HONDA BIZ 125 Ex&quot;,
+      &quot;HONDA BIZ 125 Es&quot;,
+      &quot;HONDA POP 100&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;HONDA BIZ 125&quot;,
+      &quot;HONDA BIZ 100&quot;,
+      &quot;HONDA BIZ 110i&quot;,
+      &quot;HONDA BIZ 125 Ks/Es/Ex&quot;,
+      &quot;HONDA BIZ 125 Ex&quot;,
+      &quot;HONDA BIZ 125 Es&quot;,
+      &quot;HONDA POP 100&quot;
+    ],
+    &quot;兼容性&quot;: [
+      &quot;HONDA&quot;,
+      &quot;HONDA BIZ 100 Ks/Es&quot;,
+      &quot;HONDA BIZ 110i&quot;,
+      &quot;HONDA BIZ 125 Ks/Es/Ex&quot;,
+      &quot;HONDA BIZ 125 Ex&quot;,
+      &quot;HONDA BIZ 125 Es&quot;,
+      &quot;HONDA POP 100&quot;
+    ],
+    &quot;兼容性_en&quot;: [
+      &quot;HONDA&quot;,
+      &quot;HONDA BIZ 100 Ks/Es&quot;,
+      &quot;HONDA BIZ 110i&quot;,
+      &quot;HONDA BIZ 125 Ks/Es/Ex&quot;,
+      &quot;HONDA BIZ 125 Ex&quot;,
+      &quot;HONDA BIZ 125 Es&quot;,
+      &quot;HONDA POP 100&quot;
+    ],
+    &quot;适用年份&quot;: [
+      &quot;1999a2015&quot;,
+      &quot;2016a2021&quot;,
+      &quot;2005a2022&quot;,
+      &quot;2007a2013&quot;
+    ],
+    &quot;适用年份_en&quot;: [
+      &quot;1999a2015&quot;,
+      &quot;2016a2021&quot;,
+      &quot;2005a2022&quot;,
+      &quot;2007a2013&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;amortecedor original&quot;,
+    &quot;amortecedor cofap&quot;,
+    &quot;amortecedor honda&quot;,
+    &quot;amortecedor biz 125&quot;,
+    &quot;amortecedor biz 100&quot;,
+    &quot;amortecedor biz 110i&quot;,
+    &quot;amortecedor pop 100&quot;,
+    &quot;amortecedor 1999a2015&quot;,
+    &quot;amortecedor 2016a2021&quot;,
+    &quot;amortecedor 2005a2022&quot;,
+    &quot;amortecedor 2007a2013&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;original shock absorber&quot;,
+    &quot;shock absorber cofap&quot;,
+    &quot;honda shock absorber&quot;,
+    &quot;shock absorber biz 125&quot;,
+    &quot;shock absorber biz 100&quot;,
+    &quot;shock absorber biz 110i&quot;,
+    &quot;shock absorber pop 100&quot;,
+    &quot;shock absorber 1999a2015&quot;,
+    &quot;shock absorber 2016a2021&quot;,
+    &quot;shock absorber 2005a2022&quot;,
+    &quot;shock absorber 2007a2013&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Honda&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Honda&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;amortecedor traseiro&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;rear shock absorber&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;原装正版/原产&quot;: [
+      &quot;unidade original&quot;,
+      &quot;original&quot;
+    ],
+    &quot;适配型号&quot;: [
+      &quot;HONDA/ BIZ 100&quot;,
+      &quot;HONDA/ BIZ 110i&quot;,
+      &quot;HONDA/ BIZ 125&quot;,
+      &quot;HONDA/ BIZ 125 Ex&quot;,
+      &quot;HONDA/ BIZ 125 Es&quot;,
+      &quot;HONDA/ POP 100&quot;
+    ],
+    &quot;适配型号_en&quot;: [
+      &quot;HONDA/ BIZ 100&quot;,
+      &quot;HONDA/ BIZ 110i&quot;,
+      &quot;HONDA/ BIZ 125&quot;,
+      &quot;HONDA/ BIZ 125 Ex&quot;,
+      &quot;HONDA/ BIZ 125 Es&quot;,
+      &quot;HONDA/ POP 100&quot;
+    ],
+    &quot;质量保证&quot;: [
+      &quot;garantia de todos os produtos&quot;,
+      &quot;notas fiscais&quot;
+    ],
+    &quot;质量保证_en&quot;: [
+      &quot;all products come with warranty&quot;,
+      &quot;accompanying tax invoices&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;amortecedor original Honda&quot;,
+    &quot;amortecedor traseiro Biz 125&quot;,
+    &quot;amortecedor Biz 125&quot;,
+    &quot;amortecedor traseiro Biz 110i&quot;,
+    &quot;amortecedor traseiro Biz 100&quot;,
+    &quot;amortecedor traseiro Pop 100&quot;,
+    &quot;amortecedor Honda Biz&quot;,
+    &quot;amortecedor para Biz 125&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;original Honda rear shock absorber&quot;,
+    &quot;rear shock absorber for Biz 125&quot;,
+    &quot;Biz 125 shock absorber&quot;,
+    &quot;rear shock absorber for Biz 110i&quot;,
+    &quot;rear shock absorber for Biz 100&quot;,
+    &quot;rear shock absorber for Pop 100&quot;,
+    &quot;Honda Biz shock absorber&quot;,
+    &quot;Biz 125 rear shock absorber&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+            </section>
+            
+            <section class="case-card">
+              <div class="case-head">
+                <div>
+                  <div class="case-kicker">Case 5</div>
+                  <h2>23698824186</h2>
+                </div>
+                <div class="case-meta">
+                  <span>BR</span>
+                  <span>high</span>
+                  <span>schema_f1=0.600</span>
+                  <span>final_f1=0.404</span>
+                </div>
+              </div>
+              <div class="two-col prompt-row">
+                <div class="panel">
+                  <h3>System Prompt</h3>
+                  <pre>你是电商搜索优化专家。
+
+请根据商品信息和可用Schema属性，先输出 &lt;analysis&gt; JSON，再输出 &lt;final&gt; JSON。
+
+要求：
+1. analysis 必须包含 target_language、selected_schema、keyword_plan，可选 search_intent_summary。
+2. final 必须是结构化 KSP JSON，包含 top_attractiveness、unique_selling_points、long_tail_keywords。
+3. 只能保留商品本身有证据支持的信息，不得编造功能、认证、材质、适配关系。
+4. 过滤物流、售后、退换货、免责声明、客服引导、店铺介绍等非产品信息。
+5. value 字段必须使用目标市场语言；品牌名、型号名、规格数字、通用英文技术词可保留原文。
+6. 只输出标签化结果，不要输出额外解释文字。</pre>
+                </div>
+                <div class="panel">
+                  <h3>User Prompt</h3>
+                  <pre>商品标题：Motor completo GM Omega 3.8 V6 200CV australiano 2004
+商品描述：Motor completo GM Omega 3.8 V6 200CV australiano 2004
+Motor completo com injeção e periférico GM Omega 3.8 V6 200CV australiano 2004
+
+OBS:excelente motor para adaptação!!
+
+Desmanche Auto Mogi - 35 Anos de Experiência em Mogi Mirim SP
+
+Com 35 anos de tradição no mercado de peças automotivas, o Desmanche Auto Mogi é referência em Mogi Mirim SP quando o assunto é a venda de peças usadas e semi-novas de alta qualidade. Atuamos com seriedade, transparência e compromisso com nossos clientes, oferecendo produtos testados e garantidos, além de um atendimento especializado para atender todas as suas necessidades automotivas.
+
+Nosso desmanche é especializado em diversas marcas e modelos de veículos, garantindo peças em excelente estado, com ótimos preços e pronta entrega.
+
+Por que escolher o Desmanche Auto Mogi?
+
+- 35 anos de experiência no mercado de desmanche de veículos.
+- Peças originais e de qualidade, testadas e garantidas.
+- Atendimento personalizado para ajudar você a encontrar exatamente o que precisa.
+- Preço justo e condições de pagamento facilitadas.
+
+Estamos à disposição para oferecer o melhor em peças automotivas. Faça sua compra com segurança e confiança!
+商品一级类目：Spare Parts and Accessories for Vehicles
+商品类目：Spare Parts and Accessories for Vehicles|Spare Parts for Automobiles|Engine
+目标地区：BR
+目标市场语言：Português (Brasil)
+可用Schema属性：产地, 原装正版/原产</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;产地&quot;,
+    &quot;原装正版/原产&quot;,
+    &quot;适配车型&quot;,
+    &quot;功率&quot;,
+    &quot;排量&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;marca&quot;: [
+      &quot;GM&quot;,
+      &quot;General Motors&quot;,
+      &quot;GM Omega&quot;
+    ],
+    &quot;tipo de produto&quot;: [
+      &quot;motor&quot;,
+      &quot;motor completo&quot;
+    ],
+    &quot;potência&quot;: [
+      &quot;200CV&quot;,
+      &quot;potência&quot;,
+      &quot;200 CV&quot;,
+      &quot;200 cavalos&quot;
+    ],
+    &quot;capacidade&quot;: [
+      &quot;3.8 V6&quot;,
+      &quot;3,8 V6&quot;,
+      &quot;3,8 litros&quot;,
+      &quot;V6&quot;
+    ],
+    &quot;origem&quot;: [
+      &quot;australiano&quot;,
+      &quot;desmanche australiano&quot;,
+      &quot;austrália&quot;
+    ],
+    &quot;aplicação&quot;: [
+      &quot;adaptação em veículos&quot;,
+      &quot;adaptação&quot;,
+      &quot;instalação em veículos&quot;
+    ],
+    &quot;garantia&quot;: [
+      &quot;testado e garantido&quot;,
+      &quot;testado&quot;,
+      &quot;garantido&quot;
+    ],
+    &quot;qualidade&quot;: [
+      &quot;alta qualidade&quot;,
+      &quot;qualidade&quot;,
+      &quot;excelente qualidade&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Motoristas e mecânicos buscando motores usados de alta qualidade para adaptação em veículos, pesquisando motores GM Omega 3.8 V6, potência 200CV e peças de desmanche australianas&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Analysis</h3>
+                  <pre>{
+  &quot;target_language&quot;: &quot;Português (Brasil)&quot;,
+  &quot;selected_schema&quot;: [
+    &quot;产地&quot;,
+    &quot;原装正版/原产&quot;,
+    &quot;适配型号&quot;,
+    &quot;功率&quot;,
+    &quot;年份&quot;
+  ],
+  &quot;keyword_plan&quot;: {
+    &quot;marca&quot;: [
+      &quot;GM&quot;,
+      &quot;General Motors&quot;
+    ],
+    &quot;tipo de motor&quot;: [
+      &quot;V6&quot;,
+      &quot;motor V6&quot;
+    ],
+    &quot;potência&quot;: [
+      &quot;200CV&quot;,
+      &quot;200 cavalos de potência&quot;
+    ],
+    &quot;ano&quot;: [
+      &quot;2004&quot;,
+      &quot;2004&quot;
+    ],
+    &quot;origem&quot;: [
+      &quot;australiano&quot;,
+      &quot;australiano&quot;
+    ]
+  },
+  &quot;search_intent_summary&quot;: &quot;Compradores de peças automotivas procurando motores usados de alta qualidade, especialmente aqueles que precisam de peças para adaptação de veículos ou reparos. Pesquisam por marcas, potência do motor e ano de fabricação.&quot;,
+  &quot;search_word_types&quot;: [
+    &quot;brand&quot;,
+    &quot;product type&quot;,
+    &quot;feature&quot;,
+    &quot;use case&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+              <div class="two-col">
+                <div class="panel">
+                  <h3>Label Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;GM&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;GM&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;motor completo&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;complete motor&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;产地&quot;: [
+      &quot;desmanche australiano&quot;,
+      &quot;australiano&quot;
+    ],
+    &quot;产地_en&quot;: [
+      &quot;australian&quot;
+    ],
+    &quot;适配车型&quot;: [
+      &quot;adaptação em veículos&quot;,
+      &quot;adaptação&quot;
+    ],
+    &quot;适配车型_en&quot;: [
+      &quot;vehicle adaptation&quot;
+    ],
+    &quot;功率&quot;: [
+      &quot;200CV&quot;,
+      &quot;200 cavalos&quot;,
+      &quot;potência&quot;
+    ],
+    &quot;功率_en&quot;: [
+      &quot;200CV&quot;,
+      &quot;200 horsepower&quot;,
+      &quot;power&quot;
+    ],
+    &quot;排量&quot;: [
+      &quot;3.8 V6&quot;,
+      &quot;3,8 V6&quot;,
+      &quot;3,8 litros&quot;
+    ],
+    &quot;排量_en&quot;: [
+      &quot;3.8 V6&quot;,
+      &quot;3.8 liters&quot;,
+      &quot;displacement&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;motor GM Omega&quot;,
+    &quot;motor 3.8 V6&quot;,
+    &quot;motor 200CV&quot;,
+    &quot;adaptação de motor&quot;,
+    &quot;motor para veículos&quot;,
+    &quot;motor desmanche&quot;,
+    &quot;motor de desmanche australiano&quot;,
+    &quot;motor de veículos usados&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;GM Omega motor&quot;,
+    &quot;3.8 V6 motor&quot;,
+    &quot;200CV motor&quot;,
+    &quot;motor adaptation&quot;,
+    &quot;vehicle motor&quot;,
+    &quot;salvage motor&quot;,
+    &quot;australian salvage motor&quot;,
+    &quot;used vehicle motor&quot;
+  ]
+}</pre>
+                </div>
+                <div class="panel">
+                  <h3>Prediction Final</h3>
+                  <pre>{
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;GM&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;GM&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;motor completo&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;complete engine&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;原装正版/原产&quot;: [
+      &quot;australiano&quot;,
+      &quot;peças originais&quot;
+    ],
+    &quot;适配型号&quot;: [
+      &quot;GM Omega 3.8 V6&quot;,
+      &quot;Omega 3.8 V6&quot;
+    ],
+    &quot;功率&quot;: [
+      &quot;200CV&quot;,
+      &quot;200 cavalos de potência&quot;
+    ],
+    &quot;年份&quot;: [
+      &quot;2004&quot;,
+      &quot;2004&quot;
+    ]
+  },
+  &quot;long_tail_keywords&quot;: [
+    &quot;motor GM Omega&quot;,
+    &quot;motor V6 3.8&quot;,
+    &quot;motor 200CV&quot;,
+    &quot;motor 2004&quot;,
+    &quot;motor desmanche&quot;,
+    &quot;motor usado&quot;,
+    &quot;motor para adaptação&quot;,
+    &quot;motor GM&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;GM Omega motor&quot;,
+    &quot;V6 3.8 motor&quot;,
+    &quot;200CV motor&quot;,
+    &quot;2004 motor&quot;,
+    &quot;desmanche motor&quot;,
+    &quot;used motor&quot;,
+    &quot;adaptation motor&quot;,
+    &quot;GM motor&quot;
+  ]
+}</pre>
+                </div>
+              </div>
+            </section>
+            
+  </main>
+</body>
+</html>
