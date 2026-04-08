@@ -390,7 +390,7 @@
     <section class="hero">
       <span class="eyebrow">Judge Prompt</span>
       <h1>KSP 双边评审 Prompt 预览</h1>
-      <p class="sub">这页把当前正在使用的 `KSP judge`（KSP 评审）提示词渲染成更容易检查的结构视图。上面先看 `TW`（台湾）`sample20`（20 条样本）评审结果，下面是第一条真实样本的输入内容和完整 prompt 原文。</p>
+      <p class="sub">这页把当前正在使用的 `KSP judge`（KSP 评审）提示词渲染成更容易检查的结构视图。现在这版把 `地区语言与本地化`（locale and language fit）的优先级抬到了更前面。上面先看 `TW`（台湾）`sample20`（20 条样本）评审结果，下面是第一条真实样本的输入内容和完整 prompt 原文。</p>
       <div class="meta-row">
         <div class="card">
           <div class="label">Prompt 文件</div>
@@ -438,8 +438,8 @@
           <h3>硬约束</h3>
           <ul>
             <li>`品牌错误`（brand wrong）直接算严重问题；商品本身无品牌时，不写品牌也可以接受。</li>
+            <li>`语言是否符合地区`（locale fit）现在提到了更前面；主结果字段如果明显跑错语种，原则上不能获胜。</li>
             <li>`明显编造`（clear hallucination）不能靠别的维度补回来。</li>
-            <li>`语言是否符合地区`（locale fit）单独检查，不和搜索价值混算；`_en` 字段允许英文。</li>
           </ul>
         </article>
         <article class="rule-card">
