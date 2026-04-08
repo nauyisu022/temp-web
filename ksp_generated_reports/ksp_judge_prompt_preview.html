@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #f4efe6;
-      --panel: rgba(255, 251, 243, 0.92);
+      --panel: rgba(255, 251, 243, 0.94);
       --panel-strong: #fffdf8;
       --ink: #1c2328;
       --muted: #627078;
@@ -22,9 +22,7 @@
       --mono: "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
       --serif: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", serif;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       color: var(--ink);
@@ -34,15 +32,12 @@
         radial-gradient(circle at bottom right, rgba(27, 107, 79, 0.10), transparent 26rem),
         linear-gradient(180deg, #f7f3ec 0%, var(--bg) 100%);
     }
-
     .wrap {
-      width: min(1420px, calc(100vw - 32px));
+      width: min(1480px, calc(100vw - 32px));
       margin: 0 auto;
       padding: 28px 0 48px;
     }
-
-    .hero,
-    .section {
+    .hero, .section {
       margin-bottom: 18px;
       padding: 20px 22px;
       border: 1px solid var(--line);
@@ -51,7 +46,6 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-
     .eyebrow {
       display: inline-block;
       padding: 6px 12px;
@@ -62,79 +56,63 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-
     h1 {
       margin: 14px 0 8px;
       font-size: clamp(30px, 4vw, 52px);
       line-height: 1.04;
     }
-
     .sub {
       margin: 0;
-      max-width: 940px;
+      max-width: 960px;
       color: var(--muted);
       line-height: 1.8;
       font-size: 15px;
     }
-
-    .meta-row,
-    .metric-grid,
-    .rule-grid,
-    .two-col {
+    .meta-row, .metric-grid, .rule-grid, .two-col, .case-grid {
       display: grid;
       gap: 14px;
     }
-
     .meta-row {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       margin-top: 18px;
     }
-
     .metric-grid {
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     }
-
     .rule-grid {
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
-
     .two-col {
-      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-columns: 1.02fr 0.98fr;
     }
-
-    .card,
-    .panel,
-    .rule-card {
+    .case-grid {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 14px;
+    }
+    .card, .panel, .rule-card, .case-card, .side-panel {
       border: 1px solid var(--line);
       border-radius: 18px;
       background: var(--panel-strong);
     }
-
-    .card {
-      padding: 14px 16px;
-    }
-
+    .card { padding: 14px 16px; }
     .label {
       font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--muted);
     }
-
     .value {
       margin-top: 8px;
       font-size: 28px;
       font-weight: 700;
       color: var(--accent);
     }
-
     .note {
       margin-top: 6px;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.6;
     }
-
     .section-head {
       display: flex;
       justify-content: space-between;
@@ -142,13 +120,11 @@
       align-items: flex-start;
       margin-bottom: 14px;
     }
-
     .section-head h2 {
       margin: 6px 0 0;
       font-size: 24px;
       line-height: 1.2;
     }
-
     .section-head p {
       margin: 6px 0 0;
       color: var(--muted);
@@ -156,7 +132,6 @@
       line-height: 1.7;
       max-width: 820px;
     }
-
     .chip {
       align-self: flex-start;
       padding: 7px 11px;
@@ -166,16 +141,11 @@
       font-size: 12px;
       white-space: nowrap;
     }
-
-    .rule-card {
-      padding: 18px;
-    }
-
+    .rule-card { padding: 18px; }
     .rule-card h3 {
       margin: 0 0 10px;
       font-size: 18px;
     }
-
     .rule-card ul {
       margin: 0;
       padding-left: 18px;
@@ -183,27 +153,9 @@
       line-height: 1.8;
       font-size: 14px;
     }
-
-    .sample-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .sample-meta span {
-      display: inline-flex;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: rgba(28, 35, 40, 0.06);
-      color: #314047;
-      font-size: 12px;
-    }
-
     .panel {
       overflow: hidden;
     }
-
     .panel-head {
       padding: 12px 14px;
       border-bottom: 1px solid var(--line);
@@ -211,19 +163,13 @@
       font-size: 14px;
       font-weight: 700;
     }
-
     .panel-body {
       padding: 14px;
     }
-
     .field {
       margin-bottom: 14px;
     }
-
-    .field:last-child {
-      margin-bottom: 0;
-    }
-
+    .field:last-child { margin-bottom: 0; }
     .field .field-name {
       display: inline-block;
       margin-bottom: 6px;
@@ -235,7 +181,6 @@
       letter-spacing: 0.03em;
       text-transform: uppercase;
     }
-
     .field .field-text {
       color: #2c353a;
       line-height: 1.8;
@@ -243,7 +188,6 @@
       white-space: pre-wrap;
       word-break: break-word;
     }
-
     pre {
       margin: 0;
       padding: 16px;
@@ -256,44 +200,12 @@
       color: #223037;
       background: #fdfaf4;
     }
-
-    .candidate-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .candidate-head h3 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    .candidate-tag {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-    }
-
-    .candidate-tag.good {
-      background: var(--good-soft);
-      color: var(--good);
-    }
-
-    .candidate-tag.bad {
-      background: var(--bad-soft);
-      color: var(--bad);
-    }
-
     details {
       border: 1px solid var(--line);
       border-radius: 18px;
       background: var(--panel-strong);
       overflow: hidden;
     }
-
     summary {
       cursor: pointer;
       padding: 14px 16px;
@@ -301,17 +213,151 @@
       font-size: 15px;
       background: #f8f2e8;
     }
-
+    .case-card {
+      padding: 18px;
+      margin-top: 16px;
+      box-shadow: 0 12px 30px rgba(80, 58, 34, 0.06);
+    }
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .case-kicker {
+      color: var(--accent);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .case-head h3 {
+      margin: 6px 0 0;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .case-meta span {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(28, 35, 40, 0.06);
+      color: #314047;
+      font-size: 12px;
+    }
+    .winner-badge {
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .winner-a {
+      background: var(--good-soft);
+      color: var(--good);
+    }
+    .winner-b {
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+    .winner-tie, .winner-unknown {
+      background: rgba(28, 35, 40, 0.07);
+      color: #314047;
+    }
+    .verdict {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f8f2e8;
+      border: 1px solid var(--line);
+    }
+    .verdict-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .verdict p {
+      margin: 8px 0 0;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .side-panel { overflow: hidden; }
+    .side-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbf7ef;
+    }
+    .side-head h4 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .side-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(28, 35, 40, 0.06);
+      color: #314047;
+      font-size: 12px;
+    }
+    .metric-list {
+      padding: 12px 14px 8px;
+      display: grid;
+      gap: 8px;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(28, 35, 40, 0.1);
+      font-size: 14px;
+      color: #334147;
+    }
+    .metric-row strong {
+      color: var(--ink);
+      font-size: 15px;
+    }
+    .issues {
+      padding: 0 14px 14px;
+    }
+    .issues-title {
+      margin: 8px 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .issues ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #425158;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+    }
     .footer-note {
       margin-top: 14px;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.7;
     }
-
-    @media (max-width: 1024px) {
-      .two-col {
+    @media (max-width: 1100px) {
+      .two-col, .case-grid {
         grid-template-columns: 1fr;
+      }
+      .case-head {
+        flex-direction: column;
       }
     }
   </style>
@@ -344,39 +390,15 @@
           <h2>Sample 20 结果</h2>
           <p>这组结果来自 `TW v6 vs new_v9`（台湾旧模型对新模型）的 `20` 条冒烟评审。这里主要是想先确认新的评审提示词和 `A/B` 随机化没有偏掉。</p>
         </div>
-        <div class="chip">Gemini 2.5 Flash</div>
+        <div class="chip">gemini-2.5-flash</div>
       </div>
       <div class="metric-grid">
-        <div class="card">
-          <div class="label">样本数</div>
-          <div class="value">20</div>
-          <div class="note">当前这轮冒烟评审的样本数量</div>
-        </div>
-        <div class="card">
-          <div class="label">new v9 胜出</div>
-          <div class="value">13</div>
-          <div class="note">按真实标签回算，不按展示位置统计</div>
-        </div>
-        <div class="card">
-          <div class="label">v6 胜出</div>
-          <div class="value">7</div>
-          <div class="note">这组里 `new_v9`（新模型）暂时领先</div>
-        </div>
-        <div class="card">
-          <div class="label">交换比例</div>
-          <div class="value">10 / 10</div>
-          <div class="note">`swap_true=10`、`swap_false=10`，位置基本对半</div>
-        </div>
-        <div class="card">
-          <div class="label">new v9 均分</div>
-          <div class="value">3.75</div>
-          <div class="note">综合均分</div>
-        </div>
-        <div class="card">
-          <div class="label">v6 均分</div>
-          <div class="value">2.89</div>
-          <div class="note">综合均分</div>
-        </div>
+        <div class="card"><div class="label">样本数</div><div class="value">20</div><div class="note">当前这轮冒烟评审的样本数量</div></div>
+        <div class="card"><div class="label">new v9 胜出</div><div class="value">13</div><div class="note">按真实标签回算，不按展示位置统计</div></div>
+        <div class="card"><div class="label">v6 胜出</div><div class="value">7</div><div class="note">这组里 `new_v9`（新模型）暂时领先</div></div>
+        <div class="card"><div class="label">交换比例</div><div class="value">10 / 10</div><div class="note">`swap_true`（交换）/ `swap_false`（未交换）</div></div>
+        <div class="card"><div class="label">new v9 均分</div><div class="value">3.75</div><div class="note">综合均分</div></div>
+        <div class="card"><div class="label">v6 均分</div><div class="value">2.89</div><div class="note">综合均分</div></div>
       </div>
     </section>
 
@@ -422,134 +444,10 @@
           <h2>第一条真实样本</h2>
           <p>这条是 `TW v6 vs new_v9`（台湾旧模型对新模型）的第一条真实输入。这里展示的是已经随机完 `A/B` 顺序之后，真正喂给评审模型的内容。</p>
         </div>
-        <div class="sample-meta">
-          <span>Region: TW</span>
-          <span>Category: Beauty|Skincare|Lip Treatment</span>
-          <span>A/B 已随机</span>
-        </div>
+        <div class="chip">Prompt Sample</div>
       </div>
-
-      <div class="two-col">
-        <div class="panel">
-          <div class="panel-head">输入信息</div>
-          <div class="panel-body">
-            <div class="field">
-              <div class="field-name">title</div>
-              <div class="field-text">[ETUDE] 薑糖隔夜唇膜 23g</div>
-            </div>
-            <div class="field">
-              <div class="field-name">description</div>
-              <div class="field-text">[ETUDE] 薑糖隔夜唇膜 23g
-感謝您光臨我的商店
-關注我的商店並獲得您的折扣券.
-
-日常脣部護理,可用作潤脣膏和脣膜
-
-含有姜+橙油成分,有助於為皮膚提供能量,穩定身心.
-
-含有糖+乳木果油成分,有助於形成保溼膜,呵護死皮細胞.
-
-韓國製造 Made in KOREA
-體積: 23g 23g
-使用方法:睡前取適量塗抹於嘴脣.
-對於溼潤的脣部護理,您可以不時重新塗抹以使用它.
-
-✅ 請理解,由於產品的有效期單獨標記,並且每個選項都有差異,因此很難提供確切的日期.
-規格上張貼的日期是任意設置的,我們會盡快向您發送具有有效期的產品.
-
-交貨期 (pdf)
->> 產品直接從韓國發貨.
->>> 100% 正品
->> 交貨時間長達 7-10 天. (不含週末及假日)
-
->>> 如果發貨包裹有嚴重損壞或錯誤,
-
-提供客戶服務
->> 如果您有任何問題,請通過聊天給我留言.
->>> 我們會盡快回復.
->>> 我們會確保您與我們保持聯繫, 除非我們睡著了.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="two-col" style="grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div class="panel">
-            <div class="candidate-head">
-              <h3>候选 A</h3>
-              <span class="candidate-tag good">当前样本中为 new_v9</span>
-            </div>
-            <pre>{
-  "long_tail_keywords": [
-    "姜糖護唇",
-    "睡前護唇",
-    "日常護唇",
-    "干燥天氣護唇",
-    "韓國製造",
-    "23g唇膜",
-    "隔夜護唇",
-    "姜橙護唇"
-  ],
-  "long_tail_keywords_en": [
-    "ginger sugar lip care",
-    "overnight lip care",
-    "daily lip care",
-    "dry weather lip care",
-    "made in korea",
-    "23g lip mask",
-    "overnight lip treatment",
-    "ginger orange lip care"
-  ],
-  "top_attractiveness": {
-    "brand": ["ETUDE"],
-    "brand_en": ["ETUDE"],
-    "product_type": ["隔夜唇膜"],
-    "product_type_en": ["overnight lip mask"]
-  },
-  "unique_selling_points": {
-    "滋润保湿": ["保濕", "滋润", "保湿"],
-    "滋润保湿_en": ["moisturizing", "hydration", "moisture retention"],
-    "舒緩修復": ["舒緩", "修復", "鎮定"],
-    "舒緩修復_en": ["relaxation", "repair", "calming"],
-    "適用群體": ["女性", "愛護唇部的人", "需要護唇的人"],
-    "適用群體_en": ["women", "lip care enthusiasts", "people who need lip care"]
-  }
-}</pre>
-          </div>
-
-          <div class="panel">
-            <div class="candidate-head">
-              <h3>候选 B</h3>
-              <span class="candidate-tag bad">当前样本中为 v6</span>
-            </div>
-            <pre>{
-  "long_tail_keywords": [
-    "生姜蜂蜜面膜",
-    "晚安唇霜",
-    "滋养修护唇膜"
-  ],
-  "top_attractiveness": {
-    "brand": ["ETUDE"],
-    "brand_en": ["ETUDE"],
-    "product_type": ["隔夜唇膜"],
-    "product_type_en": ["Overnight Lip Mask"]
-  },
-  "unique_selling_points": {
-    "夜间护肤": ["可用于晚间滋润护唇", "每日涂抹更新配方"],
-    "夜间护肤_en": ["Suitable for Nighttime Moisturizing Care", "Daily Application with Fresh Formula Update"],
-    "天然成分": ["含姜+橙油成分", "含糖+乳木果油成分"],
-    "天然成分_en": ["Contains Ginger + Orange Oil Ingredients", "Contains Sugar + Shea Butter Components"],
-    "舒缓护理": ["稳定身心", "呵护干燥细胞"],
-    "舒缓护理_en": ["Stabilizes Mind and Body", "Nurtures Dry Cells"]
-  }
-}</pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
       <details open>
-        <summary>完整 Prompt 原文</summary>
+        <summary>展开查看完整 Prompt 原文</summary>
         <pre>你是电商搜索卖点提取的评审员。你的任务是比较两个候选结果，判断哪一个更适合作为商品搜索卖点结果。
 
 你必须优先关注品牌是否正确、内容是否忠实于原始商品信息，其次再看搜索价值、地区语言和结构质量。
@@ -663,24 +561,137 @@ Beauty|Skincare|Lip Treatment
 規格上張貼的日期是任意設置的,我們會盡快向您發送具有有效期的產品.
 
 交貨期 (pdf)
->> 產品直接從韓國發貨.
->>> 100% 正品
->> 交貨時間長達 7-10 天. (不含週末及假日)
+&gt;&gt; 產品直接從韓國發貨.
+&gt;&gt;&gt; 100% 正品
+&gt;&gt; 交貨時間長達 7-10 天. (不含週末及假日)
 
->>> 如果發貨包裹有嚴重損壞或錯誤,
+&gt;&gt;&gt; 如果發貨包裹有嚴重損壞或錯誤,
 
 提供客戶服務
->> 如果您有任何問題,請通過聊天給我留言.
->>> 我們會盡快回復.
->>> 我們會確保您與我們保持聯繫, 除非我們睡著了.
+&gt;&gt; 如果您有任何問題,請通過聊天給我留言.
+&gt;&gt;&gt; 我們會盡快回復.
+&gt;&gt;&gt; 我們會確保您與我們保持聯繫, 除非我們睡著了.
 &lt;/description&gt;
 
 &lt;candidate_a&gt;
-{ ... }
+{
+  &quot;long_tail_keywords&quot;: [
+    &quot;姜糖護唇&quot;,
+    &quot;睡前護唇&quot;,
+    &quot;日常護唇&quot;,
+    &quot;干燥天氣護唇&quot;,
+    &quot;韓國製造&quot;,
+    &quot;23g唇膜&quot;,
+    &quot;隔夜護唇&quot;,
+    &quot;姜橙護唇&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;ginger sugar lip care&quot;,
+    &quot;overnight lip care&quot;,
+    &quot;daily lip care&quot;,
+    &quot;dry weather lip care&quot;,
+    &quot;made in korea&quot;,
+    &quot;23g lip mask&quot;,
+    &quot;overnight lip treatment&quot;,
+    &quot;ginger orange lip care&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;隔夜唇膜&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;overnight lip mask&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;滋润保湿&quot;: [
+      &quot;保濕&quot;,
+      &quot;滋润&quot;,
+      &quot;保湿&quot;
+    ],
+    &quot;滋润保湿_en&quot;: [
+      &quot;moisturizing&quot;,
+      &quot;hydration&quot;,
+      &quot;moisture retention&quot;
+    ],
+    &quot;舒緩修復&quot;: [
+      &quot;舒緩&quot;,
+      &quot;修復&quot;,
+      &quot;鎮定&quot;
+    ],
+    &quot;舒緩修復_en&quot;: [
+      &quot;relaxation&quot;,
+      &quot;repair&quot;,
+      &quot;calming&quot;
+    ],
+    &quot;適用群體&quot;: [
+      &quot;女性&quot;,
+      &quot;愛護唇部的人&quot;,
+      &quot;需要護唇的人&quot;
+    ],
+    &quot;適用群體_en&quot;: [
+      &quot;women&quot;,
+      &quot;lip care enthusiasts&quot;,
+      &quot;people who need lip care&quot;
+    ]
+  }
+}
 &lt;/candidate_a&gt;
 
 &lt;candidate_b&gt;
-{ ... }
+{
+  &quot;long_tail_keywords&quot;: [
+    &quot;生姜蜂蜜面膜&quot;,
+    &quot;晚安唇霜&quot;,
+    &quot;滋养修护唇膜&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;隔夜唇膜&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Overnight Lip Mask&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;夜间护肤&quot;: [
+      &quot;可用于晚间滋润护唇&quot;,
+      &quot;每日涂抹更新配方&quot;
+    ],
+    &quot;夜间护肤_en&quot;: [
+      &quot;Suitable for Nighttime Moisturizing Care&quot;,
+      &quot;Daily Application with Fresh Formula Update&quot;
+    ],
+    &quot;天然成分&quot;: [
+      &quot;含姜+橙油成分&quot;,
+      &quot;含糖+乳木果油成分&quot;
+    ],
+    &quot;天然成分_en&quot;: [
+      &quot;Contains Ginger + Orange Oil Ingredients&quot;,
+      &quot;Contains Sugar + Shea Butter Components&quot;
+    ],
+    &quot;舒缓护理&quot;: [
+      &quot;稳定身心&quot;,
+      &quot;呵护干燥细胞&quot;
+    ],
+    &quot;舒缓护理_en&quot;: [
+      &quot;Stabilizes Mind and Body&quot;,
+      &quot;Nurtures Dry Cells&quot;
+    ]
+  }
+}
 &lt;/candidate_b&gt;
 
 【输出要求】
@@ -688,14 +699,1523 @@ Beauty|Skincare|Lip Treatment
 
 输出格式：
 {
-  "硬约束判断": { ... },
-  "评分": { ... },
-  "关键问题": { ... },
-  "结论摘要": "一句话说明为什么A或B更好",
-  "胜者": "A/B/平"
+  &quot;硬约束判断&quot;: {
+    &quot;A&quot;: {
+      &quot;品牌状态&quot;: &quot;正确/缺失但未写错/错误&quot;,
+      &quot;是否明显编造&quot;: &quot;否/轻微/明显&quot;,
+      &quot;语言是否符合地区&quot;: &quot;是/部分否/否&quot;
+    },
+    &quot;B&quot;: {
+      &quot;品牌状态&quot;: &quot;正确/缺失但未写错/错误&quot;,
+      &quot;是否明显编造&quot;: &quot;否/轻微/明显&quot;,
+      &quot;语言是否符合地区&quot;: &quot;是/部分否/否&quot;
+    }
+  },
+  &quot;评分&quot;: {
+    &quot;A&quot;: {
+      &quot;品牌正确性&quot;: 1,
+      &quot;事实忠实度&quot;: {
+        &quot;核心吸引点&quot;: 1,
+        &quot;独特卖点&quot;: 1,
+        &quot;长尾搜索词&quot;: 1,
+        &quot;综合分&quot;: 1
+      },
+      &quot;搜索价值&quot;: 1,
+      &quot;地区语言与本地化&quot;: 1,
+      &quot;结构完整与去重&quot;: 1
+    },
+    &quot;B&quot;: {
+      &quot;品牌正确性&quot;: 1,
+      &quot;事实忠实度&quot;: {
+        &quot;核心吸引点&quot;: 1,
+        &quot;独特卖点&quot;: 1,
+        &quot;长尾搜索词&quot;: 1,
+        &quot;综合分&quot;: 1
+      },
+      &quot;搜索价值&quot;: 1,
+      &quot;地区语言与本地化&quot;: 1,
+      &quot;结构完整与去重&quot;: 1
+    }
+  },
+  &quot;关键问题&quot;: {
+    &quot;A&quot;: [&quot;最多3条&quot;],
+    &quot;B&quot;: [&quot;最多3条&quot;]
+  },
+  &quot;结论摘要&quot;: &quot;一句话说明为什么A或B更好&quot;,
+  &quot;胜者&quot;: &quot;A/B/平&quot;
 }</pre>
       </details>
-      <div class="footer-note">这页主要是为了看清现在实际喂给 `judge model`（评审模型）的 prompt 长什么样，以及 `TW sample20`（台湾 20 条样本）这一轮评审的大致结果。</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>逐条打分</h2>
+          <p>下面这 `20` 条就是这次 `sample20`（20 条样本）评审的逐条结果。每条都保留了 `A/B`（双边）真实展示位置、胜者、硬约束判断、各维度打分和关键问题。</p>
+        </div>
+        <div class="chip">20 Cases</div>
+      </div>
+      
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 1</div>
+            <h3>[ETUDE] 薑糖隔夜唇膜 23g</h3>
+            <div class="case-meta">
+              <span>Item 19873128577</span>
+              <span>TW</span>
+              <span>Beauty|Skincare|Lip Treatment</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A在语言本地化和事实忠实度方面远优于候选B，候选B存在严重的语言错误和事实编造。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>unique_selling_points中的“適用群體”包含假设性人群（女性）和过于泛化的描述。</li><li>unique_selling_points中的“舒緩修復”包含“鎮定”，与原文“穩定身心”有轻微延伸。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>输出语言为简体中文，不符合目标地区（台湾）的繁体中文要求。</li><li>long_tail_keywords中“生姜蜂蜜面膜”的“蜂蜜”成分为凭空编造，原文无此信息。</li><li>long_tail_keywords中“晚安唇霜”将产品类型“唇膜”错误地写成“唇霜”。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 2</div>
+            <h3>🪐216張美國山海經搞笑抽象沙雕貼紙意義不明創意趣味裝飾貼畫防水</h3>
+            <div class="case-meta">
+              <span>Item 41004677407</span>
+              <span>TW</span>
+              <span>Stationery|Notebooks &amp; Papers|Labels &amp; Stickers</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A存在严重的品牌识别错误和地区语言错误，而候选B虽然有轻微的事实推断和语言混杂问题，但其主要输出语言符合地区要求且品牌处理正确，因此更优。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>将商品描述中的&#x27;美國山海經&#x27;错误识别为品牌。</li><li>输出语言为简体中文，不符合目标地区台湾（繁体中文）的语言要求。</li><li>`_en`字段作为主要输出的一部分，不符合地区语言要求。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>部分长尾搜索词和独特卖点（如适用场景）是推断而非直接来源于原文，存在轻微编造。</li><li>`_en`字段中存在简体中文，语言混杂。</li><li>部分卖点存在轻微重复（如防水防潮）。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 3</div>
+            <h3>寇比造型蛋糕 小小兵 造型蛋糕 客製化 人偶蛋糕</h3>
+            <div class="case-meta">
+              <span>Item 1175102786</span>
+              <span>TW</span>
+              <span>Food &amp; Beverages|Bakery|Cakes &amp; Pies</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>尽管两者在英文翻译上都存在事实错误，但候选B的中文内容更忠实于原文，且结构更清晰，错误程度相对较轻。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>英文翻译存在多处严重事实错误，如&#x27;muffin cake&#x27;对应&#x27;戚風蛋糕&#x27;，&#x27;egg and dairy free&#x27;对应&#x27;蛋奶素&#x27;。</li><li>独特卖点&#x27;口味多樣&#x27;中混入了形状/主题词（小小兵、人偶蛋糕）而非口味。</li><li>长尾词&#x27;蛋糕配送&#x27;在原文中未明确提及为服务。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>英文翻译存在事实错误，如&#x27;Homemade Fresh Cream Cheese&#x27;对应&#x27;自製鲜奶卡士达及奶霜&#x27;。</li><li>独特卖点&#x27;健康友好&#x27;中的&#x27;不含添加剂&#x27;与原文提及的色素使用有出入，属于过度概括或编造。</li><li>英文翻译&#x27;No Additives Added&#x27;与原文提及的色素使用有出入。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 4</div>
+            <h3>【秒殺預售】寶可夢 PTCG 日版 超級夢想X 可達鴨 AR 199/193 M2a MEGA 日文</h3>
+            <div class="case-meta">
+              <span>Item 51402536216</span>
+              <span>TW</span>
+              <span>Hobbies &amp; Collections|Toys &amp; Games|Dice, Board &amp; Card Games</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然存在内容编造和结构冗余问题，但其品牌识别正确且语言符合目标地区。候选B存在严重的品牌错误和语言错误，且同样有内容编造，因此候选A更优。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>4</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中&#x27;数量与包装&#x27;完全编造，原文无此信息且商品为单卡。</li><li>长尾搜索词和独特卖点中存在少量推断或泛化，如&#x27;限量版&#x27;、&#x27;交易&#x27;。</li><li>结构中包含英文翻译，不符合目标地区语言输出要求。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将&#x27;PTCG&#x27;作为品牌，而非&#x27;寶可夢&#x27;。</li><li>语言不符合目标地区，使用简体中文而非繁体中文。</li><li>独特卖点中&#x27;限量预购&#x27;下的&#x27;现货保障&#x27;与原文描述相悖，属于编造。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 5</div>
+            <h3>刮勺 挖勺 面膜挖勺 分裝勺 分裝棒 面膜勺 調膜棒 面霜勺 美妝工具 化妝品 分裝刮勺【L084】Color me</h3>
+            <div class="case-meta">
+              <span>Item 22923223497</span>
+              <span>TW</span>
+              <span>Beauty|Beauty Tools|Others</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然未提取品牌信息且有轻微编造，但其编造内容为通用属性，且提供了更丰富的搜索关键词；候选B虽然提取了品牌，但其独特卖点存在严重误导性编造，将负面信息错误解读为卖点，且搜索关键词覆盖不足。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中“易清洗”、“耐用”为原文未提及的编造内容</li><li>未提取品牌信息</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中“輕巧設計”为原文未提及的编造内容</li><li>独特卖点中将原文描述产品可能出现刮痕或掉漆的免责声明，错误解读为“耐用性”的卖点，属于严重误导和编造</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 6</div>
+            <h3>多用途隔音棉 汽車 辦公室 KTV 錄音室 隔音 中空纖維吸音棉 隔音棉 汽車隔音棉 四門隔音 底盤隔音 防火隔音 吸音</h3>
+            <div class="case-meta">
+              <span>Item 40227439394</span>
+              <span>TW</span>
+              <span>Automobiles|Automobile Interior Accessories|Sun Shields &amp; Dash Covers</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B在品牌、事实忠实度、地区语言和搜索价值方面均表现优异，且无硬约束问题，而候选A存在严重的品牌错误、语言错误和内容编造。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将材质“聚丙烯”识别为品牌</li><li>语言不符合目标地区（使用简体中文而非繁体中文）</li><li>长尾搜索词存在编造（如“套装”、“垫片”、“隔离板”原文未提及）</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <div class="empty">无</div>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 7</div>
+            <h3>YSL 化妝包 手拿包 全新</h3>
+            <div class="case-meta">
+              <span>Item 28292201062</span>
+              <span>TW</span>
+              <span>Beauty|Beauty Tools|Makeup Accessories</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B存在明显编造商品功能的问题，严重违反事实忠实度原则，因此候选A更适合，尽管其存在语言本地化问题。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>部分中文词汇使用了简体字，不符合台湾地区的语言习惯</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中包含明显编造的功能（便携、轻便、防水、防潮），原文未提及</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 8</div>
+            <h3>台灣製 彈力水桶 水桶 塑膠水桶 (圻媽雜貨舖)</h3>
+            <div class="case-meta">
+              <span>Item 2937447532</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Home Care Supplies|Basins, Buckets &amp; Water Dippers</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然品牌识别有误，但其内容忠实度、搜索价值和地区语言符合度远优于候选B。候选B存在严重的品牌错误、明显编造、语言不符和结构混乱问题。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>将店铺名“圻媽雜貨舖”错误识别为品牌</li><li>部分卖点和长尾词有轻微扩展，如“戶外活動”、“辦公室”</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>将店铺名“圻媽杂货铺”错误识别为品牌，且使用简体字</li><li>明显编造“彈力手柄”卖点，原文为“彈力水桶”</li><li>长尾词“家用塑料容器”、“商用储物箱”与原文“水桶”不符，且使用简体字</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 9</div>
+            <h3>【富爾康】免運•燦博JAMBO人造石水槽JB-780壓克力彩色人造石水槽（6色可選）</h3>
+            <div class="case-meta">
+              <span>Item 4767870404</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Tools &amp; Home Improvement|Others</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A在事实忠实度和地区语言方面表现优于候选B，候选B存在明显编造和严重的语言错误。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>3</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中包含多处原文未明确提及的推断性描述（如防水、耐用等）。</li><li>长尾搜索词中“厨房水槽”使用了简体字“厨”，不符合TW地区语言规范。</li><li>“卫浴水槽”作为长尾词和适用场景，与商品类型关联度较低，可能过度推断。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>长尾搜索词和独特卖点中多次出现“压克力气泡底板”，此信息在原文中完全没有提及，属于明显编造。</li><li>多处使用简体字（如“可选”、“压克力”、“气泡底板”），严重不符合TW地区（繁体中文）的语言规范。</li><li>独特卖点中“防水防潮”和“耐用材料”为推断性描述，原文未明确提及。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 10</div>
+            <h3>比德堡崁入式晴雨窗【內崁式-短截式】速霸陸SUBARU OUTBACK 5D 四代 2009-2014年專用</h3>
+            <div class="case-meta">
+              <span>Item 6121402934</span>
+              <span>TW</span>
+              <span>Automobiles|Automobile Exterior Accessories|Gutters</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然在长尾词方面存在编造，但其核心信息准确，且语言符合目标地区。候选B存在严重的语言错误（简体中文用于台湾地区）和多处事实编造/误解，因此候选A更优。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>长尾搜索词中&#x27;車窗防曬罩&#x27;, &#x27;車窗防曬&#x27;, &#x27;車窗防霧&#x27;, &#x27;車窗防刮&#x27;属于明显编造，与商品实际功能不符。</li><li>&#x27;車窗防霧&#x27;是材质特性而非产品功能，&#x27;車窗防刮&#x27;无原文支持。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>主要内容（如product_type, unique_selling_points）使用简体中文，不符合目标地区（TW）的繁体中文要求。</li><li>长尾搜索词中&#x27;Speeder&#x27;和&#x27;Rainproof Windshield Cover&#x27;属于明显编造或严重误解产品类型。</li><li>compatible_models中的&#x27;VD&#x27;与原文&#x27;5D 四代&#x27;不符。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 11</div>
+            <h3>嘉義現貨（日本山葵種子） 高級調料辣根種子綠芥末種子 多年生四季蔬菜種子#調料horseradish</h3>
+            <div class="case-meta">
+              <span>Item 43074315347</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Gardening|Seeds &amp; Bulbs</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B虽然品牌错误，但其内容忠实于原文，没有编造信息，且结构清晰；候选A不仅品牌错误，还存在明显编造的卖点，因此B更优。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将店铺名“秦川園藝”作为品牌。</li><li>独特卖点中“天然無毒”、“無添加”、“純天然”等信息在原文中无任何提及，属于明显编造。</li><li>长尾关键词中部分词语过于泛化，且与独特卖点存在概念重复。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将地点/现货信息“嘉義現貨”作为品牌。</li><li>长尾关键词“多樣季節適用”和“健康食用植物”虽然基于原文，但略显泛化。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 12</div>
+            <h3>【Hothing】蜜意坊 GIGA超大棉花糖 250g</h3>
+            <div class="case-meta">
+              <span>Item 40269127675</span>
+              <span>TW</span>
+              <span>Food &amp; Beverages|Snacks|Pudding, Jellies &amp; Marshmallow</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B的语言符合目标地区要求，且长尾关键词更忠实于原文，搜索价值更高，尽管在独特卖点中存在轻微编造，但优于候选A的语言错误和多处事实忠实度问题。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>语言不符合目标地区，使用了简体中文而非繁体中文。</li><li>“健康友好”分类错误，其内容（环保包装）与健康无关。</li><li>“家庭烘焙用品”有轻微编造，原文未提及烘焙用途。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>“加热即食”下包含“直接食用”和“無需加熱”是编造，与原文强调烤制最佳的描述相悖。</li><li>结果中包含冗余的英文翻译字段（如long_tail_keywords_en，unique_selling_points中的_en字段），在中文结果中不必要。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 13</div>
+            <h3>🥳丨臺灣優選🥳Mr.green德國格林先生氣墊梳氣囊順發木質梳子</h3>
+            <div class="case-meta">
+              <span>Item 46550263880</span>
+              <span>TW</span>
+              <span>Beauty|Beauty Tools|Hair Tools</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B在语言本地化方面完全符合要求，且事实忠实度远高于候选A，虽然存在少量推断和一处编造，但整体质量远优于候选A。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>语言不符合目标地区（使用简体中文而非繁体中文）</li><li>独特卖点中存在多处明显编造（如“多角度调节”、“易于携带”、“温和梳理”、“柔软触感”）</li><li>长尾关键词中存在编造（如“套装”、“工具箱”）</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中“無毒安全”为编造</li><li>部分卖点和长尾词为推断或泛化，而非原文直接支持（如“天然木質”、“減壓舒適”、“護理頭皮”、“女士梳子”）</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 14</div>
+            <h3>日本【KAO 花王】Biore 按壓式 泡沫 洗手乳 泡泡 幼兒 兒童 果香</h3>
+            <div class="case-meta">
+              <span>Item 11499446561</span>
+              <span>TW</span>
+              <span>Beauty|Hand, Foot &amp; Nail Care|Hand Care</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B在事实忠实度、搜索价值和地区语言本地化方面表现更优，且没有明显编造或语言问题。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>3</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>brand_en字段添加了原文没有的品牌信息&#x27;Kao Shokuhin Co., Ltd.&#x27;</li><li>long_tail_keywords中的&#x27;幼兒洗手法&#x27;表达不自然，应为&#x27;幼兒洗手乳&#x27;</li><li>部分英文翻译不够自然地道，例如&#x27;Thorough Odor Removal Cleanliness&#x27;</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <div class="empty">无</div>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 15</div>
+            <h3>Abib Jericho Rose Bifida 精華緊緻滴劑 50ml★韓國發貨★</h3>
+            <div class="case-meta">
+              <span>Item 41256802716</span>
+              <span>TW</span>
+              <span>Beauty|Skincare|Facial Serum &amp; Essence</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然存在语言不符合地区的问题，但其内容忠实于原始商品信息，未凭空编造功效。候选B在语言上符合地区要求，但严重编造了商品功效（抗老、抗皺），这违反了事实忠实度的核心原则，且在评审规则中属于严重错误。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>输出语言为简体中文，不符合台湾（TW）地区的繁体中文要求。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>在原文未提及“抗老”和“抗皺”功效的情况下，凭空编造了这些卖点和长尾词。</li><li>“抗老抗皺”的编造严重影响了事实忠实度。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 16</div>
+            <h3>【Herschel】官方直營 品牌 雨傘 H55518612000F 只送不賣</h3>
+            <div class="case-meta">
+              <span>Item 57005310057</span>
+              <span>TW</span>
+              <span>Sports &amp; Outdoors|Sports &amp; Outdoor Accessories|Umbrellas</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A在事实忠实度方面优于候选B，其核心卖点和独特卖点均忠实于原文，尽管存在语言和部分长尾词编造问题。候选B则在独特卖点和长尾词方面存在大量编造，严重偏离原文信息。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>long_tail_keywords中包含明显编造的信息（如“旅行折叠伞”）。</li><li>long_tail_keywords和unique_selling_points的键使用了简体中文，与目标地区（台湾，繁体中文）不符。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>unique_selling_points中的所有卖点（便携性、材质安全、用途）均属凭空编造，原文无任何支持信息。</li><li>long_tail_keywords中包含大量编造信息（如“輕便雨傘”、“210x120公分雨傘”）。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 17</div>
+            <h3>Wonder Core 全能塑體健身機「強化升級版」萬達康</h3>
+            <div class="case-meta">
+              <span>Item 162862517</span>
+              <span>TW</span>
+              <span>Sports &amp; Outdoors|Sports &amp; Outdoor Recreation Equipments|Fitness Equipment</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A虽然品牌提取不完整且有轻微编造，但其语言完全符合目标地区。候选B在品牌和事实忠实度上表现更好，但存在严重的地区语言不符问题（使用简体中文和错别字），这在电商搜索中是更严重的硬伤。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌未完全提取（缺少&#x27;Wonder Core&#x27;）</li><li>独特卖点中&#x27;耐用設計&#x27;为轻微编造</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>多处使用简体中文（如&#x27;塑体&#x27;、&#x27;折叠&#x27;、&#x27;于证&#x27;），不符合台湾地区语言习惯</li><li>独特卖点中&#x27;获得多国专利于证认证&#x27;存在错别字（&#x27;于证&#x27;应为&#x27;认证&#x27;）</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 18</div>
+            <h3>◥⊕【客製化】【衣架】兒童衣架童裝小實木防滑嬰兒寶寶大童服裝店專用木質衣撐訂製小孩</h3>
+            <div class="case-meta">
+              <span>Item 24266814636</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Home Organizers|Hangers &amp; Pegs</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选A在品牌识别、事实忠实度、搜索价值和地区语言方面均表现出色，完全符合评审要求。候选B存在严重的品牌错误、内容编造和语言不符问题，不应被采纳。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <div class="empty">无</div>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>将商品型号/系列名错误地识别为品牌。</li><li>存在多处内容编造，例如&#x27;Tree Branch Style Storage Aid&#x27;和&#x27;Real Tree Branch Structure&#x27;在原文中无依据。</li><li>主要输出语言为英文，不符合目标地区（TW）的繁体中文要求。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 19</div>
+            <h3>普拉提床 瑜伽床 核心床 普拉提核心床瑜伽館健身房家用普拉提大器械五件套普拉提床</h3>
+            <div class="case-meta">
+              <span>Item 26090338070</span>
+              <span>TW</span>
+              <span>Sports &amp; Outdoors|Sports &amp; Outdoor Recreation Equipments|Yoga &amp; Pilates</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B存在明显的尺寸和材质信息编造，这是严重的事实忠实度问题，因此候选A更优，尽管A存在语言和拼写错误。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>地区语言不符，使用了简体中文作为键名</li><li>核心吸引点&#x27;Pratice Bed Set&#x27;存在拼写错误</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>明显编造了商品尺寸信息</li><li>明显编造了商品材质信息</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 20</div>
+            <h3>免運開發票 可定製水桶架 可移動水桶架 廚房桶架加厚不鏽鋼 湯桶架 奶茶桶架 帶滑輪支架 食堂餐廳保溫桶架 開水桶推車架</h3>
+            <div class="case-meta">
+              <span>Item 41605479489</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Furniture|Shelves &amp; Racks</span>
+              <span>swap=False</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B存在严重的事实编造问题，特别是“防水防潮”等功能在原文中完全没有提及，违反了硬约束。候选A虽然在核心吸引点上存在识别错误，但内容忠实于原文，因此A更优。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>核心吸引点将产品类型识别为特征“帶滑輪支架”，而非核心产品“水桶架”。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点中包含多处明显编造信息，如“防水”、“防潮”、“防漏”等原文未提及的功能。</li><li>独特卖点中包含多处轻微编造或过度推断，如“輕便”、“私人訂製”、“移動方便”、“耐用”、“長壽命”等。</li><li>独特卖点中存在冗余信息，例如“便携性/轻便性”和“机械工学”的描述有重叠。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+      </article>
+    
+      <div class="footer-note">这一段主要是给你直接看每一条到底怎么判、怎么扣分。后面如果重跑 `judge`（评审），只要重新生成这张页，下面的逐条卡片会一起更新。</div>
     </section>
   </main>
 </body>
