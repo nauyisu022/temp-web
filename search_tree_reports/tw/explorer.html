@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TW 全量搜索词图</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" />
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --panel: #fffdf8;
+      --ink: #1f262b;
+      --muted: #6a737c;
+      --line: rgba(31, 38, 43, 0.12);
+      --accent: #9d4b32;
+      --accent-soft: rgba(157, 75, 50, 0.12);
+      --mono: "SFMono-Regular", "JetBrains Mono", "Cascadia Code", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(157, 75, 50, 0.10), transparent 24rem),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", serif;
+    }
+    .wrap {
+      width: min(1280px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 32px;
+    }
+    .panel {
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 16px 30px rgba(76, 57, 30, 0.06);
+      margin-bottom: 16px;
+    }
+    .crumb {
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .crumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.8fr) repeat(3, minmax(120px, 0.6fr)) auto;
+      gap: 12px;
+      margin-top: 18px;
+      align-items: end;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: var(--mono);
+    }
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: var(--panel);
+      color: var(--ink);
+    }
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      color: #fffaf2;
+      font-weight: 600;
+    }
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    #network {
+      width: 100%;
+      height: 78vh;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <div class="crumb"><a href="../index.html">../</a></div>
+      <h1>TW 全量搜索词图</h1>
+      <p>页面加载后会读取 `graph.json`，按根词动态渲染局部子图。底层图默认保留全部父边。</p>
+      <div class="controls">
+        <div>
+          <label for="root-search">根词</label>
+          <input id="root-search" list="root-options" placeholder="输入根词，例如 行動電源" />
+          <datalist id="root-options"></datalist>
+        </div>
+        <div>
+          <label for="max-depth">深度</label>
+          <input id="max-depth" type="number" min="1" max="6" value="2" />
+        </div>
+        <div>
+          <label for="max-children">每层子词数</label>
+          <input id="max-children" type="number" min="1" max="50" value="8" />
+        </div>
+        <div>
+          <label for="root-preset">高频根词</label>
+          <select id="root-preset"></select>
+        </div>
+        <div>
+          <button id="render-btn" type="button">渲染</button>
+        </div>
+      </div>
+      <div class="summary" id="summary"></div>
+    </section>
+    <section class="panel">
+      <div id="network"></div>
+    </section>
+  </main>
+  <script>
+    const DATA_HREF = "graph.json";
+    let graphData = null;
+    let network = null;
+
+    function formatInt(value) {
+      return new Intl.NumberFormat('zh-CN').format(value);
+    }
+
+    function buildLocalSubgraph(rootId, maxDepth, maxChildren) {
+      const queue = [[rootId, 0]];
+      const seenNodes = new Set([rootId]);
+      const nodes = [];
+      const edges = [];
+      while (queue.length > 0) {
+        const [nodeId, depth] = queue.shift();
+        nodes.push({
+          id: nodeId,
+          label: graphData.labels[nodeId],
+          level: depth,
+          value: Math.max(10, Math.log10(Math.max(graphData.impressions[nodeId], 10)) * 10),
+          title:
+            'term: ' + graphData.labels[nodeId] + '<br>' +
+            'impressions: ' + formatInt(graphData.impressions[nodeId]) + '<br>' +
+            'parents: ' + graphData.parents[nodeId].length + '<br>' +
+            'children: ' + graphData.children[nodeId].length,
+        });
+        if (depth >= maxDepth) {
+          continue;
+        }
+        const children = [...graphData.children[nodeId]]
+          .sort((a, b) => graphData.impressions[b] - graphData.impressions[a])
+          .slice(0, maxChildren);
+        for (const childId of children) {
+          edges.push({ from: nodeId, to: childId });
+          if (!seenNodes.has(childId)) {
+            seenNodes.add(childId);
+            queue.push([childId, depth + 1]);
+          }
+        }
+      }
+
+      for (const node of nodes) {
+        for (const parentId of graphData.parents[node.id]) {
+          if (seenNodes.has(parentId)) {
+            edges.push({ from: parentId, to: node.id, dashes: true, color: '#c08a6d' });
+          }
+        }
+      }
+      return { nodes, edges };
+    }
+
+    function renderSummary(rootId, nodes, edges) {
+      const summary = document.getElementById('summary');
+      summary.innerHTML = '';
+      const items = [
+        '根词：' + graphData.labels[rootId],
+        '局部节点：' + nodes.length,
+        '局部边：' + edges.length,
+        '全量节点：' + formatInt(graphData.meta.total_nodes),
+        '全量边：' + formatInt(graphData.meta.total_edges),
+      ];
+      for (const item of items) {
+        const div = document.createElement('div');
+        div.textContent = item;
+        summary.appendChild(div);
+      }
+    }
+
+    function renderRoot(rootLabel) {
+      if (!graphData) {
+        return;
+      }
+      const rootId = graphData.root_lookup[rootLabel];
+      if (rootId === undefined) {
+        alert('找不到根词: ' + rootLabel);
+        return;
+      }
+      const maxDepth = Number(document.getElementById('max-depth').value || 2);
+      const maxChildren = Number(document.getElementById('max-children').value || 8);
+      const local = buildLocalSubgraph(rootId, maxDepth, maxChildren);
+      renderSummary(rootId, local.nodes, local.edges);
+      const container = document.getElementById('network');
+      const data = {
+        nodes: new vis.DataSet(local.nodes),
+        edges: new vis.DataSet(local.edges),
+      };
+      const options = {
+        layout: {
+          hierarchical: {
+            enabled: true,
+            direction: 'UD',
+            sortMethod: 'directed',
+            nodeSpacing: 220,
+            levelSeparation: 180,
+          },
+        },
+        physics: {
+          hierarchicalRepulsion: {
+            nodeDistance: 220,
+          },
+          solver: 'hierarchicalRepulsion',
+        },
+        edges: {
+          arrows: {
+            to: {
+              enabled: true,
+            },
+          },
+          smooth: false,
+        },
+        interaction: {
+          dragNodes: true,
+          navigationButtons: true,
+          keyboard: true,
+        },
+      };
+      network = new vis.Network(container, data, options);
+    }
+
+    async function boot() {
+      const response = await fetch(DATA_HREF);
+      graphData = await response.json();
+      graphData.root_lookup = Object.fromEntries(graphData.root_labels.map((label, idx) => [label, graphData.roots[idx]]));
+
+      const datalist = document.getElementById('root-options');
+      const preset = document.getElementById('root-preset');
+      const topRoots = [...graphData.roots]
+        .sort((a, b) => graphData.impressions[b] - graphData.impressions[a])
+        .slice(0, 200);
+
+      for (const rootId of topRoots) {
+        const label = graphData.labels[rootId];
+        const option = document.createElement('option');
+        option.value = label;
+        datalist.appendChild(option);
+
+        const selectOption = document.createElement('option');
+        selectOption.value = label;
+        selectOption.textContent = label + ' (' + formatInt(graphData.impressions[rootId]) + ')';
+        preset.appendChild(selectOption);
+      }
+
+      if (topRoots.length > 0) {
+        const firstLabel = graphData.labels[topRoots[0]];
+        document.getElementById('root-search').value = firstLabel;
+        preset.value = firstLabel;
+        renderRoot(firstLabel);
+      }
+
+      document.getElementById('render-btn').addEventListener('click', () => {
+        renderRoot(document.getElementById('root-search').value.trim());
+      });
+      preset.addEventListener('change', (event) => {
+        document.getElementById('root-search').value = event.target.value;
+        renderRoot(event.target.value);
+      });
+    }
+
+    boot();
+  </script>
+</body>
+</html>
