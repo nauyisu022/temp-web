@@ -152,31 +152,7 @@
     .badge-v9 { background: var(--v9); }
     .badge-step25 { background: var(--step25); }
     .badge-step100 { background: var(--step100); }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .metric {
-      padding: 10px;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(29,26,23,0.08);
-    }
-    .metric span { display: block; color: var(--muted); font-size: 12px; }
-    .metric b { display: block; margin-top: 6px; font-size: 18px; }
-    .field { margin-top: 14px; }
     .field-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
-    .mini-chip, .kw {
-      padding: 6px 10px;
-      border: 1px solid rgba(29,26,23,0.10);
-      background: rgba(255,255,255,0.54);
-      font-size: 12px;
-    }
-    .usp-block { display: grid; gap: 8px; width: 100%; }
-    .usp-row { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 10px; font-size: 13px; }
-    .usp-row span { color: var(--muted); }
     pre {
       margin: 0;
       white-space: pre-wrap;
@@ -185,7 +161,15 @@
       line-height: 1.65;
       font-family: "SFMono-Regular", "Menlo", monospace;
     }
-    .raw-box { margin-top: 14px; border-top: 1px solid rgba(29,26,23,0.08); padding-top: 12px; }
+    .json-grid { display: grid; gap: 10px; margin-top: 14px; }
+    .json-block { border-top: 1px solid rgba(29,26,23,0.08); padding-top: 12px; }
+    .json-block pre {
+      max-height: 260px;
+      overflow: auto;
+      padding: 12px;
+      border: 1px solid rgba(29,26,23,0.08);
+      background: rgba(255,255,255,0.52);
+    }
     .load-more {
       display: inline-flex;
       align-items: center;
@@ -214,8 +198,6 @@
       .source-grid { grid-template-columns: 1fr; }
       .region-grid { grid-template-columns: 1fr; }
       .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .metric-grid { grid-template-columns: 1fr 1fr; }
-      .usp-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -372,55 +354,22 @@
     }
 
     function buildModelPanel(spec, model) {
-      const rewardKey = 'reward_' + state.rewardVersion;
-      const metricsKey = 'metrics_' + state.rewardVersion;
-      const metrics = model[metricsKey] || {};
-      const chips = (model.product_type || []).map((value) => `<span class="mini-chip">${escapeHtml(value)}</span>`).join('')
-        || '<span class="mini-chip">无</span>';
-      const brands = (model.brand || []).map((value) => `<span class="mini-chip">${escapeHtml(value)}</span>`).join('')
-        || '<span class="mini-chip">无</span>';
-      const keywords = (model.keywords || []).map((value) => `<span class="kw">${escapeHtml(value)}</span>`).join('')
-        || '<span class="kw">无</span>';
-      const usp = (model.usp || []).map(([label, values]) => `
-        <div class="usp-row">
-          <span>${escapeHtml(label)}</span>
-          <div>${(values || []).map((value) => `<span class="kw">${escapeHtml(value)}</span>`).join(' ')}</div>
-        </div>
-      `).join('') || '<div class="usp-row"><span>USP</span><div>无</div></div>';
       return `
         <article class="panel">
           <div class="panel-head">
             <div class="panel-title">${escapeHtml(spec.label)}</div>
             <div class="panel-badge ${MODEL_BADGE_CLASS[spec.id]}">${escapeHtml(MODEL_STATUS_LABEL[model.status] || model.status_label || model.status)}</div>
           </div>
-          <div class="metric-grid">
-            <div class="metric"><span>当前奖励</span><b>${formatNumber(model[rewardKey])}</b></div>
-            <div class="metric"><span>支撑率</span><b>${formatNumber(metrics.strict_support_score)}</b></div>
-            <div class="metric"><span>短语命中</span><b>${formatNumber(metrics.phrase_hit_rate)}</b></div>
-            <div class="metric"><span>词条数</span><b>${formatNumber(metrics.total_terms)}</b></div>
-            <div class="metric"><span>PT 完整度</span><b>${formatNumber(metrics.pt_phrase_integrity)}</b></div>
-            <div class="metric"><span>LT 完整度</span><b>${formatNumber(metrics.lt_phrase_integrity)}</b></div>
+          <div class="json-grid">
+            <div class="json-block">
+              <div class="field-label">Analysis JSON</div>
+              <pre>${escapeHtml(model.analysis_json || '无')}</pre>
+            </div>
+            <div class="json-block">
+              <div class="field-label">Final JSON</div>
+              <pre>${escapeHtml(model.final_json || model.preview || '无')}</pre>
+            </div>
           </div>
-          <div class="field">
-            <div class="field-label">Brand</div>
-            <div class="chip-row">${brands}</div>
-          </div>
-          <div class="field">
-            <div class="field-label">Product Type</div>
-            <div class="chip-row">${chips}</div>
-          </div>
-          <div class="field">
-            <div class="field-label">Long Tail</div>
-            <div class="chip-row">${keywords}</div>
-          </div>
-          <div class="field">
-            <div class="field-label">USP</div>
-            <div class="usp-block">${usp}</div>
-          </div>
-          <details class="raw-box">
-            <summary>展开预览</summary>
-            <pre>${escapeHtml(model.preview || '')}</pre>
-          </details>
         </article>
       `;
     }
