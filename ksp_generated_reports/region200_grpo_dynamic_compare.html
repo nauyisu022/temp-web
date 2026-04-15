@@ -205,55 +205,26 @@
   <main class="shell">
     <section class="hero">
       <div>
-        <div class="eyebrow">Region200 Dynamic Eval</div>
-        <h1>同一批 `1600` 条样本里动态看 Gemini、new_v9、GRPO step25 和 step100</h1>
-        <p>这页把历史 `AB` 输入、两版 `GRPO` 预测和两套 `reward` 评分放到同一个浏览器工作台里。首屏只看整体评测，后面可以按地区、关键词和排序方式筛选单条 case，逐条展开原文与四路输出。</p>
+        <div class="eyebrow">Region200 JSON Browser</div>
+        <h1>一条一页，只看 `analysis / final` JSON</h1>
+        <p>这里不再做报表汇总，只保留单条样本浏览。筛选结果集之后，一次只展示一个 item，按左右方向键或按钮翻页。</p>
       </div>
       <aside class="hero-note">
         <strong>交互说明</strong>
-        <div>支持在 `legacy` 和 `tuned_gate_v4` 两套奖励之间切换，也支持按指定模型的当前奖励排序。</div>
-        <div style="margin-top:8px;">列表采用分批渲染，避免 `1600` 条 case 一次性塞满页面。</div>
+        <div>左方向键上一条，右方向键下一条。</div>
+        <div style="margin-top:8px;">修改搜索、地区或状态后，会自动跳到当前结果集的第一条。</div>
       </aside>
     </section>
 
-    <section class="stat-grid" id="globalStats"></section>
-
     <section>
       <div class="section-head">
         <div>
-          <h2>评测视角</h2>
-          <p>奖励版本切换会同时刷新顶部统计、地区摘要和逐条排序。模型按钮决定列表默认按谁的当前奖励排序。</p>
-        </div>
-      </div>
-      <div class="switch-row">
-        <button class="reward-toggle active" data-reward-version="legacy">legacy reward</button>
-        <button class="reward-toggle" data-reward-version="tuned_gate_v4">tuned_gate_v4</button>
-      </div>
-      <div class="switch-row" id="modelSwitches"><button class="model-toggle" data-model="gemini">Gemini</button>
-<button class="model-toggle" data-model="new_v9">new_v9</button>
-<button class="model-toggle" data-model="step25_tuned_gate_v4">GRPO step25</button>
-<button class="model-toggle" data-model="step100_v9_grpo_max1024">GRPO step100</button></div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <div>
-          <h2>地区摘要</h2>
-          <p>每个地区都保留四路模型的均值和状态计数，用来快速看 step25 与 step100 的完整率差异。</p>
-        </div>
-      </div>
-      <div class="region-grid" id="regionGrid"></div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <div>
-          <h2>逐条对照</h2>
-          <p>支持按 `item_id`、标题、品牌、商品类型搜索，并按地区或 step25 状态过滤。</p>
+          <h2>筛选</h2>
+          <p>按 `item_id`、标题或描述搜索，并按地区或 `step25` 状态过滤。</p>
         </div>
       </div>
       <div class="toolbar">
-        <input id="searchInput" type="search" placeholder="按 item、标题、描述、品牌、商品类型搜索">
+        <input id="searchInput" type="search" placeholder="按 item、标题、描述搜索">
         <select id="regionFilter">
           <option value="ALL">全部地区</option>
         </select>
@@ -264,9 +235,18 @@
           <option value="analysis_only">只看 step25 只有 analysis</option>
         </select>
       </div>
-      <div class="result-line" id="resultLine"></div>
-      <div class="case-list" id="caseList"></div>
-      <button class="load-more hidden" id="loadMoreBtn">继续加载更多</button>
+
+      <div class="section-head" style="margin-top: 18px;">
+        <div>
+          <h2>当前样本</h2>
+          <p id="resultLine">正在加载…</p>
+        </div>
+        <div class="switch-row">
+          <button class="model-toggle" id="prevBtn">上一条</button>
+          <button class="model-toggle" id="nextBtn">下一条</button>
+        </div>
+      </div>
+      <section id="singleCase"></section>
     </section>
   </main>
 
@@ -285,12 +265,10 @@
       analysis_only: '只有 analysis',
     };
     const state = {
-      rewardVersion: 'legacy',
-      sortModel: 'step25_tuned_gate_v4',
       search: '',
       region: 'ALL',
       status: 'ALL',
-      limit: 40,
+      currentIndex: 0,
       payload: null,
     };
 
@@ -301,56 +279,6 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-    }
-
-    function formatNumber(value) {
-      if (value === null || value === undefined || value === '') return '—';
-      const num = Number(value);
-      return Number.isFinite(num) ? num.toFixed(3) : '—';
-    }
-
-    function renderGlobalStats(payload) {
-      const statsEl = document.getElementById('globalStats');
-      const global = payload.summary.global[state.rewardVersion];
-      const items = [
-        ['总样本', payload.summary.total_cases, 'region200 全量'],
-        ['当前奖励版本', state.rewardVersion, '顶部和排序同步切换'],
-        ['当前排序模型均值', formatNumber(global.mean_reward_by_model[state.sortModel]), state.sortModel],
-        ['当前排序模型胜场', global.best_count_by_model[state.sortModel] ?? 0, '同页内部比较'],
-        ['step25 当前均值', formatNumber(global.mean_reward_by_model.step25_tuned_gate_v4), payload.metadata.skip_reward ? 'reward 暂未计算' : '当前奖励版本'],
-      ];
-      statsEl.innerHTML = items.map(([label, value, note]) => `
-        <article class="stat-card">
-          <span>${escapeHtml(label)}</span>
-          <b>${escapeHtml(value)}</b>
-          <small>${escapeHtml(note)}</small>
-        </article>
-      `).join('');
-    }
-
-    function renderRegionCards(payload) {
-      const regionGrid = document.getElementById('regionGrid');
-      const byRegion = payload.summary.by_region;
-      regionGrid.innerHTML = Object.entries(byRegion).map(([region, block]) => {
-        const modelLines = payload.model_specs.map((spec) => {
-          const model = block.models[spec.id];
-          return `<div><span>${escapeHtml(spec.label)} 均值</span><b>${formatNumber(model['mean_reward_' + state.rewardVersion])}</b></div>`;
-        }).join('');
-        const step25Statuses = block.models.step25_tuned_gate_v4.status_counts;
-        return `
-          <article class="region-card">
-            <h3>${escapeHtml(region)}</h3>
-            <div class="count">${block.count} 条</div>
-            <div class="region-lines">
-              <div><span>Gemini 旧 judge 胜</span><b>${block.judge_winner_counts.gemini ?? 0}</b></div>
-              <div><span>new_v9 旧 judge 胜</span><b>${block.judge_winner_counts.new_v9 ?? 0}</b></div>
-              <div><span>step25 完整</span><b>${step25Statuses.closed ?? 0}</b></div>
-              <div><span>step25 截断</span><b>${step25Statuses.truncated ?? 0}</b></div>
-              ${modelLines}
-            </div>
-          </article>
-        `;
-      }).join('');
     }
 
     function buildModelPanel(spec, model) {
@@ -374,66 +302,16 @@
       `;
     }
 
-    function renderCases(payload) {
+    function getFilteredItems(payload) {
       const region = state.region;
       const status = state.status;
       const query = state.search.trim().toLowerCase();
-      const rewardKey = 'reward_' + state.rewardVersion;
-      let items = payload.records.filter((record) => {
+      return payload.records.filter((record) => {
         if (region !== 'ALL' && record.region !== region) return false;
         if (status !== 'ALL' && record.models.step25_tuned_gate_v4.status !== status) return false;
         if (query && !record.search.includes(query)) return false;
         return true;
       });
-      items.sort((left, right) => {
-        const rightScore = right.models[state.sortModel][rewardKey];
-        const leftScore = left.models[state.sortModel][rewardKey];
-        const diff = ((rightScore === null || rightScore === undefined) ? -999 : rightScore) - ((leftScore === null || leftScore === undefined) ? -999 : leftScore);
-        if (diff !== 0) return diff;
-        if (left.region !== right.region) return left.region.localeCompare(right.region);
-        return left.item_id.localeCompare(right.item_id);
-      });
-
-      const visible = items.slice(0, state.limit);
-      const caseList = document.getElementById('caseList');
-      caseList.innerHTML = visible.map((record) => {
-        const sortScore = record.models[state.sortModel][rewardKey];
-        const panels = payload.model_specs.map((spec) => buildModelPanel(spec, record.models[spec.id])).join('');
-        return `
-          <details class="case">
-            <summary>
-              <div class="meta-row">
-                <span class="chip">${escapeHtml(record.region)}</span>
-                <span class="chip">${escapeHtml(record.item_id)}</span>
-                <span class="chip good">旧 judge 胜者: ${escapeHtml(record.judge_winner)}</span>
-                <span class="chip warn">step25: ${escapeHtml(record.models.step25_tuned_gate_v4.status_label)}</span>
-                <span class="chip">当前排序分: ${formatNumber(sortScore)}</span>
-              </div>
-              <div class="case-title">${escapeHtml(record.title)}</div>
-              <div class="summary-text">${escapeHtml(record.category)} · ${escapeHtml(record.category_path)}<br>${escapeHtml(record.judge_summary || shortText(record.description, 180))}</div>
-            </summary>
-            <div class="case-body">
-              <div class="source-card">
-                <div class="source-grid">
-                  <div>
-                    <div class="label">Description</div>
-                    <pre>${escapeHtml(record.description)}</pre>
-                  </div>
-                  <div>
-                    <div class="label">Judge Summary</div>
-                    <pre>${escapeHtml(record.judge_summary || '无') }</pre>
-                  </div>
-                </div>
-              </div>
-              <div class="panel-grid">${panels}</div>
-            </div>
-          </details>
-        `;
-      }).join('');
-
-      document.getElementById('resultLine').textContent = `当前显示 ${visible.length} / ${items.length} 条，排序模型：${state.sortModel}，奖励版本：${state.rewardVersion}`;
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
-      loadMoreBtn.classList.toggle('hidden', state.limit >= items.length);
     }
 
     function shortText(text, limit) {
@@ -447,17 +325,62 @@
         Object.keys(payload.summary.by_region).map((region) => `<option value="${region}">${region}</option>`).join('');
     }
 
+    function renderSingleCase(payload) {
+      const items = getFilteredItems(payload);
+      const total = items.length;
+      const singleCase = document.getElementById('singleCase');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      if (!total) {
+        singleCase.innerHTML = '<article class="panel"><div class="panel-title">当前筛选条件下没有样本</div></article>';
+        document.getElementById('resultLine').textContent = '当前筛选结果 0 条';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+      if (state.currentIndex >= total) state.currentIndex = total - 1;
+      if (state.currentIndex < 0) state.currentIndex = 0;
+      const record = items[state.currentIndex];
+      const panels = payload.model_specs.map((spec) => buildModelPanel(spec, record.models[spec.id])).join('');
+      singleCase.innerHTML = `
+        <article class="source-card">
+          <div class="meta-row">
+            <span class="chip">${escapeHtml(record.region)}</span>
+            <span class="chip">${escapeHtml(record.item_id)}</span>
+            <span class="chip good">旧 judge 胜者: ${escapeHtml(record.judge_winner)}</span>
+            <span class="chip warn">step25: ${escapeHtml(record.models.step25_tuned_gate_v4.status_label)}</span>
+          </div>
+          <div class="case-title">${escapeHtml(record.title)}</div>
+          <div class="summary-text">${escapeHtml(record.category)} · ${escapeHtml(record.category_path)}<br>${escapeHtml(record.judge_summary || shortText(record.description, 220))}</div>
+          <div class="source-grid" style="margin-top: 16px;">
+            <div>
+              <div class="label">Description</div>
+              <pre>${escapeHtml(record.description)}</pre>
+            </div>
+            <div>
+              <div class="label">Judge Summary</div>
+              <pre>${escapeHtml(record.judge_summary || '无')}</pre>
+            </div>
+          </div>
+        </article>
+        <div class="panel-grid">${panels}</div>
+      `;
+      document.getElementById('resultLine').textContent = `当前第 ${state.currentIndex + 1} / ${total} 条`;
+      prevBtn.disabled = state.currentIndex <= 0;
+      nextBtn.disabled = state.currentIndex >= total - 1;
+    }
+
+    function moveCase(step) {
+      if (!state.payload) return;
+      const total = getFilteredItems(state.payload).length;
+      if (!total) return;
+      state.currentIndex = Math.max(0, Math.min(total - 1, state.currentIndex + step));
+      renderSingleCase(state.payload);
+    }
+
     function render() {
       if (!state.payload) return;
-      renderGlobalStats(state.payload);
-      renderRegionCards(state.payload);
-      renderCases(state.payload);
-      document.querySelectorAll('.reward-toggle').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.rewardVersion === state.rewardVersion);
-      });
-      document.querySelectorAll('.model-toggle').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.model === state.sortModel);
-      });
+      renderSingleCase(state.payload);
     }
 
     async function init() {
@@ -466,40 +389,34 @@
       populateRegionFilter(state.payload);
       document.getElementById('searchInput').addEventListener('input', (event) => {
         state.search = event.target.value;
-        state.limit = 40;
+        state.currentIndex = 0;
         render();
       });
       document.getElementById('regionFilter').addEventListener('change', (event) => {
         state.region = event.target.value;
-        state.limit = 40;
+        state.currentIndex = 0;
         render();
       });
       document.getElementById('statusFilter').addEventListener('change', (event) => {
         state.status = event.target.value;
-        state.limit = 40;
+        state.currentIndex = 0;
         render();
       });
-      document.querySelectorAll('.reward-toggle').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          state.rewardVersion = btn.dataset.rewardVersion;
-          state.limit = 40;
-          render();
-        });
+      document.getElementById('prevBtn').addEventListener('click', () => {
+        moveCase(-1);
       });
-      document.querySelectorAll('.model-toggle').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          state.sortModel = btn.dataset.model;
-          state.limit = 40;
-          render();
-        });
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        moveCase(1);
       });
-      document.getElementById('loadMoreBtn').addEventListener('click', () => {
-        state.limit += 40;
-        render();
+      document.addEventListener('keydown', (event) => {
+        const tagName = document.activeElement && document.activeElement.tagName;
+        if (tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA') return;
+        if (event.key === 'ArrowRight') {
+          moveCase(1);
+        } else if (event.key === 'ArrowLeft') {
+          moveCase(-1);
+        }
       });
-      if (state.payload.metadata && state.payload.metadata.skip_reward) {
-        document.querySelectorAll('.reward-toggle').forEach((btn) => btn.classList.add('hidden'));
-      }
       render();
     }
 
