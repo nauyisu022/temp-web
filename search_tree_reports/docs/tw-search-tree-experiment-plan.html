@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台湾搜索词结构实验方案</title>
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --panel: #fffdf8;
+      --ink: #1f262b;
+      --muted: #6a737c;
+      --line: rgba(31, 38, 43, 0.12);
+      --accent: #9d4b32;
+      --accent-soft: rgba(157, 75, 50, 0.12);
+      --mono: "SFMono-Regular", "JetBrains Mono", "Cascadia Code", monospace;
+      --shadow: 0 16px 30px rgba(76, 57, 30, 0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(157, 75, 50, 0.10), transparent 24rem),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", serif;
+    }
+    .wrap {
+      width: min(980px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+    .panel {
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .crumb {
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .crumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.08;
+    }
+    .article {
+      margin-top: 22px;
+      line-height: 1.85;
+      font-size: 16px;
+    }
+    .article h1,
+    .article h2,
+    .article h3 {
+      line-height: 1.25;
+      margin-top: 1.8em;
+      margin-bottom: 0.55em;
+    }
+    .article h1:first-child,
+    .article h2:first-child,
+    .article h3:first-child {
+      margin-top: 0;
+    }
+    .article p,
+    .article ul,
+    .article ol,
+    .article pre,
+    .article table,
+    .article blockquote {
+      margin: 0 0 1em;
+    }
+    .article code {
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background: rgba(31, 38, 43, 0.06);
+      padding: 0.12em 0.36em;
+      border-radius: 6px;
+    }
+    .article pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f5efe6;
+    }
+    .article pre code {
+      background: transparent;
+      padding: 0;
+    }
+    .article table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .article th,
+    .article td {
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid rgba(31, 38, 43, 0.1);
+      vertical-align: top;
+    }
+    .article blockquote {
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      background: rgba(157, 75, 50, 0.06);
+      color: #4d565e;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <div class="crumb"><a href="../index.html">../</a></div>
+      <h1>台湾搜索词结构实验方案</h1>
+      <div class="meta">
+        <span>source: TW_SEARCH_TREE_EXPERIMENT_PLAN.md</span>
+        <span>updated: 2026-04-15 18:21 UTC</span>
+      </div>
+      <article class="article"><h2 id="_1">一、实验目标</h2>
+<p>这轮实验只聚焦台湾搜索词库本身，不先考虑 <code>reward</code>（奖励）接法。</p>
+<p>目标有两层：</p>
+<ol>
+<li>在 <code>TW</code>（台湾）全量搜索词上，比较多种建图方案，产出一版可信的森林或 <code>DAG</code>（有向无环图）结构。</li>
+<li>在每种结构上进一步导出连续分数，用来判断一个词更偏 <code>泛词</code>，还是更偏 <code>长尾词</code>。</li>
+</ol>
+<p>最终要解决的不是“图好不好看”，而是：</p>
+<ol>
+<li>哪种结构更稳定</li>
+<li>哪种结构更能支撑 <code>泛词 / 长尾词</code> 区分</li>
+<li>哪种连续分数最可用</li>
+</ol>
+<hr>
+<h2 id="_2">二、为什么要做这轮实验</h2>
+<p>当前问题并不是单纯“词库命中率低”，而是：</p>
+<ol>
+<li>词库反馈本身稀疏</li>
+<li>二值命中信号过硬</li>
+<li>只看命中，无法稳定区分：
+   - 完整搜索词
+   - 安全碎词
+   - 泛词
+   - 长尾词</li>
+</ol>
+<p>因此需要先把全量搜索词组织起来，再从结构中提取“一个词有多泛、有多具体”的依据。</p>
+<p>台湾是合适的首个实验区，原因有三点：</p>
+<ol>
+<li><code>CJK</code>（中文连续字形）词面包含关系天然更强</li>
+<li>已经具备全量建图、局部树图、多父图和全量浏览器基础</li>
+<li>便于观察词面结构、分支结构和搜索行为之间的关系</li>
+</ol>
+<hr>
+<h2 id="_3">三、实验核心问题</h2>
+<p>这轮实验围绕两个问题展开：</p>
+<h3 id="1">1. 台湾搜索词之间应如何组织成结构</h3>
+<p>也就是：</p>
+<ol>
+<li>哪些词应当互相连边</li>
+<li>父子边应该如何筛选</li>
+<li>多父边是否应该保留</li>
+<li>图结构应当更像树，还是更像真实 <code>DAG</code></li>
+</ol>
+<h3 id="2">2. 如何从结构中推导一个连续分数</h3>
+<p>这个分数先定义为：</p>
+<p><code>specificity score</code>（具体度分数）</p>
+<p>语义约定：</p>
+<ul>
+<li><code>0</code> 更偏泛词</li>
+<li><code>1</code> 更偏长尾词</li>
+</ul>
+<p>这个分数当前不直接判定“是不是理想搜索词”，只回答“这个词在结构上有多具体”。</p>
+<hr>
+<h2 id="_4">四、实验边界</h2>
+<h3 id="_5">本轮要做</h3>
+<ol>
+<li>台湾全量词库结构实验</li>
+<li>建图方案多路对比</li>
+<li>连续分数多路对比</li>
+<li>结构稳定性和区分能力评估</li>
+<li>全量浏览器抽样检查</li>
+</ol>
+<h3 id="_6">本轮先不做</h3>
+<ol>
+<li>不直接改 <code>reward</code></li>
+<li>不先做跨地区联合方案</li>
+<li>不依赖大量人工标注</li>
+<li>不先做监督式训练模型</li>
+</ol>
+<p>人工参与只保留在最后少量抽检阶段，用来辅助确认方向。</p>
+<hr>
+<h2 id="_7">五、输入数据</h2>
+<p>当前台湾可直接使用的数据包括：</p>
+<ol>
+<li>
+<p>搜索词节点
+   - <code>search_term</code>
+   - <code>impressions</code>
+   - <code>clicks</code>
+   - <code>orders_7d</code>
+   - <code>gmv_7d</code>
+   - <code>cost</code></p>
+</li>
+<li>
+<p>现有结构能力
+   - 单父树投影
+   - 多父图索引
+   - 全量 <code>DAG</code>
+   - 局部树图页面
+   - 台湾全量浏览器</p>
+</li>
+</ol>
+<hr>
+<h2 id="_8">六、实验总框架</h2>
+<p>实验拆成两条并行主线：</p>
+<h3 id="a">主线 A：建图方案实验</h3>
+<p>目标是找到最稳的台湾全量结构。</p>
+<h3 id="b">主线 B：连续分数实验</h3>
+<p>目标是在不同图结构上，比较哪种 <code>specificity score</code> 最能区分泛词与长尾词。</p>
+<p>最后不是分别选最优，而是选一组组合：</p>
+<p><code>最佳结构方案 + 最佳连续分数方案</code></p>
+<hr>
+<h2 id="a_1">七、主线 A：建图方案矩阵</h2>
+<h3 id="a1lexical-only">方案 A1：Lexical Only</h3>
+<p>只使用词面关系。</p>
+<p>规则：</p>
+<ol>
+<li>连续字串包含召回候选父词</li>
+<li>父词更短</li>
+<li>父词存在于词库</li>
+</ol>
+<p>这是最朴素的基线。</p>
+<p>优点：</p>
+<ol>
+<li>简单</li>
+<li>易解释</li>
+<li>对中文词面天然有效</li>
+</ol>
+<p>风险：</p>
+<ol>
+<li>容易把资讯词挂进来</li>
+<li>容易产生碎片边</li>
+<li>多义词容易混挂</li>
+</ol>
+<hr>
+<h3 id="a2lexical-frequency">方案 A2：Lexical + Frequency</h3>
+<p>在 A1 上增加搜索数据约束。</p>
+<p>增加条件：</p>
+<ol>
+<li>父词曝光高于子词</li>
+<li>父子曝光比例处于合理区间</li>
+<li>活跃度更稳定的词优先作为父词</li>
+</ol>
+<p>目标：</p>
+<p>减少明显不合理的边。</p>
+<p>优点：</p>
+<ol>
+<li>能压掉一部分极端错挂</li>
+<li>更接近真实搜索层级</li>
+</ol>
+<p>风险：</p>
+<ol>
+<li>仍然容易保留资讯型边</li>
+<li>高频歧义词可能更强势</li>
+</ol>
+<hr>
+<h3 id="a3lexical-frequency-graph-regularization">方案 A3：Lexical + Frequency + Graph Regularization</h3>
+<p>在 A2 上增加结构约束。</p>
+<p>约束包括：</p>
+<ol>
+<li>多父边数量控制</li>
+<li>父边方向一致性</li>
+<li>分支宽度异常检测</li>
+<li>深度异常检测</li>
+<li>极弱边裁剪</li>
+</ol>
+<p>目标：</p>
+<p>让结构更稳定，不只是局部对。</p>
+<p>优点：</p>
+<ol>
+<li>更适合全量图</li>
+<li>可减少图污染</li>
+<li>更利于后续连续分数稳定</li>
+</ol>
+<p>风险：</p>
+<ol>
+<li>规则复杂度更高</li>
+<li>调参成本更大</li>
+</ol>
+<hr>
+<h3 id="a4lexical-frequency-quality-signals">方案 A4：Lexical + Frequency + Quality Signals</h3>
+<p>在 A3 基础上进一步把搜索行为信号纳入边筛选。</p>
+<p>可加入：</p>
+<ol>
+<li><code>ctr</code></li>
+<li><code>orders_7d</code></li>
+<li><code>gmv_7d</code></li>
+<li><code>gpm</code></li>
+</ol>
+<p>注意：</p>
+<p>这一步不是直接判断词好坏，而是用行为信号辅助判断这条边像不像真实上下位关系。</p>
+<p>例如：</p>
+<ol>
+<li>高曝光但极低商业价值的词，可能更偏资讯词</li>
+<li>低曝光但高成交的词，可能是强长尾</li>
+</ol>
+<p>优点：</p>
+<ol>
+<li>更接近实际搜索价值</li>
+<li>可能进一步改善边质量</li>
+</ol>
+<p>风险：</p>
+<ol>
+<li>容易把“结构问题”和“商业问题”混在一起</li>
+<li>某些类目会被销量偏置带偏</li>
+</ol>
+<hr>
+<h2 id="b_1">八、主线 B：连续分数方案矩阵</h2>
+<h3 id="b1specificity_lexical">方案 B1：specificity_lexical</h3>
+<p>只看词面。</p>
+<p>特征候选：</p>
+<ol>
+<li>字符长度</li>
+<li>是否带品牌</li>
+<li>是否带型号</li>
+<li>是否带规格</li>
+<li>是否带修饰信息</li>
+<li>是否像完整短语</li>
+</ol>
+<p>作用：</p>
+<p>做最低成本基线。</p>
+<hr>
+<h3 id="b2specificity_graph">方案 B2：specificity_graph</h3>
+<p>只看图结构位置。</p>
+<p>特征候选：</p>
+<ol>
+<li>深度</li>
+<li>父节点数</li>
+<li>子节点数</li>
+<li>后代规模</li>
+<li>是否根节点</li>
+<li>是否叶子</li>
+<li>所处子树规模</li>
+</ol>
+<p>作用：</p>
+<p>验证图本身能不能稳定给出具体度。</p>
+<hr>
+<h3 id="b3specificity_search">方案 B3：specificity_search</h3>
+<p>只看搜索数据。</p>
+<p>特征候选：</p>
+<ol>
+<li><code>log(impressions)</code></li>
+<li><code>ctr</code></li>
+<li><code>orders_7d / impressions</code></li>
+<li><code>gmv_7d / impressions</code></li>
+<li>活跃度</li>
+</ol>
+<p>作用：</p>
+<p>观察只用行为信号时，是否已经能粗分层级。</p>
+<hr>
+<h3 id="b4specificity_hybrid">方案 B4：specificity_hybrid</h3>
+<p>综合词面、图结构和搜索行为。</p>
+<p>这是当前最可能成为最终主方案的一路。</p>
+<p>思路：</p>
+<ol>
+<li>先把每类特征分别标准化</li>
+<li>再按实验比较权重</li>
+<li>输出 <code>0-1</code> 连续分数</li>
+</ol>
+<p>优点：</p>
+<ol>
+<li>同时利用词形、结构和搜索行为</li>
+<li>区分能力上限最高</li>
+</ol>
+<p>风险：</p>
+<ol>
+<li>可解释性会弱于单一路方案</li>
+<li>调试复杂度更高</li>
+</ol>
+<hr>
+<h2 id="_9">九、弱监督基准设计</h2>
+<p>尽量不使用人工标注，因此先构造一组“弱标签锚点”作为比较基准。</p>
+<h3 id="91">9.1 强泛词锚点</h3>
+<p>典型特征：</p>
+<ol>
+<li>高曝光</li>
+<li>高分支</li>
+<li>位于根部或近根部</li>
+<li>词短</li>
+</ol>
+<p>这类词应在 <code>specificity score</code> 上靠近低分区域。</p>
+<h3 id="92">9.2 强长尾锚点</h3>
+<p>典型特征：</p>
+<ol>
+<li>位于深层</li>
+<li>叶子或近叶子</li>
+<li>含品牌、规格、型号、属性或场景</li>
+<li>词更具体</li>
+</ol>
+<p>这类词应在 <code>specificity score</code> 上靠近高分区域。</p>
+<h3 id="93">9.3 疑似资讯词锚点</h3>
+<p>例如：</p>
+<ol>
+<li><code>做法</code></li>
+<li><code>推薦</code></li>
+<li><code>ptt</code></li>
+<li><code>dcard</code></li>
+</ol>
+<p>这类词往往“具体”，但不一定是理想商品搜索词。<br>
+它们用于检验具体度分数是否会把“具体”与“商品意图”混在一起。</p>
+<h3 id="94">9.4 歧义词锚点</h3>
+<p>例如：</p>
+<ol>
+<li><code>康乃馨</code></li>
+<li><code>玩具</code></li>
+<li><code>手機</code></li>
+</ol>
+<p>它们用于观察：</p>
+<ol>
+<li>结构是否容易污染</li>
+<li>分数在歧义簇里是否仍有层次</li>
+</ol>
+<hr>
+<h2 id="_10">十、评估指标</h2>
+<p>本轮验收标准按已确定的 <code>C</code> 口径：</p>
+<h3 id="_11">主指标：区分能力</h3>
+<p>重点看：</p>
+<ol>
+<li>强泛词锚点是否稳定落在低具体度区</li>
+<li>强长尾锚点是否稳定落在高具体度区</li>
+<li>疑似资讯词是否与商品长尾词发生明显混淆</li>
+</ol>
+<h3 id="_12">辅指标：结构稳定性</h3>
+<p>重点看：</p>
+<ol>
+<li><code>root_ratio</code></li>
+<li><code>singleton_tree_ratio</code></li>
+<li><code>leaf_ratio</code></li>
+<li><code>child_count_p50 / p90</code></li>
+<li><code>depth_p50 / p90</code></li>
+<li><code>subtree_size_gini</code></li>
+<li>明显异常边比例</li>
+</ol>
+<h3 id="_13">最终抽检</h3>
+<p>从每种方案里抽三类词：</p>
+<ol>
+<li>低分词</li>
+<li>中间分词</li>
+<li>高分词</li>
+</ol>
+<p>再配合浏览器做少量人工复核，确认直觉是否一致。</p>
+<hr>
+<h2 id="_14">十一、执行顺序</h2>
+<h3 id="phase-1">Phase 1：建图基线</h3>
+<ol>
+<li>先跑 A1</li>
+<li>再跑 A2</li>
+<li>比较结构差异</li>
+</ol>
+<p>目标：</p>
+<p>先拿到词面和频次层面的基础结论。</p>
+<h3 id="phase-2">Phase 2：图结构收紧</h3>
+<ol start="4">
+<li>跑 A3</li>
+<li>比较 A2 与 A3</li>
+</ol>
+<p>目标：</p>
+<p>观察结构正则是否真的提升稳定性。</p>
+<h3 id="phase-3">Phase 3：行为信号增强</h3>
+<ol start="6">
+<li>跑 A4</li>
+<li>比较 A3 与 A4</li>
+</ol>
+<p>目标：</p>
+<p>判断搜索行为信号是否真能改善边质量。</p>
+<h3 id="phase-4">Phase 4：连续分数实验</h3>
+<ol start="8">
+<li>
+<p>在每一版图上都计算：
+   - B1
+   - B2
+   - B3
+   - B4</p>
+</li>
+<li>
+<p>比较：
+   - 单路分数
+   - 融合分数</p>
+</li>
+</ol>
+<p>目标：</p>
+<p>确定哪一版 <code>specificity score</code> 最稳。</p>
+<h3 id="phase-5">Phase 5：总评与推荐</h3>
+<ol start="10">
+<li>选出：
+   - 最佳建图方案
+   - 最佳连续分数方案
+   - 最佳结构与分数组合</li>
+</ol>
+<hr>
+<h2 id="_15">十二、最终交付物</h2>
+<p>本轮实验结束后，应交付：</p>
+<ol>
+<li>台湾建图实验结果对比</li>
+<li>台湾连续分数方案对比</li>
+<li>推荐的结构方案</li>
+<li>推荐的 <code>specificity score</code></li>
+<li>台湾全量浏览入口</li>
+<li>一份结论文档，说明为什么选这版</li>
+</ol>
+<hr>
+<h2 id="_16">十三、当前推荐假设</h2>
+<p>在真正跑实验之前，当前最看好的组合是：</p>
+<ol>
+<li>
+<p>建图主方案：
+   <code>Lexical + Frequency + Graph Regularization</code></p>
+</li>
+<li>
+<p>连续分数主方案：
+   <code>specificity_hybrid</code></p>
+</li>
+</ol>
+<p>原因是：</p>
+<ol>
+<li>只靠词面，信息不足</li>
+<li>只靠曝光，容易把高商业词和高层泛词混淆</li>
+<li>只靠图位置，容易受建图误差放大</li>
+<li>三者联合最有机会得到更强区分能力</li>
+</ol>
+<p>但这个结论必须通过实验验证，不应直接当成最终答案。</p>
+<hr>
+<h2 id="_17">十四、一句话总结</h2>
+<p>这轮台湾实验的真正目标是：</p>
+<p><strong>先比较多种建图方案，做出一版可信的台湾搜索词结构，再在这版结构上找到一个区分泛词和长尾词的连续分数。</strong></p></article>
+    </section>
+  </main>
+</body>
+</html>

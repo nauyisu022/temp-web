@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>当前 Reward 设计存在的问题</title>
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --panel: #fffdf8;
+      --ink: #1f262b;
+      --muted: #6a737c;
+      --line: rgba(31, 38, 43, 0.12);
+      --accent: #9d4b32;
+      --accent-soft: rgba(157, 75, 50, 0.12);
+      --mono: "SFMono-Regular", "JetBrains Mono", "Cascadia Code", monospace;
+      --shadow: 0 16px 30px rgba(76, 57, 30, 0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(157, 75, 50, 0.10), transparent 24rem),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", serif;
+    }
+    .wrap {
+      width: min(980px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+    .panel {
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .crumb {
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .crumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.08;
+    }
+    .article {
+      margin-top: 22px;
+      line-height: 1.85;
+      font-size: 16px;
+    }
+    .article h1,
+    .article h2,
+    .article h3 {
+      line-height: 1.25;
+      margin-top: 1.8em;
+      margin-bottom: 0.55em;
+    }
+    .article h1:first-child,
+    .article h2:first-child,
+    .article h3:first-child {
+      margin-top: 0;
+    }
+    .article p,
+    .article ul,
+    .article ol,
+    .article pre,
+    .article table,
+    .article blockquote {
+      margin: 0 0 1em;
+    }
+    .article code {
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background: rgba(31, 38, 43, 0.06);
+      padding: 0.12em 0.36em;
+      border-radius: 6px;
+    }
+    .article pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f5efe6;
+    }
+    .article pre code {
+      background: transparent;
+      padding: 0;
+    }
+    .article table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .article th,
+    .article td {
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid rgba(31, 38, 43, 0.1);
+      vertical-align: top;
+    }
+    .article blockquote {
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      background: rgba(157, 75, 50, 0.06);
+      color: #4d565e;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <div class="crumb"><a href="../index.html">../</a></div>
+      <h1>当前 Reward 设计存在的问题</h1>
+      <div class="meta">
+        <span>source: REWARD_CURRENT_ISSUES_2026-04-15.md</span>
+        <span>updated: 2026-04-15 17:41 UTC</span>
+      </div>
+      <article class="article"><p>这份文档只总结当前 <code>KSP GRPO</code> 奖励设计本身的问题，不展开完整改造方案。</p>
+<h2 id="_1">一、当前奖励在优化什么</h2>
+<p>当前主链路里的 <code>reward</code>，本质上还是把多项规则分数压成一个标量：</p>
+<ol>
+<li>原文支撑</li>
+<li>搜索词库命中</li>
+<li>精确命中</li>
+<li>词条数量</li>
+<li>一些通用惩罚项</li>
+</ol>
+<p>这套设计在“减少明显编造”上是有效的，但它和最终想要的目标并没有完全对齐。最终真正想要的是：</p>
+<ol>
+<li>搜索词来自原文或有充分依据</li>
+<li>搜索词本身是完整短语，而不是碎片词</li>
+<li>单条词有足够的信息密度</li>
+<li>整体结果既忠实，又有搜索价值</li>
+</ol>
+<p>当前 <code>reward</code> 对第一点优化较多，对后面三点约束不足。</p>
+<h2 id="_2">二、最核心的问题</h2>
+<h3 id="1">1. 奖励单位和目标单位不一致</h3>
+<p>当前很多正向信号仍然是按“单个词条命中”在加分，但业务上真正需要的是“完整搜索短语”。</p>
+<p>例如：</p>
+<ul>
+<li><code>speaker</code></li>
+<li><code>portable</code></li>
+<li><code>black</code></li>
+</ul>
+<p>这些词单独命中时可以拿到支撑或词库命中分，但它们本身不一定是可用的搜索词。</p>
+<p>这会导致训练更容易学到“拆开写几个安全词”，而不是“写出一个完整可搜索短语”。</p>
+<h3 id="2-reward-hacking">2. 容易出现 <code>reward hacking</code>（奖励投机）</h3>
+<p>已经在离线分析里看到，模型会通过下面这种方式抬高分数：</p>
+<ol>
+<li>尽量复用原文里出现过的安全词</li>
+<li>把一个完整短语拆成多个短词</li>
+<li>用很多支撑强但搜索价值低的词来换更高总分</li>
+</ol>
+<p>这样做会让：</p>
+<ol>
+<li><code>factscore</code> 更高</li>
+<li><code>phrase_support_rate</code> 更高</li>
+<li>结果整体更短、更散、更不像搜索词</li>
+</ol>
+<p>也就是说，模型学到的是“如何拿高分”，不是“如何写更好的搜索词”。</p>
+<h3 id="3">3. 当前奖励对“单条词丰富度”约束不够</h3>
+<p>现在最明显的问题已经不只是“词条数量少”，而是“单条词的信息密度低”。</p>
+<p>例如：</p>
+<ul>
+<li><code>bluetooth speaker</code> 比 <code>speaker</code> 更有用</li>
+<li><code>AIWA RS-X10 bluetooth speaker</code> 又比前者更完整</li>
+</ul>
+<p>但当前奖励里，对这种“单条词是否足够丰富”的建模还不够强。它更容易奖励：</p>
+<ol>
+<li>有依据</li>
+<li>命中过词库</li>
+</ol>
+<p>却没有稳定奖励：</p>
+<ol>
+<li>有中心词</li>
+<li>有修饰信息</li>
+<li>有品牌、型号、规格等额外信息</li>
+</ol>
+<h3 id="4">4. 规则型特征泛化有限</h3>
+<p>目前补进去的新版 <code>tuned_gate_v4</code> 已经比旧版更好，尤其在压碎词方面明显有效，但它本质上仍然是规则系统。</p>
+<p>规则擅长抓：</p>
+<ol>
+<li>明显碎词</li>
+<li>明显句子</li>
+<li>明显重复</li>
+<li>明显锚点</li>
+</ol>
+<p>规则不擅长稳定判断：</p>
+<ol>
+<li>这条短语是否足够自然</li>
+<li>这条短语是否足够丰富</li>
+<li>这条短语是否真的像用户会搜的词</li>
+</ol>
+<p>所以它可以作为保底约束，但很难单独承担长期主奖励。</p>
+<h3 id="5">5. 多目标被压成单个标量之后，可解释性和调试成本都偏高</h3>
+<p>现在训练框架里最终吃的是一个 <code>score</code>。虽然内部会记录很多诊断字段，但训练优化时真正回传的还是单一标量。</p>
+<p>这会带来两个问题：</p>
+<ol>
+<li>很难直接看出模型到底是在追“支撑率”，还是在追“数量”，还是在钻某个规则漏洞</li>
+<li>一旦总分上涨但观感下降，定位是哪一项在误导训练会比较慢</li>
+</ol>
+<p>这也是为什么当前需要反复做离线排查，而不是只看训练曲线。</p>
+<h2 id="_3">三、这些问题带来的直接现象</h2>
+<p>当前已经看到的现象主要有三类：</p>
+<h3 id="1_1">1. 结果变得更忠实，但搜索价值下降</h3>
+<p>表现为：</p>
+<ol>
+<li>更少编造</li>
+<li>更贴原文</li>
+<li>但词更碎、短语更弱</li>
+</ol>
+<h3 id="2">2. 同样的分数，不同质量的词会被混在一起</h3>
+<p>例如一条完整短语和几个安全碎词，在当前设计里可能拿到接近的总分。</p>
+<h3 id="3_1">3. 训练优化方向容易偏到“保守”</h3>
+<p>模型会优先选择更安全、更不容易出错的写法，而不是更完整、更丰富、更像搜索词的写法。</p>
+<h2 id="_4">四、当前设计的边界</h2>
+<p>当前这版奖励更适合作为：</p>
+<ol>
+<li>“去编造”的约束层</li>
+<li>“压明显碎词”的保护层</li>
+<li>离线比较不同产物时的辅助评估层</li>
+</ol>
+<p>它还不适合作为：</p>
+<ol>
+<li>唯一的长期主奖励</li>
+<li>唯一的单条词质量判断器</li>
+<li>唯一的跨地区泛化方案</li>
+</ol>
+<h2 id="_5">五、接下来应该围绕什么继续改</h2>
+<p>如果只看问题本身，后续最该补的不是更多命中规则，而是三件事：</p>
+<ol>
+<li>把奖励单位进一步从“词条命中”收紧到“完整短语”</li>
+<li>明确建模“单条词丰富度”</li>
+<li>继续研究全量搜索词的稀疏性问题，并考虑基于全量搜索词建树的组织方式，把局部匹配提升到结构化覆盖</li>
+</ol>
+<hr>
+<p>一句话概括当前问题：</p>
+<p>当前 <code>reward</code> 已经能较好地约束“不要乱编”，但还没有足够稳定地奖励“写出完整、丰富、可搜索的短语”，因此训练仍然会偏向高支撑、低信息密度的保守结果。</p></article>
+    </section>
+  </main>
+</body>
+</html>

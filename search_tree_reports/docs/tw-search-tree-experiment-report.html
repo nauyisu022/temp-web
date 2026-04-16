@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台湾搜索词结构实验结论</title>
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --panel: #fffdf8;
+      --ink: #1f262b;
+      --muted: #6a737c;
+      --line: rgba(31, 38, 43, 0.12);
+      --accent: #9d4b32;
+      --accent-soft: rgba(157, 75, 50, 0.12);
+      --mono: "SFMono-Regular", "JetBrains Mono", "Cascadia Code", monospace;
+      --shadow: 0 16px 30px rgba(76, 57, 30, 0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(157, 75, 50, 0.10), transparent 24rem),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", serif;
+    }
+    .wrap {
+      width: min(980px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+    .panel {
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .crumb {
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .crumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.08;
+    }
+    .article {
+      margin-top: 22px;
+      line-height: 1.85;
+      font-size: 16px;
+    }
+    .article h1,
+    .article h2,
+    .article h3 {
+      line-height: 1.25;
+      margin-top: 1.8em;
+      margin-bottom: 0.55em;
+    }
+    .article h1:first-child,
+    .article h2:first-child,
+    .article h3:first-child {
+      margin-top: 0;
+    }
+    .article p,
+    .article ul,
+    .article ol,
+    .article pre,
+    .article table,
+    .article blockquote {
+      margin: 0 0 1em;
+    }
+    .article code {
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background: rgba(31, 38, 43, 0.06);
+      padding: 0.12em 0.36em;
+      border-radius: 6px;
+    }
+    .article pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f5efe6;
+    }
+    .article pre code {
+      background: transparent;
+      padding: 0;
+    }
+    .article table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .article th,
+    .article td {
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid rgba(31, 38, 43, 0.1);
+      vertical-align: top;
+    }
+    .article blockquote {
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      background: rgba(157, 75, 50, 0.06);
+      color: #4d565e;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <div class="crumb"><a href="../index.html">../</a></div>
+      <h1>台湾搜索词结构实验结论</h1>
+      <div class="meta">
+        <span>source: TW_SEARCH_TREE_EXPERIMENT_REPORT.md</span>
+        <span>updated: 2026-04-15 19:34 UTC</span>
+      </div>
+      <article class="article"><h2 id="_1">一、结论</h2>
+<p>台湾全量搜索词当前推荐采用：</p>
+<ol>
+<li>建图方案：<code>A3 = Lexical + Frequency + Graph Regularization</code></li>
+<li>连续分数：<code>B4 = specificity_hybrid</code></li>
+<li>融合权重：<code>lexical = 0.34, graph = 0.33, search = 0.33</code></li>
+</ol>
+<p>这版可以作为“一个词更偏泛词，还是更偏长尾词”的当前依据。</p>
+<hr>
+<h2 id="a3">二、为什么选 A3</h2>
+<p>四版结构里，A3 是最平衡的一档。</p>
+<h3 id="a1">A1 的问题</h3>
+<ol>
+<li><code>edge_count = 510,017</code></li>
+<li><code>multi_parent_ratio = 56.65%</code></li>
+<li><code>max_component_size = 221,140</code></li>
+</ol>
+<p>纯词面图过密，很多 generic 父词会同时挂上去。</p>
+<h3 id="a2">A2 的改进</h3>
+<ol>
+<li><code>edge_count = 406,576</code></li>
+<li><code>multi_parent_ratio = 45.65%</code></li>
+</ol>
+<p>频次约束能先压掉一批明显不合理的边，但仍然留了很多“可挂但没必要挂”的泛父词。</p>
+<h3 id="a3_1">A3 的优势</h3>
+<ol>
+<li><code>edge_count = 235,247</code></li>
+<li><code>multi_parent_ratio = 14.72%</code></li>
+<li><code>root_ratio = 21.96%</code></li>
+<li><code>subtree_size_gini = 0.8076</code></li>
+</ol>
+<p>A3 的关键点不是把图打散，而是把弱泛父边裁掉。</p>
+<p>典型变化：</p>
+<ol>
+<li><code>麵包超人玩具: [麵包超人, 玩具] -&gt; [麵包超人]</code></li>
+<li><code>機車手機架推薦: [機車手機架, 機車, 手機架] -&gt; [機車手機架]</code></li>
+<li><code>日本美白牙膏: [美白牙膏, 牙膏] -&gt; [美白牙膏]</code></li>
+</ol>
+<p>这一层更接近“真实上下位”，而不是“只要能包含就算父词”。</p>
+<h3 id="a4">A4 没有成为最终方案</h3>
+<ol>
+<li><code>edge_count = 226,569</code></li>
+<li><code>multi_parent_ratio = 11.73%</code></li>
+</ol>
+<p>A4 继续更稀，但提升已经很小。<br>
+同时它会继续砍掉一部分仍有用的 generic 父边，例如：</p>
+<ol>
+<li><code>汪汪隊玩具 -&gt; [汪汪隊]</code></li>
+<li><code>皮克敏娃娃 -&gt; [皮克敏]</code></li>
+<li><code>機車後照鏡 -&gt; [後照鏡]</code></li>
+</ol>
+<p>如果把台湾搜索词结构当成后续泛词、长尾词判断的基础层，A4 略显过头。</p>
+<hr>
+<h2 id="b4">三、为什么选 B4</h2>
+<p>在 <code>A3</code> 上比较四种分数：</p>
+<ol>
+<li><code>B1</code>
+   - <code>avg_auc = 0.9936</code>
+   - <code>objective = 0.9946</code></li>
+<li><code>B2</code>
+   - <code>avg_auc = 0.9786</code>
+   - <code>objective = 0.9855</code></li>
+<li><code>B3</code>
+   - <code>avg_auc = 0.8713</code>
+   - <code>objective = 0.8874</code></li>
+<li><code>B4</code>
+   - <code>avg_auc = 0.9991</code>
+   - <code>objective = 0.99924</code>
+   - <code>edge_monotonicity = 0.99990</code>
+   - <code>primary_edge_monotonicity = 1.0</code></li>
+</ol>
+<h3 id="b1">B1</h3>
+<p>词面分数非常强，但和 <code>surface</code>（词面锚点）共享一部分先验，因此结果会偏乐观。</p>
+<h3 id="b2">B2</h3>
+<p>图位置分数已经能用，解释也直观，但区分力略弱于融合分数。</p>
+<h3 id="b3">B3</h3>
+<p>只看搜索行为明显不够。<br>
+它能提供辅助信号，但单独拿来做泛词、长尾词判断不稳。</p>
+<h3 id="b4_1">B4</h3>
+<p>B4 同时利用：</p>
+<ol>
+<li>词面具体度</li>
+<li>图结构位置</li>
+<li>搜索行为强弱</li>
+</ol>
+<p>这版在两类弱监督锚点上都最稳，同时父子边的分数单调性也几乎满分，因此最终采用。</p>
+<hr>
+<h2 id="_2">四、分数直觉检查</h2>
+<h3 id="_3">低分词</h3>
+<ol>
+<li><code>巧虎</code></li>
+<li><code>波力</code></li>
+<li><code>恐龍</code></li>
+<li><code>玩具</code></li>
+<li><code>樂高</code></li>
+</ol>
+<p>这些词普遍更像泛词或大类词。</p>
+<h3 id="_4">高分词</h3>
+<ol>
+<li><code>toyotacorollacross鑰匙皮套</code></li>
+<li><code>jolly迷你鐵盒磁力片40片</code></li>
+<li><code>dhc速攻藍莓vmax30天份</code></li>
+<li><code>iphone16promax256g二手價格</code></li>
+<li><code>dreambaby兒童安全圍欄</code></li>
+</ol>
+<p>这些词大多已经具备品牌、型号、规格、场景或交易条件。</p>
+<h3 id="_5">中间词</h3>
+<ol>
+<li><code>bhk's益生菌</code></li>
+<li><code>ct125honda</code></li>
+<li><code>陶瓷咖啡濾杯</code></li>
+<li><code>日本口臭牙膏</code></li>
+<li><code>衣服收納層架</code></li>
+</ol>
+<p>中间分区域也基本符合“已经有一定具体度，但还没有收得特别细”的直觉。</p>
+<hr>
+<h2 id="_6">五、当前建议怎么用</h2>
+<p>当前这版更适合先做两个动作：</p>
+<ol>
+<li>把 <code>B4</code> 当成连续具体度分数，先给每个台湾搜索词打一分。</li>
+<li>把 <code>A3</code> 的 DAG 当成结构底座，后续再叠加另一条“商品意图”或“商业价值”轴。</li>
+</ol>
+<p>原因很简单：</p>
+<ol>
+<li>这轮已经把“泛词到长尾词”的层次做出来了。</li>
+<li><code>推薦</code>、<code>ptt</code>、<code>哪裡買</code> 这类资讯词虽然会更具体，但它们和商品词仍是另一条维度。</li>
+<li>因此下一步更合理的做法，是在 <code>A3 + B4</code> 之上再补一条意图分数，而不是重新推翻这一层结构。</li>
+</ol>
+<hr>
+<h2 id="_7">六、实验产物</h2>
+<p>全量输出位于：</p>
+<p><code>outputs/search_tree_experiments/tw/</code></p>
+<p>其中包含：</p>
+<ol>
+<li><code>summary.json</code></li>
+<li><code>a1</code> 到 <code>a4</code> 各自的 <code>edges.parquet</code></li>
+<li>各方案的 <code>graph_metrics.json</code></li>
+<li>各方案的 <code>scores.parquet</code></li>
+<li>各方案的 <code>score_report.json</code></li>
+<li>各方案的 <code>samples.json</code></li>
+</ol></article>
+    </section>
+  </main>
+</body>
+</html>
