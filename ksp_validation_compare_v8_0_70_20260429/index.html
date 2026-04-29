@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KSP Validation Compare</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <header class="brand">
+          <div>
+            <p class="eyebrow">KSP validation</p>
+            <h1>0-70 对比</h1>
+          </div>
+          <div id="liveBadge" class="status-pill">loading</div>
+        </header>
+
+        <section class="filters" aria-label="筛选 case">
+          <label>
+            <span>搜索</span>
+            <input id="searchInput" type="search" placeholder="item / region / title" />
+          </label>
+          <div class="filter-row">
+            <label>
+              <span>地区</span>
+              <select id="regionSelect"></select>
+            </label>
+            <label>
+              <span>排序</span>
+              <select id="sortSelect">
+                <option value="idx">行号</option>
+                <option value="rewardDown">reward 下降</option>
+                <option value="rewardUp">reward 上升</option>
+                <option value="termsDown">terms 变短</option>
+                <option value="step70">step70 reward</option>
+              </select>
+            </label>
+          </div>
+          <div class="filter-row">
+            <label>
+              <span>问题</span>
+              <select id="flagSelect">
+                <option value="">全部</option>
+                <option value="coverage">coverage hack</option>
+                <option value="guarded">guarded</option>
+                <option value="invalid">invalid</option>
+                <option value="compressed">明显变短</option>
+                <option value="single-char">单字</option>
+                <option value="reward-drop">reward 下降</option>
+              </select>
+            </label>
+            <label>
+              <span>显示</span>
+              <select id="densitySelect">
+                <option value="all">全部 case</option>
+                <option value="flagged">只看有问题</option>
+                <option value="live">只看 live</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <div class="list-meta">
+          <span id="caseCount">0 cases</span>
+          <span id="selectedMeta">-</span>
+        </div>
+        <nav id="caseList" class="case-list" aria-label="case 列表"></nav>
+      </aside>
+
+      <main class="workspace">
+        <section class="topbar">
+          <div>
+            <p class="eyebrow" id="caseKicker">选择 case</p>
+            <h2 id="caseTitle">Loading validation outputs</h2>
+          </div>
+          <div class="view-controls" aria-label="显示控制">
+            <div class="segmented" id="stepPreset">
+              <button data-preset="all" class="active">0-70</button>
+              <button data-preset="ends">0 / 70</button>
+              <button data-preset="key">0 / 20 / 50 / 70</button>
+            </div>
+            <div class="segmented" id="outputMode">
+              <button data-mode="final" class="active">final</button>
+              <button data-mode="analysis">analysis</button>
+              <button data-mode="full">full</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="source-band">
+          <div class="source-main">
+            <p class="source-title" id="sourceTitle"></p>
+            <pre id="sourceDescription"></pre>
+          </div>
+          <div class="run-summary" id="runSummary"></div>
+        </section>
+
+        <section class="metric-section">
+          <div class="section-head">
+            <h3>指标趋势</h3>
+            <p id="metricNote"></p>
+          </div>
+          <div class="table-scroll">
+            <table id="metricTable" class="metric-table"></table>
+          </div>
+        </section>
+
+        <section class="outputs-section">
+          <div class="section-head">
+            <h3>逐步输出</h3>
+            <p id="outputNote"></p>
+          </div>
+          <div id="stepGrid" class="step-grid"></div>
+        </section>
+      </main>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
