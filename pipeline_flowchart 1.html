@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Title Optimization v9 Pipeline</title>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Virgil', 'Segoe Print', 'Comic Sans MS', cursive, sans-serif; background: #fff; }
+  #canvas { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+const dpr = window.devicePixelRatio || 1;
+const W = 1900, H = 1740;
+const canvas = document.getElementById('canvas');
+canvas.width = W * dpr; canvas.height = H * dpr;
+canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+const ctx = canvas.getContext('2d');
+ctx.scale(dpr, dpr);
+const rc = rough.canvas(canvas);
+const S = 42;
+
+const C = {
+  input:   '#e8f0fe',
+  select:  '#fff3e0',
+  ksp:     '#fce4ec',
+  info:    '#e8f0fe',
+  search:  '#e8f5e9',
+  sim:     '#e8f5e9',
+  sort:    '#f3e5f5',
+  llm:     '#e3f2fd',
+  pattern: '#fff8e1',
+  ek:      '#fff3e0',
+  filter:  '#fce4ec',
+  output:  '#e8f5e9',
+  white:   '#fff',
+  dataBg:  '#f5f5f5',
+};
+
+function rect(x, y, w, h, fill, opts) {
+  rc.rectangle(x, y, w, h, { roughness: 1, strokeWidth: 1.5, fill, fillStyle: 'solid', seed: S, ...opts });
+}
+
+function text(str, x, y, { font = '14px', bold = false, color = '#222', align = 'center' } = {}) {
+  ctx.fillStyle = color;
+  ctx.font = (bold ? 'bold ' : '') + font + ' "Virgil", "Segoe Print", "Comic Sans MS", cursive';
+  ctx.textAlign = align;
+  ctx.fillText(str, x, y);
+}
+
+function arrow(x1, y1, x2, y2, opts = {}) {
+  const o = { roughness: 0.7, strokeWidth: 1.5, seed: S, ...opts };
+  rc.line(x1, y1, x2, y2, o);
+  const a = Math.atan2(y2 - y1, x2 - x1), sz = 9;
+  rc.line(x2, y2, x2 - sz * Math.cos(a - 0.4), y2 - sz * Math.sin(a - 0.4), o);
+  rc.line(x2, y2, x2 - sz * Math.cos(a + 0.4), y2 - sz * Math.sin(a + 0.4), o);
+}
+
+function line(x1, y1, x2, y2, opts = {}) {
+  rc.line(x1, y1, x2, y2, { roughness: 0.7, strokeWidth: 1.5, seed: S, ...opts });
+}
+
+function pill(str, x, y, w, fill = C.white) {
+  rect(x, y, w, 24, fill);
+  text(str, x + w / 2, y + 16, { font: '9px' });
+}
+
+function laneFrame(title, subtitle, x, y, w, h, fill, stroke = '#666', titleColor = '#222') {
+  rect(x, y, w, h, fill, { stroke, strokeWidth: 2.5 });
+  text(title, x + 20, y + 30, { font: '18px', bold: true, color: titleColor, align: 'left' });
+  if (subtitle) text(subtitle, x + 20, y + 52, { font: '11px', color: '#666', align: 'left' });
+}
+
+// ── Layout constants ──
+const laneW = 520;
+const laneTop = 300;
+const laneH = 705;
+const c1 = 315, c2 = 950, c3 = 1585;
+const lane1X = c1 - laneW / 2;
+const lane2X = c2 - laneW / 2;
+const lane3X = c3 - laneW / 2;
+const boxW = 400;
+const smallW = 300;
+
+// ── Title ──
+text('Title Optimization v9', W / 2, 42, { font: '28px', bold: true });
+text('Shopee Google Ads Title Optimization Pipeline', W / 2, 68, { font: '14px', color: '#888' });
+
+// ── Inputs band and shared product selection ──
+const inputsY = 120;
+rect(W / 2 - 250, inputsY, 500, 56, C.input);
+text('Inputs', W / 2, inputsY + 24, { font: '16px', bold: true });
+text('item catalog · ads performance · historical title knowledge', W / 2, inputsY + 43, { font: '11px', color: '#666' });
+
+const productSelectionY = 210;
+const productSelectionW = 460, productSelectionH = 60;
+rect(W / 2 - productSelectionW / 2, productSelectionY, productSelectionW, productSelectionH, C.select, { stroke: '#e65100', strokeWidth: 2 });
+text('Product Selection', W / 2, productSelectionY + 24, { font: '17px', bold: true });
+text('Choosing Items with CPO Improvement Space', W / 2, productSelectionY + 45, { font: '11px', color: '#666' });
+arrow(W / 2, inputsY + 56, W / 2, productSelectionY, { stroke: '#e65100', strokeWidth: 2 });
+
+// ── Parallel lanes ──
+laneFrame('Lane 1 · Search Terms Processing', 'performance search terms → simulator → sorting', lane1X, laneTop, laneW, laneH, C.search, '#00897b', '#00796b');
+laneFrame('Lane 2 · KSP Extraction', 'multi-turn CoT KSP → product information', lane2X, laneTop, laneW, laneH, C.ksp, '#c62828', '#c62828');
+laneFrame('Lane 3 · Knowledge & Pattern', 'offline clusters → title patterns → expert knowledge', lane3X, laneTop, laneW, laneH, C.pattern, '#ef6c00', '#e65100');
+
+// shared selection fan-out into all three lanes
+const fanoutY = laneTop - 18;
+line(W / 2, productSelectionY + productSelectionH, W / 2, fanoutY, { stroke: '#e65100', strokeWidth: 2 });
+line(c1, fanoutY, c3, fanoutY, { stroke: '#e65100', strokeWidth: 2 });
+arrow(c1, fanoutY, c1, laneTop, { stroke: '#e65100', strokeWidth: 2 });
+arrow(c2, fanoutY, c2, laneTop, { stroke: '#e65100', strokeWidth: 2 });
+arrow(c3, fanoutY, c3, laneTop, { stroke: '#e65100', strokeWidth: 2 });
+
+// ══════════════════════════════════════════════════════════════
+// Lane 1: Search Terms Processing
+// ══════════════════════════════════════════════════════════════
+const l1InputY = 355;
+rect(c1 - smallW / 2, l1InputY, smallW, 56, C.input);
+text('item with performance', c1, l1InputY + 24, { font: '13px', bold: true });
+text('ads conversion / CPO / relevance signals', c1, l1InputY + 43, { font: '10px', color: '#666' });
+
+const searchY = 430;
+rect(c1 - 120, searchY, 240, 60, C.search);
+text('Search Terms', c1, searchY + 26, { font: '15px', bold: true });
+text('(with Performance)', c1, searchY + 46, { font: '11px', color: '#666' });
+arrow(c1, l1InputY + 56, c1, searchY);
+
+const simY = 510;
+const ssW = 430, ssH = 290;
+rect(c1 - ssW / 2, simY, ssW, ssH, C.sim);
+text('Search Simulator', c1, simY + 26, { font: '17px', bold: true });
+
+const wsY = simY + 48;
+rect(c1 - 170, wsY, 130, 28, C.white);
+text('Word Segmentation', c1 - 105, wsY + 18, { font: '10px' });
+rect(c1 + 40, wsY, 130, 28, C.white);
+text('Word Segmentation', c1 + 105, wsY + 18, { font: '10px' });
+
+const iiY = simY + 105;
+rect(c1 - 160, iiY, 320, 58, C.white);
+text('Inverted Index', c1, iiY + 18, { font: '12px', bold: true });
+rect(c1 - 140, iiY + 25, 130, 26, C.input);
+text('Text Index (BM25s)', c1 - 75, iiY + 42, { font: '10px' });
+rect(c1 + 10, iiY + 25, 150, 26, C.input);
+text('Semantic Index (Qwen3 Emb)', c1 + 85, iiY + 42, { font: '9px' });
+arrow(c1 - 105, wsY + 28, c1 - 75, iiY);
+arrow(c1 + 105, wsY + 28, c1 + 85, iiY);
+
+const srY = iiY + 78;
+rect(c1 - 90, srY, 180, 32, C.white);
+text('Similarity Recall', c1, srY + 21, { font: '12px' });
+arrow(c1, iiY + 58, c1, srY);
+
+const rrY = srY + 52;
+rect(c1 - 120, rrY, 240, 40, C.white);
+text('Relevance Re-ranking', c1, rrY + 17, { font: '12px' });
+text('(Qwen3 Reranker · Fine-tuned)', c1, rrY + 32, { font: '10px', color: '#c62828' });
+arrow(c1, srY + 32, c1, rrY);
+
+arrow(c1, searchY + 60, c1, simY);
+
+const sortY = 825;
+rect(c1 - 175, sortY, 350, 46, C.sort);
+text('Sorting (Conversion score × Relevance score)', c1, sortY + 28, { font: '12px' });
+arrow(c1, simY + ssH, c1, sortY);
+
+const l1OutY = 890;
+const dataBoxW = 370, dataBoxH = 90;
+rect(c1 - dataBoxW / 2, l1OutY, dataBoxW, dataBoxH, C.search, { stroke: '#00897b', strokeWidth: 2 });
+text('Lane 1 Output', c1, l1OutY + 22, { font: '13px', bold: true });
+text('Original Title + KSP +', c1 - 95, l1OutY + 43, { font: '11px', color: '#555', align: 'left' });
+text('High Relevance Good search terms', c1 - 95, l1OutY + 59, { font: '11px', color: '#555', align: 'left' });
+text('High Relevance Bad search terms', c1 - 95, l1OutY + 75, { font: '11px', color: '#555', align: 'left' });
+arrow(c1, sortY + 46, c1, l1OutY);
+
+// ══════════════════════════════════════════════════════════════
+// Lane 2: KSP Extraction
+// ══════════════════════════════════════════════════════════════
+const kspY = 360;
+const kspW = 430, kspH = 320;
+rect(c2 - kspW / 2, kspY, kspW, kspH, C.ksp);
+text('Product KSP Extraction', c2, kspY + 24, { font: '16px', bold: true });
+text('4-Round Multi-turn CoT', c2, kspY + 43, { font: '11px', bold: true, color: '#c62828' });
+
+const stepX = c2 - kspW / 2 + 24;
+const stepW = kspW - 48;
+const stepH = 34;
+const stepGap = 14;
+let sy = kspY + 58;
+
+rect(stepX, sy, stepW, stepH, C.white);
+text('Step 1: User Profile', c2 - 48, sy + 15, { font: '11px', bold: true });
+text('— target user · search intent · select schema', c2 + 70, sy + 28, { font: '9px', color: '#666' });
+sy += stepH + stepGap;
+arrow(c2, sy - stepGap, c2, sy);
+
+rect(stepX, sy, stepW, stepH, C.white);
+text('Step 2: Keywords Extraction', c2 - 24, sy + 15, { font: '11px', bold: true });
+text('— extract + expand search keywords by attribute', c2 + 68, sy + 28, { font: '9px', color: '#666' });
+sy += stepH + stepGap;
+arrow(c2, sy - stepGap, c2, sy);
+
+rect(stepX, sy, stepW, stepH, C.white);
+text('Step 3: Candidates Generation', c2 - 14, sy + 15, { font: '11px', bold: true });
+text('— brand → USP → long_tail (n=5 candidates)', c2 + 70, sy + 28, { font: '9px', color: '#666' });
+sy += stepH + stepGap;
+arrow(c2, sy - stepGap, c2, sy);
+
+rect(stepX, sy, stepW, stepH, C.white);
+text('Step 4: Evaluation & Selection', c2 - 12, sy + 15, { font: '11px', bold: true });
+text('— 4-dim scoring · pick best of 5 candidates', c2 + 70, sy + 28, { font: '9px', color: '#666' });
+
+sy += stepH + 16;
+const outLabels = ['Brand', 'Product Type', 'USP', 'Long-tail KW'];
+const olW = 82, olGap = 8;
+const olTotalW = outLabels.length * olW + (outLabels.length - 1) * olGap;
+let olX = c2 - olTotalW / 2;
+for (const lb of outLabels) {
+  pill(lb, olX, sy, olW);
+  olX += olW + olGap;
+}
+const infoY = 750;
+rect(c2 - 190, infoY, 380, 94, C.info);
+text('Product Information', c2, infoY + 22, { font: '14px', bold: true });
+rect(c2 - 170, infoY + 36, 155, 42, C.white);
+text('Original Title', c2 - 92, infoY + 52, { font: '10px' });
+text('+ Description', c2 - 92, infoY + 67, { font: '10px' });
+rect(c2 + 15, infoY + 36, 155, 42, C.white);
+text('Original Title', c2 + 92, infoY + 52, { font: '10px' });
+text('+ KSP', c2 + 92, infoY + 67, { font: '10px' });
+arrow(c2, kspY + kspH, c2, infoY);
+
+const l2OutY = 885;
+rect(c2 - 170, l2OutY, 340, 64, C.ksp, { stroke: '#c62828', strokeWidth: 2 });
+text('Lane 2 Output', c2, l2OutY + 22, { font: '13px', bold: true });
+text('structured facts, product KSP, title context', c2, l2OutY + 45, { font: '11px', color: '#555' });
+arrow(c2, infoY + 94, c2, l2OutY);
+
+// ══════════════════════════════════════════════════════════════
+// Lane 3: Knowledge & Pattern
+// ══════════════════════════════════════════════════════════════
+const l3InputY = 355;
+rect(c3 - smallW / 2, l3InputY, smallW, 56, C.input);
+text('historical titles + KSP', c3, l3InputY + 24, { font: '13px', bold: true });
+text('good / bad examples by category', c3, l3InputY + 43, { font: '10px', color: '#666' });
+
+const clusterY = 430;
+rect(c3 - 150, clusterY, 300, 64, C.pattern);
+text('Cluster by', c3, clusterY + 24, { font: '14px', bold: true });
+rect(c3 - 70, clusterY + 34, 140, 22, C.white);
+text('Product Type', c3, clusterY + 49, { font: '10px' });
+arrow(c3, l3InputY + 56, c3, clusterY);
+
+const tpY = 530;
+rect(c3 - 170, tpY, 340, 126, C.pattern);
+text('Title Pattern Generation', c3, tpY + 23, { font: '15px', bold: true });
+text('offline', c3 + 125, tpY + 23, { font: '9px', bold: true, color: '#e65100' });
+rect(c3 - 145, tpY + 38, 290, 26, C.white);
+text('Mining Good / Bad Title Examples', c3, tpY + 56, { font: '10px' });
+rect(c3 - 145, tpY + 72, 290, 26, C.white);
+text('Pattern Generation (LLM & CoT)', c3, tpY + 90, { font: '10px' });
+text('→ SQLite DB', c3, tpY + 114, { font: '9px', color: '#999' });
+arrow(c3, clusterY + 64, c3, tpY);
+
+const ekY = 690;
+rect(c3 - 160, ekY, 320, 118, C.ek);
+text('Expert Knowledge', c3, ekY + 24, { font: '15px', bold: true });
+text('by cluster priority:', c3, ekY + 45, { font: '11px', color: '#555' });
+text('1. Product Type', c3, ekY + 64, { font: '11px', color: '#555' });
+text('2. L3 Category', c3, ekY + 82, { font: '11px', color: '#555' });
+text('3. L2 Category', c3, ekY + 100, { font: '11px', color: '#555' });
+arrow(c3, tpY + 126, c3, ekY);
+
+const l3OutY = 890;
+rect(c3 - 175, l3OutY, 350, 76, C.pattern, { stroke: '#ef6c00', strokeWidth: 2 });
+text('Lane 3 Output', c3, l3OutY + 24, { font: '13px', bold: true });
+text('title patterns + expert knowledge', c3, l3OutY + 47, { font: '11px', color: '#555' });
+text('cluster-aware rules for generation', c3, l3OutY + 63, { font: '10px', color: '#777' });
+arrow(c3, ekY + 118, c3, l3OutY);
+
+// ══════════════════════════════════════════════════════════════
+// Convergence: three lane outputs feed directly into LLM Title Generator
+// ══════════════════════════════════════════════════════════════
+const llmY = 1055;
+const llmW = 620, llmH = 180;
+const llmX = W / 2 - llmW / 2;
+
+// lane outputs merge cleanly before entering LLM Title Generator
+const mergeY = 1030;
+const mergeLeft = llmX + 120;
+const mergeRight = llmX + llmW - 120;
+line(c1, l1OutY + dataBoxH, c1, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+line(c2, l2OutY + 64, c2, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+line(c3, l3OutY + 76, c3, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+line(mergeLeft, mergeY, mergeRight, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+line(c1, mergeY, mergeLeft, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+line(c3, mergeY, mergeRight, mergeY, { stroke: '#1565c0', strokeWidth: 2 });
+arrow(W / 2, mergeY, W / 2, llmY, { stroke: '#1565c0', strokeWidth: 2.2 });
+
+rect(llmX, llmY, llmW, llmH, C.llm, { stroke: '#1565c0', strokeWidth: 2 });
+text('LLM Title Generator', W / 2, llmY + 26, { font: '18px', bold: true });
+
+rect(llmX + 25, llmY + 42, llmW - 50, 54, C.white);
+text('Call 1: Extract Facts + Policy', W / 2, llmY + 60, { font: '12px', bold: true });
+text('brand · product_type · specs · core_usp · signals', W / 2, llmY + 77, { font: '10px', color: '#666' });
+text('→ select policy (max_len, structure rules)', W / 2, llmY + 91, { font: '10px', color: '#666' });
+
+text('+', W / 2, llmY + 113, { font: '17px', bold: true, color: '#1565c0' });
+
+rect(llmX + 25, llmY + 124, llmW - 50, 38, C.white);
+text('Call 2: Generate Optimized Title', W / 2, llmY + 139, { font: '12px', bold: true });
+text('facts + policy + search terms + EK → N candidates', W / 2, llmY + 154, { font: '10px', color: '#666' });
+
+text('GPT-5-mini · async · concurrency=200', W / 2, llmY + 174, { font: '10px', color: '#888' });
+
+// ══════════════════════════════════════════════════════════════
+// Candidate selection: LLM N candidates → best title
+// ══════════════════════════════════════════════════════════════
+const candY = llmY + llmH + 14;
+const candW = 100, candH = 28;
+const candXs = [W / 2 - 160, W / 2 - candW / 2, W / 2 + 60];
+const candLabels = ['Candidate 1', 'Candidate 2', 'Candidate N'];
+for (let i = 0; i < candXs.length; i++) {
+  rect(candXs[i], candY, candW, candH, C.white, { stroke: '#6a1b9a', strokeWidth: 1.2 });
+  text(candLabels[i], candXs[i] + candW / 2, candY + 18, { font: '9px', bold: true, color: '#6a1b9a' });
+}
+text('...', W / 2 + 35, candY + 18, { font: '13px', bold: true, color: '#777' });
+
+const selectY = 1305;
+const selectW = 620, selectH = 145;
+const selectX = W / 2 - selectW / 2;
+rect(selectX, selectY, selectW, selectH, C.sort, { stroke: '#6a1b9a', strokeWidth: 2 });
+text('Multi-candidate Selection', W / 2, selectY + 24, { font: '16px', bold: true, color: '#6a1b9a' });
+text('score and verify N candidates → select the best one', W / 2, selectY + 43, { font: '10px', color: '#666' });
+
+const evalY = selectY + 60;
+line(candXs[0] + candW / 2, candY + candH, candXs[0] + candW / 2, selectY - 12, { stroke: '#6a1b9a', strokeWidth: 1.4 });
+line(candXs[1] + candW / 2, candY + candH, candXs[1] + candW / 2, selectY - 12, { stroke: '#6a1b9a', strokeWidth: 1.4 });
+line(candXs[2] + candW / 2, candY + candH, candXs[2] + candW / 2, selectY - 12, { stroke: '#6a1b9a', strokeWidth: 1.4 });
+line(candXs[0] + candW / 2, selectY - 12, candXs[2] + candW / 2, selectY - 12, { stroke: '#6a1b9a', strokeWidth: 1.4 });
+arrow(W / 2, selectY - 12, W / 2, selectY, { stroke: '#6a1b9a', strokeWidth: 1.4 });
+
+rect(W / 2 - 250, evalY, 230, 42, C.white);
+text('DAG Search-term Scoring', W / 2 - 135, evalY + 17, { font: '11px', bold: true });
+text('relevance · good/bad terms', W / 2 - 135, evalY + 33, { font: '9px', color: '#666' });
+rect(W / 2 + 20, evalY, 230, 42, C.white);
+text('Facts / EK Validation', W / 2 + 135, evalY + 17, { font: '11px', bold: true });
+text('facts · policy · expert knowledge', W / 2 + 135, evalY + 33, { font: '9px', color: '#666' });
+
+const bestY = selectY + 116;
+rect(W / 2 - 85, bestY, 170, 24, C.output, { stroke: '#2e7d32', strokeWidth: 1.5 });
+text('Best Candidate', W / 2, bestY + 16, { font: '10px', bold: true, color: '#2e7d32' });
+arrow(W / 2, evalY + 42, W / 2, bestY, { stroke: '#6a1b9a', strokeWidth: 1.5 });
+arrow(W / 2, llmY + llmH, W / 2, candY);
+
+// ══════════════════════════════════════════════════════════════
+// Final flow: selection → Blacklist Filter → Enhanced Title
+// ══════════════════════════════════════════════════════════════
+const filterY = 1495;
+rect(W / 2 - 175, filterY, 350, 68, C.filter);
+text('Blacklist Filter', W / 2, filterY + 22, { font: '15px', bold: true });
+text('flashtext (Aho-Corasick) · CJK cleanup', W / 2, filterY + 42, { font: '10px', color: '#666' });
+text('Google GMC Policy Compliance', W / 2, filterY + 57, { font: '10px', color: '#666' });
+arrow(W / 2, selectY + selectH, W / 2, filterY);
+
+const outY = 1615;
+rect(W / 2 - 120, outY, 240, 48, C.output, { stroke: '#2e7d32', strokeWidth: 2 });
+text('Enhanced Title', W / 2, outY + 20, { font: '15px', bold: true, color: '#2e7d32' });
+text('→ Hive (Parquet)', W / 2, outY + 38, { font: '11px', color: '#555' });
+arrow(W / 2, filterY + 68, W / 2, outY);
+text('BR · ID · MY · PH · SG · TH · TW · VN', W / 2, outY + 68, { font: '11px', color: '#aaa' });
+
+</script>
+</body>
+</html>

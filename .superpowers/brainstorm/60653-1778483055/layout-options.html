@@ -1,0 +1,57 @@
+<h2>大组件关系调整方案</h2>
+<p class="subtitle">只看大组件关系：KSP 与 Search Simulator 并排，最终都汇入 LLM Title Generator。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:18px;background:#fafafa;">
+      <div style="display:flex;gap:16px;align-items:stretch;justify-content:center;">
+        <div style="border:2px solid #189a76;background:#d9f7e8;border-radius:8px;padding:12px;width:30%;min-height:210px;">
+          <b>Lane 1</b><br>Search Terms Processing<br><br>
+          <div style="border:1px solid #189a76;background:white;padding:8px;margin-top:10px;">Search Terms</div>
+          <div style="border:1px solid #189a76;background:white;padding:8px;margin-top:10px;">Search Simulator</div>
+          <div style="border:1px solid #189a76;background:white;padding:8px;margin-top:10px;">Sorting</div>
+        </div>
+        <div style="border:2px solid #c62828;background:#fde9ef;border-radius:8px;padding:12px;width:30%;min-height:210px;">
+          <b>Lane 2</b><br>KSP Extraction<br><br>
+          <div style="border:1px solid #c62828;background:white;padding:8px;margin-top:10px;">4-step CoT</div>
+          <div style="border:1px solid #c62828;background:white;padding:8px;margin-top:10px;">Product Information</div>
+          <div style="border:1px solid #c62828;background:white;padding:8px;margin-top:10px;">Output → LLM</div>
+        </div>
+        <div style="border:2px solid #ef6c00;background:#fff3e0;border-radius:8px;padding:12px;width:30%;min-height:210px;">
+          <b>Lane 3</b><br>Knowledge & Pattern<br><br>
+          <div style="border:1px solid #ef6c00;background:white;padding:8px;margin-top:10px;">Pattern Generation</div>
+          <div style="border:1px solid #ef6c00;background:white;padding:8px;margin-top:10px;">Expert Knowledge</div>
+        </div>
+      </div>
+      <div style="margin:16px auto 0;border:2px solid #1565c0;background:#e3f2fd;border-radius:8px;padding:14px;width:78%;text-align:center;">LLM Title Generator receives all three lanes</div>
+    </div>
+    <div class="card-body">
+      <h3>A. 三泳道汇聚（推荐）</h3>
+      <p>最贴近你给的参考图：Search Simulator、KSP、Knowledge/Pattern 分成并行大组件，统一下接 Title Generator。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:18px;background:#fafafa;">
+      <div style="display:flex;gap:26px;align-items:flex-start;justify-content:center;">
+        <div style="border:2px solid #c62828;background:#fde9ef;border-radius:8px;padding:12px;width:36%;min-height:170px;">
+          <b>KSP Extraction</b><br><br>
+          <div style="border:1px solid #c62828;background:white;padding:8px;">4-step CoT</div>
+          <div style="border:1px solid #c62828;background:white;padding:8px;margin-top:10px;">Output → LLM</div>
+        </div>
+        <div style="border:2px solid #189a76;background:#d9f7e8;border-radius:8px;padding:12px;width:36%;min-height:170px;">
+          <b>Search Simulator</b><br><br>
+          <div style="border:1px solid #189a76;background:white;padding:8px;">Recall + Rerank</div>
+          <div style="border:1px solid #189a76;background:white;padding:8px;margin-top:10px;">Sorting → LLM</div>
+        </div>
+      </div>
+      <div style="margin:22px auto 0;border:2px solid #1565c0;background:#e3f2fd;border-radius:8px;padding:14px;width:68%;text-align:center;">LLM Title Generator</div>
+    </div>
+    <div class="card-body">
+      <h3>B. 只改局部并排</h3>
+      <p>保留原图大部分纵向结构，只把 KSP 和 Search Simulator 移成左右并列并分别连到 Title Generator。</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">建议选 A，因为它能避免误解成 KSP 是 Search Simulator 的上游。</p>
