@@ -1,0 +1,5 @@
+{"type":"server-started","port":51082,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:51082","screen_dir":"/Users/admin/git_repos/temp-web/.superpowers/brainstorm/89441-1778552091"}
+{"type":"screen-added","file":"/Users/admin/git_repos/temp-web/.superpowers/brainstorm/89441-1778552091/pipeline-flowchart-preview.html"}
+{"type":"screen-added","file":"/Users/admin/git_repos/temp-web/.superpowers/brainstorm/89441-1778552091/pipeline-flowchart-live.html"}
+{"type":"screen-updated","file":"/Users/admin/git_repos/temp-web/.superpowers/brainstorm/89441-1778552091/pipeline-flowchart-live.html"}
+{"type":"server-stopped","reason":"idle timeout"}

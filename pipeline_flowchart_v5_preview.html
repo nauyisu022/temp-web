@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Title Optimization v9 Pipeline - Three Column Layout v5</title>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Virgil', 'Segoe Print', 'Comic Sans MS', cursive, sans-serif; background: #fff; padding: 10px; }
+  #canvas { display: block; margin: 0 auto; border: 1px solid #eee; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+const dpr = window.devicePixelRatio || 1;
+const W = 1520, H = 1250;
+const canvas = document.getElementById('canvas');
+canvas.width = W * dpr; canvas.height = H * dpr;
+canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+const ctx = canvas.getContext('2d');
+ctx.scale(dpr, dpr);
+const rc = rough.canvas(canvas);
+const S = 42;
+
+function rect(x, y, w, h, fill, opts = {}) {
+  rc.rectangle(x, y, w, h, { roughness: 1, strokeWidth: 1.5, fill, fillStyle: 'solid', seed: S, ...opts });
+}
+function text(str, x, y, { font = '14px', bold = false, color = '#222', align = 'left' } = {}) {
+  ctx.fillStyle = color;
+  ctx.font = (bold ? 'bold ' : '') + font + ' "Virgil", "Segoe Print", "Comic Sans MS", cursive';
+  ctx.textAlign = align;
+  ctx.fillText(str, x, y);
+}
+function arrow(x1, y1, x2, y2, opts = {}) {
+  const o = { roughness: 0.7, strokeWidth: 1.5, seed: S, ...opts };
+  rc.line(x1, y1, x2, y2, o);
+  const a = Math.atan2(y2 - y1, x2 - x1), sz = 9;
+  rc.line(x2, y2, x2 - sz * Math.cos(a - 0.4), y2 - sz * Math.sin(a - 0.4), o);
+  rc.line(x2, y2, x2 - sz * Math.cos(a + 0.4), y2 - sz * Math.sin(a + 0.4), o);
+}
+
+// Layout
+const LX = 40, CX = 510, RX = 980;
+const COL_W = 440, TOTAL_W = 1440;
+const CENTER = TOTAL_W / 2 + 40;
+
+const PINK  = { bg: '#fce4ec', box: '#fff8f8', stroke: '#c62828' };
+const GREEN = { bg: '#d1fae5', box: '#e8f5e9', stroke: '#059669' };
+const ORANGE= { bg: '#fff3e0', box: '#fff8f0', stroke: '#ea580c' };
+const BLUE  = { bg: '#e3f2fd', stroke: '#1565c0' };
+const CYAN  = { bg: '#cffafe', stroke: '#0891b2' };
+
+// ══ Title ══
+text('Title Optimization v9 Pipeline', W / 2, 34, { font: '28px', bold: true, color: '#1e40af', align: 'center' });
+text('Shopee Google Ads · Two Active Lanes + Offline Knowledge → Convergence', W / 2, 58, { font: '14px', color: '#666', align: 'center' });
+
+// ══ Inputs ══
+const y0 = 75;
+rect(LX, y0, TOTAL_W, 48, '#f1f5f9');
+text('Inputs:', LX + 15, y0 + 20, { font: '15px', bold: true, color: '#1e40af' });
+text('item Catalog · item with Performance · Search Terms (with Performance)', LX + 100, y0 + 20, { font: '13px', color: '#444' });
+text('→ Product Selection (CPO Improvement Space)', LX + 100, y0 + 38, { font: '12px', color: '#888' });
+
+// Arrows to two active lanes (no arrow to offline right column)
+const colTop = 155;
+arrow(LX + COL_W / 2, y0 + 48, LX + COL_W / 2, colTop);
+arrow(CX + COL_W / 2, y0 + 48, CX + COL_W / 2, colTop);
+
+// ══════════════════════════════════════════════════════════════
+// LEFT COLUMN: KSP Extraction (was center, now left)
+// ══════════════════════════════════════════════════════════════
+const colH = 530;
+rect(LX, colTop, COL_W, colH, PINK.bg, { strokeWidth: 2.5, stroke: PINK.stroke });
+text('Lane 1: Product KSP Extraction', LX + 12, colTop + 20, { font: '15px', bold: true, color: PINK.stroke });
+text('v9 changed', LX + 340, colTop + 20, { font: '11px', bold: true, color: '#c62828' });
+
+// 4-step CoT
+let sy = colTop + 32;
+rect(LX + 10, sy, COL_W - 20, 330, PINK.box, { stroke: PINK.stroke });
+text('4-Round Multi-turn CoT', LX + 20, sy + 18, { font: '13px', bold: true, color: '#c62828' });
+
+let ssy = sy + 28;
+rect(LX + 18, ssy, COL_W - 36, 48, '#fff');
+text('Step 1: User Profile', LX + 28, ssy + 18, { font: '13px', bold: true });
+text('target user · search intent · select schema', LX + 28, ssy + 38, { font: '11px', color: '#666' });
+
+ssy += 56;
+arrow(LX + COL_W / 2, ssy - 8, LX + COL_W / 2, ssy);
+rect(LX + 18, ssy, COL_W - 36, 48, '#fff');
+text('Step 2: Keywords Extraction', LX + 28, ssy + 18, { font: '13px', bold: true });
+text('extract + expand search keywords by attribute', LX + 28, ssy + 38, { font: '11px', color: '#666' });
+
+ssy += 56;
+arrow(LX + COL_W / 2, ssy - 8, LX + COL_W / 2, ssy);
+rect(LX + 18, ssy, COL_W - 36, 48, '#fff');
+text('Step 3: Candidates Generation', LX + 28, ssy + 18, { font: '13px', bold: true });
+text('brand → USP → long_tail · n=5 candidates', LX + 28, ssy + 38, { font: '11px', color: '#666' });
+
+ssy += 56;
+arrow(LX + COL_W / 2, ssy - 8, LX + COL_W / 2, ssy);
+rect(LX + 18, ssy, COL_W - 36, 48, '#fff');
+text('Step 4: Evaluation & Selection', LX + 28, ssy + 18, { font: '13px', bold: true });
+text('4-dim scoring · pick best of 5 candidates', LX + 28, ssy + 38, { font: '11px', color: '#666' });
+
+// KSP output fields
+ssy += 58;
+const labels = ['Brand', 'Product Type', 'USP', 'Long-tail KW'];
+let lx = LX + 22;
+for (const lb of labels) { rect(lx, ssy, 95, 26, '#fff'); text(lb, lx + 48, ssy + 17, { font: '11px', align: 'center' }); lx += 101; }
+text('.parquet', LX + COL_W - 65, ssy + 17, { font: '10px', color: '#999' });
+
+// Product Information
+sy = colTop + 375;
+arrow(LX + COL_W / 2, sy - 8, LX + COL_W / 2, sy);
+rect(LX + 10, sy, COL_W - 20, 70, '#fff');
+text('Product Information', LX + 20, sy + 18, { font: '14px', bold: true, color: PINK.stroke });
+rect(LX + 18, sy + 28, 195, 32, '#f5f5f5');
+text('Original Title + Description', LX + 28, sy + 48, { font: '11px' });
+rect(LX + 222, sy + 28, 195, 32, '#f5f5f5');
+text('Original Title + KSP', LX + 232, sy + 48, { font: '11px' });
+
+// Output
+sy += 80;
+rect(LX + 10, sy, COL_W - 20, 40, '#fff', { strokeLineDash: [5, 3] });
+text('↓ To LLM: Product Info + KSP fields', LX + 20, sy + 25, { font: '12px', bold: true, color: PINK.stroke });
+
+// ══════════════════════════════════════════════════════════════
+// CENTER COLUMN: Search Terms Processing (was left, now center)
+// ══════════════════════════════════════════════════════════════
+rect(CX, colTop, COL_W, colH, GREEN.bg, { strokeWidth: 2.5, stroke: GREEN.stroke });
+text('Lane 2: Search Terms → Relevance Scoring', CX + 12, colTop + 20, { font: '15px', bold: true, color: GREEN.stroke });
+
+sy = colTop + 32;
+rect(CX + 10, sy, COL_W - 20, 42, '#fff');
+text('Search Terms (with Performance)', CX + 20, sy + 17, { font: '13px', bold: true });
+text('good_terms · bad_terms · rerank_extra', CX + 20, sy + 34, { font: '11px', color: '#666' });
+
+// Search Simulator
+sy += 52;
+rect(CX + 10, sy, COL_W - 20, 240, GREEN.box, { stroke: GREEN.stroke });
+text('Search Simulator', CX + 20, sy + 18, { font: '14px', bold: true, color: GREEN.stroke });
+
+ssy = sy + 28;
+rect(CX + 18, ssy, COL_W - 36, 30, '#fff');
+text('Word Segmentation (product title + search terms)', CX + 28, ssy + 20, { font: '12px' });
+
+ssy += 38;
+arrow(CX + COL_W / 2, ssy - 8, CX + COL_W / 2, ssy);
+rect(CX + 18, ssy, COL_W - 36, 42, '#fff');
+text('Inverted Index', CX + 28, ssy + 17, { font: '12px', bold: true });
+text('Text Index (BM25s) + Semantic Index (Qwen3 Embedding)', CX + 28, ssy + 34, { font: '11px', color: '#666' });
+
+ssy += 50;
+arrow(CX + COL_W / 2, ssy - 8, CX + COL_W / 2, ssy);
+rect(CX + 18, ssy, COL_W - 36, 30, '#fff');
+text('Similarity Recall (memmap N×100)', CX + 28, ssy + 20, { font: '12px' });
+
+ssy += 38;
+arrow(CX + COL_W / 2, ssy - 8, CX + COL_W / 2, ssy);
+rect(CX + 18, ssy, COL_W - 36, 42, '#fff');
+text('Relevance Re-ranking', CX + 28, ssy + 17, { font: '12px', bold: true });
+text('Qwen3 Reranker · Fine-tuned', CX + 28, ssy + 34, { font: '11px', color: '#c62828' });
+
+ssy += 50;
+arrow(CX + COL_W / 2, ssy - 8, CX + COL_W / 2, ssy);
+rect(CX + 18, ssy, COL_W - 36, 30, '#fff');
+text('memmap idx + score', CX + 28, ssy + 20, { font: '11px', color: '#555' });
+
+// Sorting
+sy += 252;
+arrow(CX + COL_W / 2, sy - 8, CX + COL_W / 2, sy);
+rect(CX + 10, sy, COL_W - 20, 42, '#fff');
+text('Sorting: Conversion × Relevance', CX + 20, sy + 17, { font: '13px', bold: true, color: GREEN.stroke });
+text('→ Top-K search terms per product', CX + 20, sy + 34, { font: '11px', color: '#666' });
+
+// Output summary
+sy += 52;
+rect(CX + 10, sy, COL_W - 20, 60, '#fff', { strokeLineDash: [5, 3] });
+text('↓ To LLM:', CX + 20, sy + 16, { font: '12px', bold: true, color: GREEN.stroke });
+text('Original Title + KSP + High-Relevance', CX + 20, sy + 34, { font: '12px', color: '#444' });
+text('Good/Bad search terms (.pkl)', CX + 20, sy + 50, { font: '12px', color: '#444' });
+
+// ══════════════════════════════════════════════════════════════
+// RIGHT COLUMN: Offline Knowledge Store (NOT a real-time lane)
+// ══════════════════════════════════════════════════════════════
+rect(RX, colTop, COL_W, colH, '#fef9ef', { strokeWidth: 2.5, stroke: ORANGE.stroke, strokeLineDash: [8, 4] });
+text('Offline Knowledge Store', RX + 12, colTop + 20, { font: '15px', bold: true, color: ORANGE.stroke });
+text('PRE-BUILT', RX + 310, colTop + 20, { font: '11px', bold: true, color: '#e65100' });
+text('(离线挖掘，非实时处理链路)', RX + 12, colTop + 44, { font: '11px', color: '#999' });
+
+// Cluster
+sy = colTop + 55;
+rect(RX + 10, sy, COL_W - 20, 42, '#fff', { strokeLineDash: [4, 3] });
+text('Cluster by ProductType', RX + 20, sy + 17, { font: '13px', bold: true, color: ORANGE.stroke });
+text('Group items by KSP product_type field', RX + 20, sy + 34, { font: '11px', color: '#666' });
+
+// Title Pattern
+sy += 55;
+arrow(RX + COL_W / 2, sy - 13, RX + COL_W / 2, sy);
+rect(RX + 10, sy, COL_W - 20, 150, ORANGE.box, { stroke: ORANGE.stroke, strokeLineDash: [4, 3] });
+text('Title Pattern Generation', RX + 20, sy + 18, { font: '14px', bold: true, color: ORANGE.stroke });
+rect(RX + COL_W - 70, sy + 5, 45, 30, '#fff8e1', { stroke: '#ea580c', strokeWidth: 1 });
+text('DB', RX + COL_W - 55, sy + 24, { font: '10px', bold: true, color: '#ea580c' });
+
+rect(RX + 18, sy + 35, COL_W - 36, 32, '#fff');
+text('Mining Good / Bad Title Examples', RX + 28, sy + 55, { font: '12px' });
+rect(RX + 18, sy + 75, COL_W - 36, 32, '#fff');
+text('Pattern Generation (LLM & CoT)', RX + 28, sy + 95, { font: '12px' });
+text('→ SQLite DB (per product_type)', RX + 20, sy + 125, { font: '11px', color: '#888' });
+text('offline batch job', RX + 20, sy + 140, { font: '10px', color: '#bbb' });
+
+// Expert Knowledge
+sy += 165;
+arrow(RX + COL_W / 2, sy - 15, RX + COL_W / 2, sy);
+rect(RX + 10, sy, COL_W - 20, 150, '#fff', { strokeLineDash: [4, 3] });
+text('Expert Knowledge (EK)', RX + 20, sy + 18, { font: '14px', bold: true, color: ORANGE.stroke });
+rect(RX + COL_W - 70, sy + 5, 45, 30, '#fff8e1', { stroke: '#ea580c', strokeWidth: 1 });
+text('DB', RX + COL_W - 55, sy + 24, { font: '10px', bold: true, color: '#ea580c' });
+text('人工标注 + 离线挖掘', RX + 20, sy + 38, { font: '11px', color: '#888' });
+text('by cluster priority:', RX + 20, sy + 58, { font: '12px', color: '#555' });
+text('1. Virtual Category (vc)', RX + 30, sy + 78, { font: '13px', color: '#444' });
+text('2. L3 Category', RX + 30, sy + 98, { font: '13px', color: '#444' });
+text('3. L2 Category', RX + 30, sy + 118, { font: '13px', color: '#444' });
+text('Blacklist filtering applied', RX + 20, sy + 140, { font: '11px', color: '#999' });
+
+// Output - styled as "lookup"
+sy += 162;
+rect(RX + 10, sy, COL_W - 20, 40, '#fff8e1', { strokeLineDash: [4, 3], stroke: '#ea580c' });
+text('→ LLM lookup: Merged EK + Patterns', RX + 20, sy + 25, { font: '12px', bold: true, color: ORANGE.stroke });
+
+// ══════════════════════════════════════════════════════════════
+// CONVERGENCE: LLM Title Generator (color-coded by source)
+// ══════════════════════════════════════════════════════════════
+const llmY = colTop + colH + 35;
+const llmH = 155;
+
+// Arrows from lanes
+arrow(LX + COL_W / 2, colTop + colH, LX + COL_W / 2, llmY, { stroke: PINK.stroke });
+arrow(CX + COL_W / 2, colTop + colH, CX + COL_W / 2, llmY, { stroke: GREEN.stroke });
+arrow(RX + COL_W / 2, colTop + colH, RX + COL_W / 2, llmY, { strokeLineDash: [6, 4], stroke: ORANGE.stroke });
+
+rect(LX, llmY, TOTAL_W, llmH, BLUE.bg, { strokeWidth: 2.5, stroke: BLUE.stroke });
+text('LLM Title Generator', LX + 15, llmY + 22, { font: '18px', bold: true, color: BLUE.stroke });
+text('v9 changed', LX + 260, llmY + 22, { font: '11px', bold: true, color: '#c62828' });
+text('GPT-5-mini · async · concurrency=200', LX + TOTAL_W - 310, llmY + 22, { font: '11px', color: '#888' });
+
+// Call 1 box
+const c1y = llmY + 34;
+rect(LX + 12, c1y, 690, 62, '#fff');
+text('Call 1: Extract Facts + Policy', LX + 22, c1y + 18, { font: '13px', bold: true, color: BLUE.stroke });
+// Color-coded inputs
+text('inputs:', LX + 22, c1y + 36, { font: '12px', color: '#555' });
+text('Product Info + KSP', LX + 80, c1y + 36, { font: '12px', bold: true, color: PINK.stroke });
+text('+', LX + 240, c1y + 36, { font: '12px', color: '#555' });
+text('search terms', LX + 258, c1y + 36, { font: '12px', bold: true, color: GREEN.stroke });
+text('→ extract facts (brand, product_type, specs, core_usp, signals)', LX + 22, c1y + 52, { font: '11px', color: '#555' });
+
+// Call 2 box
+rect(LX + 720, c1y, 708, 62, '#fff');
+text('Call 2: Generate Optimized Title', LX + 730, c1y + 18, { font: '13px', bold: true, color: BLUE.stroke });
+// Color-coded inputs
+text('inputs:', LX + 730, c1y + 36, { font: '12px', color: '#555' });
+text('facts + policy', LX + 788, c1y + 36, { font: '12px', bold: true, color: PINK.stroke });
+text('+', LX + 900, c1y + 36, { font: '12px', color: '#555' });
+text('search terms', LX + 918, c1y + 36, { font: '12px', bold: true, color: GREEN.stroke });
+text('+', LX + 1030, c1y + 36, { font: '12px', color: '#555' });
+text('EK', LX + 1048, c1y + 36, { font: '12px', bold: true, color: ORANGE.stroke });
+text('→ N candidates → DAG scoring → select best', LX + 730, c1y + 52, { font: '11px', color: '#555' });
+
+// Arrow between calls
+arrow(LX + 702, c1y + 32, LX + 720, c1y + 32, { stroke: BLUE.stroke });
+
+// Color-coded flow summary
+const flowY = llmY + 112;
+text('Data Flow:', LX + 15, flowY, { font: '12px', bold: true, color: '#333' });
+text('Product Info', LX + 100, flowY, { font: '12px', bold: true, color: PINK.stroke });
+text('(L1) +', LX + 200, flowY, { font: '12px', color: '#555' });
+text('Search Terms', LX + 250, flowY, { font: '12px', bold: true, color: GREEN.stroke });
+text('(L2) → Call1 → facts/policy → Call2 ←', LX + 355, flowY, { font: '12px', color: '#555' });
+text('EK', LX + 640, flowY, { font: '12px', bold: true, color: ORANGE.stroke });
+text('(offline)', LX + 662, flowY, { font: '12px', color: '#555' });
+
+text('Output: selected_candidate (.db SQLite)', LX + 15, flowY + 20, { font: '12px', bold: true, color: '#0d47a1' });
+
+// ══ Blacklist Filter ══
+const bfY = llmY + llmH + 30;
+arrow(CENTER, llmY + llmH, CENTER, bfY);
+rect(CENTER - 220, bfY, 440, 48, CYAN.bg, { stroke: CYAN.stroke, strokeWidth: 2 });
+text('Blacklist Filter', CENTER - 200, bfY + 20, { font: '15px', bold: true, color: CYAN.stroke });
+text('flashtext (Aho-Corasick) · CJK cleanup · Google GMC Policy', CENTER - 200, bfY + 38, { font: '12px', color: '#555' });
+
+// ══ Output ══
+const outY = bfY + 68;
+arrow(CENTER, bfY + 48, CENTER, outY);
+rect(CENTER - 140, outY, 280, 48, '#e8f5e9', { stroke: '#2e7d32', strokeWidth: 2.5 });
+text('Enhanced Title', CENTER - 115, outY + 20, { font: '16px', bold: true, color: '#2e7d32' });
+text('→ Hive (Parquet)', CENTER - 115, outY + 38, { font: '12px', color: '#555' });
+text('BR · ID · MY · PH · SG · TH · TW · VN · MX · CO · CL · PL', CENTER, outY + 60, { font: '12px', color: '#aaa', align: 'center' });
+
+</script>
+</body>
+</html>
