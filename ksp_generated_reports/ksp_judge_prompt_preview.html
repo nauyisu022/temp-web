@@ -417,11 +417,11 @@
       </div>
       <div class="metric-grid">
         <div class="card"><div class="label">样本数</div><div class="value">20</div><div class="note">当前这轮冒烟评审的样本数量</div></div>
-        <div class="card"><div class="label">new v9 胜出</div><div class="value">13</div><div class="note">按真实标签回算，不按展示位置统计</div></div>
-        <div class="card"><div class="label">v6 胜出</div><div class="value">7</div><div class="note">这组里 `new_v9`（新模型）暂时领先</div></div>
+        <div class="card"><div class="label">new v9 胜出</div><div class="value">14</div><div class="note">按真实标签回算，不按展示位置统计</div></div>
+        <div class="card"><div class="label">v6 胜出</div><div class="value">6</div><div class="note">这组里 `new_v9`（新模型）暂时领先</div></div>
         <div class="card"><div class="label">交换比例</div><div class="value">10 / 10</div><div class="note">`swap_true`（交换）/ `swap_false`（未交换）</div></div>
-        <div class="card"><div class="label">new v9 均分</div><div class="value">3.8</div><div class="note">综合均分</div></div>
-        <div class="card"><div class="label">v6 均分</div><div class="value">2.91</div><div class="note">综合均分</div></div>
+        <div class="card"><div class="label">new v9 均分</div><div class="value">3.86</div><div class="note">综合均分</div></div>
+        <div class="card"><div class="label">v6 均分</div><div class="value">2.73</div><div class="note">综合均分</div></div>
       </div>
     </section>
 
@@ -438,7 +438,7 @@
           <h3>硬约束</h3>
           <ul>
             <li>`品牌错误`（brand wrong）直接算严重问题；商品本身无品牌时，不写品牌也可以接受。</li>
-            <li>`语言是否符合地区`（locale fit）现在提到了更前面；主结果字段如果明显跑错语种，原则上不能获胜。</li>
+            <li>`语言是否符合地区`（locale fit）现在提到了更前面；主结果字段如果明显跑错语种，需要单独指出。</li>
             <li>`明显编造`（clear hallucination）不能靠别的维度补回来。</li>
           </ul>
         </article>
@@ -473,7 +473,7 @@
         <summary>展开查看完整 Prompt 原文</summary>
         <pre>你是电商搜索卖点提取的评审员。你的任务是比较两个候选结果，判断哪一个更适合作为商品搜索卖点结果。
 
-你必须优先关注品牌是否正确、内容是否忠实于原始商品信息，其次再看搜索价值、地区语言和结构质量。
+你必须优先关注品牌是否正确、地区语言是否符合目标市场、内容是否忠实于原始商品信息，其次再看搜索价值和结构质量。
 
 【评审对象】
 你会看到同一条商品的原始信息，以及两个候选结果：
@@ -491,16 +491,14 @@
 - 若商品本身不存在品牌，也可以接受
 - 店铺名、系列名、型号名，不能当品牌
 
-2. 是否明显编造
-- 原文没有的功能、材质、认证、适配关系、产地、功效，不允许凭空写出
-- 长尾搜索词允许组合生成，但其中涉及的商品事实应尽量以原文为依据
-
-3. 语言是否符合目标地区
+2. 语言是否符合目标地区
 - 输出语言应符合商品所在地区
 - 不要出现明显错误语种、语言污染或不自然表达
 - `_en` 字段允许使用英文，不视为语言不符
 
-如果一侧存在品牌错误或明显编造，这一侧原则上不能获胜。
+3. 是否明显编造
+- 原文没有的功能、材质、认证、适配关系、产地、功效，不允许凭空写出
+- 长尾搜索词允许组合生成，但其中涉及的商品事实应尽量以原文为依据
 
 第二步：分维度打分
 请分别给候选A、候选B打分。每个维度满分 5 分，可以打 1 到 5 分。
@@ -536,6 +534,7 @@
 - 是否符合目标市场语言
 - 是否自然、地道
 - 是否有翻译腔、错误语言或混杂问题
+- `_en` 字段中的英文不需要扣分，重点看主结果字段
 
 五、结构完整与去重
 - 层级是否清楚
@@ -547,9 +546,9 @@
 请先看硬约束，再结合评分做最终判断。
 如果两边都没有严重硬伤，则优先选择：
 - 品牌更正确
+- 更符合地区语言、更自然
 - 更忠实于原文
 - 同时更有搜索价值
-- 更符合地区语言
 - 结构更清楚的一侧
 
 【输入信息】
@@ -785,19 +784,19 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 1</div>
-            <h3>🥳丨臺灣優選🥳Mr.green德國格林先生氣墊梳氣囊順發木質梳子</h3>
+            <h3>YSL 化妝包 手拿包 全新</h3>
             <div class="case-meta">
-              <span>Item 46550263880</span>
+              <span>Item 28292201062</span>
               <span>TW</span>
-              <span>Beauty|Beauty Tools|Hair Tools</span>
+              <span>Beauty|Beauty Tools|Makeup Accessories</span>
               <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B在品牌、事实忠实度、地区语言和搜索价值方面均优于候选A，且候选A存在严重的语言不符和信息编造问题。</p>
+          <p>候选A虽然存在语言本地化问题，但其内容忠实于原始商品信息，没有编造事实。候选B则在独特卖点上明显编造了原文没有的功能，这是严重错误。</p>
         </div>
         <div class="case-grid">
           
@@ -808,20 +807,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>2</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>语言不符，使用了简体中文而非台湾繁体中文。</li><li>存在明显编造，如“多角度调节”、“木质梳子套装”、“顺发工具箱”等信息在原文中不存在。</li></ul>
+          <ul><li>部分词语使用简体中文或大陆用语，不完全符合台湾地区语言习惯（如：化妆收纳、数量优势、出售、专柜购入）</li></ul>
         </div>
       </div>
     
@@ -833,20 +832,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>3</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>存在少量推断性卖点（如“无毒安全”、“减压舒适”），但未构成严重编造。</li></ul>
+          <ul><li>独特卖点（便携性/轻便性、防水防潮）完全是凭空编造，原文无任何提及</li><li>长尾关键词存在较多重复和相似表达</li><li>部分词语使用简体中文或大陆用语，不完全符合台湾地区语言习惯（如：收纳、便携）</li></ul>
         </div>
       </div>
     
@@ -857,49 +856,38 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;台湾优选用品&quot;,
-    &quot;木质梳子套装&quot;,
-    &quot;顺发工具箱&quot;,
-    &quot;家庭美容用品&quot;
+    &quot;手拿包&quot;,
+    &quot;化妆收纳&quot;,
+    &quot;旅行用品&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Mr.green&quot;
+      &quot;YSL&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Mr.green&quot;
+      &quot;YSL&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;气垫梳&quot;
+      &quot;化妆包&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Padded Comb&quot;
+      &quot;make-up bag&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;健康护理&quot;: [
-      &quot;天然木材&quot;,
-      &quot;温和梳理&quot;
+    &quot;数量优势&quot;: [
+      &quot;全新&quot;,
+      &quot;太多不用出售&quot;
     ],
-    &quot;健康护理_en&quot;: [
-      &quot;Natural Wood&quot;,
-      &quot;Gentle Grooming&quot;
+    &quot;数量优势_en&quot;: [
+      &quot;New Condition&quot;,
+      &quot;Too Many for Personal Use Selling Off&quot;
     ],
-    &quot;实用便捷&quot;: [
-      &quot;多角度调节&quot;,
-      &quot;易于携带&quot;
+    &quot;正品保障&quot;: [
+      &quot;专柜购入&quot;
     ],
-    &quot;实用便捷_en&quot;: [
-      &quot;Adjustable Angles&quot;,
-      &quot;Easy to Carry&quot;
-    ],
-    &quot;舒适体验&quot;: [
-      &quot;空气填充头&quot;,
-      &quot;柔软触感&quot;
-    ],
-    &quot;舒适体验_en&quot;: [
-      &quot;Air-Filled Head&quot;,
-      &quot;Soft Touch&quot;
+    &quot;正品保障_en&quot;: [
+      &quot;Authentic from Official Store&quot;
     ]
   }
 }</pre>
@@ -910,69 +898,55 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;氣墊梳子&quot;,
-    &quot;木質梳子&quot;,
-    &quot;順發梳子&quot;,
-    &quot;護理頭皮梳子&quot;,
-    &quot;女士梳子&quot;,
-    &quot;美髮梳子&quot;,
-    &quot;天然木梳&quot;,
-    &quot;減壓梳子&quot;
+    &quot;YSL 化妝包&quot;,
+    &quot;YSL 手拿包&quot;,
+    &quot;YSL 化妝品包&quot;,
+    &quot;YSL 化妝袋&quot;,
+    &quot;YSL 化妝品手拿包&quot;,
+    &quot;YSL 化妝品袋&quot;,
+    &quot;YSL 化妝品收纳包&quot;,
+    &quot;YSL 化妝品收纳袋&quot;
   ],
   &quot;long_tail_keywords_en&quot;: [
-    &quot;padded comb&quot;,
-    &quot;wooden comb&quot;,
-    &quot;smooth hair comb&quot;,
-    &quot;scalp care comb&quot;,
-    &quot;ladies comb&quot;,
-    &quot;hair care comb&quot;,
-    &quot;natural wooden comb&quot;,
-    &quot;pressure relief comb&quot;
+    &quot;YSL makeup bag&quot;,
+    &quot;YSL handbag&quot;,
+    &quot;YSL makeup case&quot;,
+    &quot;YSL cosmetic bag&quot;,
+    &quot;YSL cosmetic handbag&quot;,
+    &quot;YSL cosmetic case&quot;,
+    &quot;YSL cosmetic storage bag&quot;,
+    &quot;YSL cosmetic storage case&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Mr.green&quot;,
-      &quot;格林先生&quot;
+      &quot;YSL&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Mr.green&quot;,
-      &quot;Green Mr.&quot;
+      &quot;YSL&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;氣墊梳&quot;,
-      &quot;木質梳子&quot;
+      &quot;手拿包&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;padded comb&quot;,
-      &quot;wooden comb&quot;
+      &quot;handbag&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;材質安全&quot;: [
-      &quot;天然木質&quot;,
-      &quot;無毒安全&quot;
+    &quot;便攜性/輕便性&quot;: [
+      &quot;便攜&quot;,
+      &quot;輕便&quot;
     ],
-    &quot;材質安全_en&quot;: [
-      &quot;natural wood&quot;,
-      &quot;non-toxic and safe&quot;
+    &quot;便攜性/輕便性_en&quot;: [
+      &quot;portable&quot;,
+      &quot;lightweight&quot;
     ],
-    &quot;舒適設計&quot;: [
-      &quot;氣墊設計&quot;,
-      &quot;減壓舒適&quot;
+    &quot;防水防潮&quot;: [
+      &quot;防水&quot;,
+      &quot;防潮&quot;
     ],
-    &quot;舒適設計_en&quot;: [
-      &quot;padded design&quot;,
-      &quot;pressure relief comfortable&quot;
-    ],
-    &quot;適用人群&quot;: [
-      &quot;女性&quot;,
-      &quot;美髮愛好者&quot;,
-      &quot;護理頭皮&quot;
-    ],
-    &quot;適用人群_en&quot;: [
-      &quot;females&quot;,
-      &quot;hair enthusiasts&quot;,
-      &quot;scalp care users&quot;
+    &quot;防水防潮_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;dustproof&quot;
     ]
   }
 }</pre>
@@ -998,7 +972,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B在品牌正确性、事实忠实度、地区语言与本地化方面均表现出色，且无硬约束问题，远优于候选A。</p>
+          <p>候选B在品牌识别、语言本地化和事实忠实度方面均远优于候选A，且无明显编造，更适合作为商品搜索卖点结果。</p>
         </div>
         <div class="case-grid">
           
@@ -1009,20 +983,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌错误：将材质“聚丙烯”误作品牌。</li><li>语言不符：使用简体中文，与目标地区繁体中文不符。</li><li>长尾搜索词部分词语（如“套装”、“垫片”、“隔离板”）与原文“棉”的形态不完全一致。</li></ul>
+          <ul><li>品牌错误，将材质“聚丙烯”识别为品牌。</li><li>语言不符，使用简体中文而非目标地区繁体中文。</li><li>长尾搜索词有编造，如“套装”、“垫片”、“隔离板”。</li></ul>
         </div>
       </div>
     
@@ -1190,7 +1164,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B在长尾搜索词方面更全面和具体，更符合用户搜索习惯，因此搜索价值更高。</p>
+          <p>候选B在语言本地化方面完全符合目标市场要求，且提供了更全面和有搜索价值的长尾关键词，而候选A存在明显的语言错误。</p>
         </div>
         <div class="case-grid">
           
@@ -1202,19 +1176,19 @@ Beauty|Skincare|Lip Treatment
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
           <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>长尾搜索词不够具体，例如“幼兒洗手法”更像行为而非商品属性</li></ul>
+          <ul><li>在&#x27;unique_selling_points&#x27;的&#x27;清洁效果&#x27;中使用了简体中文（如&#x27;细小&#x27;、&#x27;脏物&#x27;、&#x27;干干净净&#x27;），与目标地区台湾（繁体中文）不符。</li><li>brand_en字段&#x27;KAO Kao Shokuhin Co., Ltd.&#x27;过于冗长，不如直接使用品牌名&#x27;KAO&#x27;。</li></ul>
         </div>
       </div>
     
@@ -1372,19 +1346,19 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 4</div>
-            <h3>YSL 化妝包 手拿包 全新</h3>
+            <h3>🥳丨臺灣優選🥳Mr.green德國格林先生氣墊梳氣囊順發木質梳子</h3>
             <div class="case-meta">
-              <span>Item 28292201062</span>
+              <span>Item 46550263880</span>
               <span>TW</span>
-              <span>Beauty|Beauty Tools|Makeup Accessories</span>
+              <span>Beauty|Beauty Tools|Hair Tools</span>
               <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-a">A 胜出（v6）</div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A更忠实于原始商品信息，没有明显编造，而候选B在独特卖点上存在严重的事实编造。</p>
+          <p>候选B在地区语言、事实忠实度和搜索价值方面均优于候选A。候选A存在严重的语言不符和事实编造问题。</p>
         </div>
         <div class="case-grid">
           
@@ -1395,20 +1369,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>长尾搜索词中的“旅行用品”是基于推断而非原文直接提及。</li></ul>
+          <ul><li>语言不符：使用简体中文，而非台湾繁体中文。</li><li>明显编造：独特卖点和长尾关键词中存在原文没有的事实（如“多角度调节”、“易于携带”、“套装”、“工具箱”）。</li><li>搜索价值低：长尾关键词泛化且基于编造信息。</li></ul>
         </div>
       </div>
     
@@ -1420,20 +1394,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
           <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>独特卖点中的“便攜性/輕便性”和“防水防潮”在原文中均未提及，属于明显编造。</li><li>长尾搜索词存在较多重复和相似的词语组合。</li></ul>
+          <div class="empty">无</div>
         </div>
       </div>
     
@@ -1444,38 +1418,49 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;手拿包&quot;,
-    &quot;化妆收纳&quot;,
-    &quot;旅行用品&quot;
+    &quot;台湾优选用品&quot;,
+    &quot;木质梳子套装&quot;,
+    &quot;顺发工具箱&quot;,
+    &quot;家庭美容用品&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;YSL&quot;
+      &quot;Mr.green&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;YSL&quot;
+      &quot;Mr.green&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;化妆包&quot;
+      &quot;气垫梳&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;make-up bag&quot;
+      &quot;Padded Comb&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;数量优势&quot;: [
-      &quot;全新&quot;,
-      &quot;太多不用出售&quot;
+    &quot;健康护理&quot;: [
+      &quot;天然木材&quot;,
+      &quot;温和梳理&quot;
     ],
-    &quot;数量优势_en&quot;: [
-      &quot;New Condition&quot;,
-      &quot;Too Many for Personal Use Selling Off&quot;
+    &quot;健康护理_en&quot;: [
+      &quot;Natural Wood&quot;,
+      &quot;Gentle Grooming&quot;
     ],
-    &quot;正品保障&quot;: [
-      &quot;专柜购入&quot;
+    &quot;实用便捷&quot;: [
+      &quot;多角度调节&quot;,
+      &quot;易于携带&quot;
     ],
-    &quot;正品保障_en&quot;: [
-      &quot;Authentic from Official Store&quot;
+    &quot;实用便捷_en&quot;: [
+      &quot;Adjustable Angles&quot;,
+      &quot;Easy to Carry&quot;
+    ],
+    &quot;舒适体验&quot;: [
+      &quot;空气填充头&quot;,
+      &quot;柔软触感&quot;
+    ],
+    &quot;舒适体验_en&quot;: [
+      &quot;Air-Filled Head&quot;,
+      &quot;Soft Touch&quot;
     ]
   }
 }</pre>
@@ -1486,55 +1471,69 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;YSL 化妝包&quot;,
-    &quot;YSL 手拿包&quot;,
-    &quot;YSL 化妝品包&quot;,
-    &quot;YSL 化妝袋&quot;,
-    &quot;YSL 化妝品手拿包&quot;,
-    &quot;YSL 化妝品袋&quot;,
-    &quot;YSL 化妝品收纳包&quot;,
-    &quot;YSL 化妝品收纳袋&quot;
+    &quot;氣墊梳子&quot;,
+    &quot;木質梳子&quot;,
+    &quot;順發梳子&quot;,
+    &quot;護理頭皮梳子&quot;,
+    &quot;女士梳子&quot;,
+    &quot;美髮梳子&quot;,
+    &quot;天然木梳&quot;,
+    &quot;減壓梳子&quot;
   ],
   &quot;long_tail_keywords_en&quot;: [
-    &quot;YSL makeup bag&quot;,
-    &quot;YSL handbag&quot;,
-    &quot;YSL makeup case&quot;,
-    &quot;YSL cosmetic bag&quot;,
-    &quot;YSL cosmetic handbag&quot;,
-    &quot;YSL cosmetic case&quot;,
-    &quot;YSL cosmetic storage bag&quot;,
-    &quot;YSL cosmetic storage case&quot;
+    &quot;padded comb&quot;,
+    &quot;wooden comb&quot;,
+    &quot;smooth hair comb&quot;,
+    &quot;scalp care comb&quot;,
+    &quot;ladies comb&quot;,
+    &quot;hair care comb&quot;,
+    &quot;natural wooden comb&quot;,
+    &quot;pressure relief comb&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;YSL&quot;
+      &quot;Mr.green&quot;,
+      &quot;格林先生&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;YSL&quot;
+      &quot;Mr.green&quot;,
+      &quot;Green Mr.&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;手拿包&quot;
+      &quot;氣墊梳&quot;,
+      &quot;木質梳子&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;handbag&quot;
+      &quot;padded comb&quot;,
+      &quot;wooden comb&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;便攜性/輕便性&quot;: [
-      &quot;便攜&quot;,
-      &quot;輕便&quot;
+    &quot;材質安全&quot;: [
+      &quot;天然木質&quot;,
+      &quot;無毒安全&quot;
     ],
-    &quot;便攜性/輕便性_en&quot;: [
-      &quot;portable&quot;,
-      &quot;lightweight&quot;
+    &quot;材質安全_en&quot;: [
+      &quot;natural wood&quot;,
+      &quot;non-toxic and safe&quot;
     ],
-    &quot;防水防潮&quot;: [
-      &quot;防水&quot;,
-      &quot;防潮&quot;
+    &quot;舒適設計&quot;: [
+      &quot;氣墊設計&quot;,
+      &quot;減壓舒適&quot;
     ],
-    &quot;防水防潮_en&quot;: [
-      &quot;waterproof&quot;,
-      &quot;dustproof&quot;
+    &quot;舒適設計_en&quot;: [
+      &quot;padded design&quot;,
+      &quot;pressure relief comfortable&quot;
+    ],
+    &quot;適用人群&quot;: [
+      &quot;女性&quot;,
+      &quot;美髮愛好者&quot;,
+      &quot;護理頭皮&quot;
+    ],
+    &quot;適用人群_en&quot;: [
+      &quot;females&quot;,
+      &quot;hair enthusiasts&quot;,
+      &quot;scalp care users&quot;
     ]
   }
 }</pre>
@@ -1560,7 +1559,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>两个候选结果都存在严重的品牌错误、内容编造和语言不符问题，但候选A在长尾搜索词的编造程度上略轻于候选B。</p>
+          <p>候选A在语言本地化和事实忠实度方面远优于候选B，尽管两者都存在品牌识别错误。</p>
         </div>
         <div class="case-grid">
           
@@ -1571,20 +1570,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌错误，将店铺名“富爾康”作为品牌，实际品牌应为“燦博JAMBO”。</li><li>独特卖点中“材质安全”和“耐用性”下的所有内容（如防水、防潮、耐用等）均属凭空编造，原文无提及。</li><li>语言不符合目标地区，使用了简体中文（如“厨房”、“卫浴”、“装修”）。</li></ul>
+          <ul><li>品牌识别错误，将经销商名“富爾康”作为品牌，实际品牌应为“燦博JAMBO”</li><li>部分卖点（如防水、防潮、耐用性）未直接在原文提及，且“衛浴”场景不符</li></ul>
         </div>
       </div>
     
@@ -1599,17 +1598,17 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>编造</span><strong>明显</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌错误，将店铺名“富爾康”作为品牌，实际品牌应为“燦博JAMBO”。</li><li>长尾搜索词和独特卖点中多处凭空编造（如“压克力气泡底板”、“防水防潮”、“耐用材料”），“专业安装建议”也属误读。</li><li>语言不符合目标地区，使用了简体中文（如“可选”、“压克力”）。</li></ul>
+          <ul><li>品牌识别错误，将经销商名“富爾康”作为品牌，实际品牌应为“燦博JAMBO”</li><li>大量卖点和长尾词凭空编造，如“压克力气泡底板”、“防水防潮”、“耐用材料”等</li><li>语言不符合目标市场（TW），大量使用简体中文</li></ul>
         </div>
       </div>
     
@@ -1758,200 +1757,6 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 6</div>
-            <h3>Abib Jericho Rose Bifida 精華緊緻滴劑 50ml★韓國發貨★</h3>
-            <div class="case-meta">
-              <span>Item 41256802716</span>
-              <span>TW</span>
-              <span>Beauty|Skincare|Facial Serum &amp; Essence</span>
-              <span>swap=False</span>
-            </div>
-          </div>
-          <div class="winner-badge winner-a">A 胜出（v6）</div>
-        </div>
-        <div class="verdict">
-          <div class="verdict-label">结论摘要</div>
-          <p>候选A虽然存在语言不符的问题，但其内容忠实度远高于候选B；候选B存在明显的事实编造，根据评审规则，事实编造是更严重的错误，原则上不能获胜。</p>
-        </div>
-        <div class="case-grid">
-          
-      <div class="side-panel side-a">
-        <div class="side-head">
-          <h4>A · v6</h4>
-          <span class="side-chip">v6</span>
-        </div>
-        <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
-        </div>
-        <div class="issues">
-          <div class="issues-title">关键问题</div>
-          <ul><li>语言不符合目标地区（使用简体中文而非繁体中文）</li></ul>
-        </div>
-      </div>
-    
-          
-      <div class="side-panel side-b">
-        <div class="side-head">
-          <h4>B · new_v9</h4>
-          <span class="side-chip">new_v9</span>
-        </div>
-        <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
-        </div>
-        <div class="issues">
-          <div class="issues-title">关键问题</div>
-          <ul><li>独特卖点和长尾搜索词中存在明显事实编造（如“抗老抗皺”、“緊緻毛孔”未在原文提及）</li></ul>
-        </div>
-      </div>
-    
-        </div>
-        <div class="output-grid">
-          
-      <div class="output-panel">
-        <div class="output-head">A 实际输出</div>
-        <pre>{
-  &quot;long_tail_keywords&quot;: [
-    &quot;玫瑰比菲达&quot;,
-    &quot;美容护理液&quot;,
-    &quot;皮肤紧致精华&quot;
-  ],
-  &quot;top_attractiveness&quot;: {
-    &quot;brand&quot;: [
-      &quot;Abib&quot;
-    ],
-    &quot;brand_en&quot;: [
-      &quot;Abib&quot;
-    ],
-    &quot;product_type&quot;: [
-      &quot;精华紧致滴剂&quot;
-    ],
-    &quot;product_type_en&quot;: [
-      &quot;Essence for Tightening Skin&quot;
-    ]
-  },
-  &quot;unique_selling_points&quot;: {
-    &quot;正品保障&quot;: [
-      &quot;100%授权产品&quot;,
-      &quot;最近制造的产品&quot;
-    ],
-    &quot;正品保障_en&quot;: [
-      &quot;Official Product Guarantee&quot;,
-      &quot;Recently Manufactured Products&quot;
-    ],
-    &quot;物流优势&quot;: [
-      &quot;韩国直发&quot;,
-      &quot;快速配送&quot;
-    ],
-    &quot;物流优势_en&quot;: [
-      &quot;Direct Shipping from Korea&quot;,
-      &quot;Fast Delivery Service&quot;
-    ],
-    &quot;赠品福利&quot;: [
-      &quot;免费赠送礼品&quot;
-    ],
-    &quot;赠品福利_en&quot;: [
-      &quot;Free Gift with Purchase&quot;
-    ]
-  }
-}</pre>
-      </div>
-    
-          
-      <div class="output-panel">
-        <div class="output-head">B 实际输出</div>
-        <pre>{
-  &quot;long_tail_keywords&quot;: [
-    &quot;韓國緊緻滴劑&quot;,
-    &quot;抗老緊緻滴劑&quot;,
-    &quot;50ml緊緻滴劑&quot;,
-    &quot;韓國抗老滴劑&quot;,
-    &quot;玫瑰比菲達滴劑&quot;,
-    &quot;緊緻毛孔滴劑&quot;,
-    &quot;韓國美容滴劑&quot;,
-    &quot;抗皺滴劑&quot;
-  ],
-  &quot;long_tail_keywords_en&quot;: [
-    &quot;Korean tightening serum&quot;,
-    &quot;anti-aging tightening serum&quot;,
-    &quot;50ml tightening serum&quot;,
-    &quot;Korean anti-aging serum&quot;,
-    &quot;rose bifida serum&quot;,
-    &quot;tightening pores serum&quot;,
-    &quot;Korean beauty serum&quot;,
-    &quot;anti-wrinkle serum&quot;
-  ],
-  &quot;top_attractiveness&quot;: {
-    &quot;brand&quot;: [
-      &quot;Abib&quot;
-    ],
-    &quot;brand_en&quot;: [
-      &quot;Abib&quot;
-    ],
-    &quot;product_type&quot;: [
-      &quot;緊緻滴劑&quot;
-    ],
-    &quot;product_type_en&quot;: [
-      &quot;tightening serum&quot;
-    ]
-  },
-  &quot;unique_selling_points&quot;: {
-    &quot;原產國&quot;: [
-      &quot;韓國&quot;,
-      &quot;韓國製造&quot;
-    ],
-    &quot;原產國_en&quot;: [
-      &quot;Korea&quot;,
-      &quot;made in Korea&quot;
-    ],
-    &quot;抗老抗皺&quot;: [
-      &quot;抗老&quot;,
-      &quot;抗皺&quot;,
-      &quot;緊緻&quot;
-    ],
-    &quot;抗老抗皺_en&quot;: [
-      &quot;anti-aging&quot;,
-      &quot;anti-wrinkle&quot;,
-      &quot;tightening&quot;
-    ],
-    &quot;數量與包裝&quot;: [
-      &quot;50ml&quot;,
-      &quot;50毫升&quot;
-    ],
-    &quot;數量與包裝_en&quot;: [
-      &quot;50ml&quot;,
-      &quot;50 milliliters&quot;
-    ]
-  }
-}</pre>
-      </div>
-    
-        </div>
-      </article>
-    
-
-      <article class="case-card">
-        <div class="case-head">
-          <div>
-            <div class="case-kicker">Case 7</div>
             <h3>比德堡崁入式晴雨窗【內崁式-短截式】速霸陸SUBARU OUTBACK 5D 四代 2009-2014年專用</h3>
             <div class="case-meta">
               <span>Item 6121402934</span>
@@ -1964,7 +1769,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A在品牌、事实忠实度、地区语言和结构上均表现优秀，仅长尾词有轻微瑕疵；候选B存在严重编造、语言不符和翻译问题，不符合评审要求。</p>
+          <p>候选A在语言、品牌正确性和核心事实忠实度方面远优于候选B，尽管A的长尾词有轻微扩展，但B存在严重的语言不符和事实编造问题。</p>
         </div>
         <div class="case-grid">
           
@@ -1980,7 +1785,7 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
           <div class="metric-row"><span>本地化</span><strong>5</strong></div>
@@ -1988,7 +1793,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>长尾搜索词中包含赠品（车窗防晒罩）和原文未直接提及的功能（防雾、防刮），与主产品关联度稍弱。</li></ul>
+          <ul><li>部分长尾关键词（如“车窗防晒罩”、“车窗防雾”）与商品核心功能关联度较低，或未直接在原文中提及。</li></ul>
         </div>
       </div>
     
@@ -2000,20 +1805,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>长尾搜索词和兼容车型中存在明显编造信息（如&#x27;Speeder&#x27;、&#x27;VD&#x27;、&#x27;Windshield Cover&#x27;）。</li><li>大量使用简体中文，与目标地区台湾的繁体中文不符。</li><li>英文翻译存在不准确或不自然表达（如&#x27;Embedded Rain and Sun Window&#x27;）。</li></ul>
+          <ul><li>主要字段（如long_tail_keywords、product_type、unique_selling_points的值）使用了简体中文和英文，不符合台湾地区的繁体中文语言要求。</li><li>compatible_models字段存在编造信息（如“Speeder”、“VD”）。</li><li>brand_en字段的品牌英文翻译错误（“Bidberg”）。</li></ul>
         </div>
       </div>
     
@@ -2169,20 +1974,20 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 8</div>
-            <h3>【Herschel】官方直營 品牌 雨傘 H55518612000F 只送不賣</h3>
+            <div class="case-kicker">Case 7</div>
+            <h3>【Hothing】蜜意坊 GIGA超大棉花糖 250g</h3>
             <div class="case-meta">
-              <span>Item 57005310057</span>
+              <span>Item 40269127675</span>
               <span>TW</span>
-              <span>Sports &amp; Outdoors|Sports &amp; Outdoor Accessories|Umbrellas</span>
+              <span>Food &amp; Beverages|Snacks|Pudding, Jellies &amp; Marshmallow</span>
               <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-a">A 胜出（v6）</div>
+          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A虽然存在语言不符的问题，但其内容忠实于原文，并准确提取了商品的核心卖点；候选B存在多处明显编造，且未能提取核心卖点，严重违反事实忠实度原则。</p>
+          <p>候选B在地区语言方面符合目标市场要求，而候选A存在严重的语言不符问题，因此B更优。</p>
         </div>
         <div class="case-grid">
           
@@ -2197,16 +2002,16 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>长尾搜索词&#x27;旅行折叠伞&#x27;无原文支持，属于轻微编造。</li><li>中文内容使用简体中文，不符合台湾地区（TW）的语言习惯。</li></ul>
+          <ul><li>语言不符合目标地区（使用简体中文而非繁体中文）</li><li>独特卖点&#x27;健康友好&#x27;的分类与内容不符，存在误导性</li></ul>
         </div>
       </div>
     
@@ -2218,20 +2023,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>2</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
           <div class="metric-row"><span>本地化</span><strong>5</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>多处内容明显编造，如&#x27;210x120公分雨傘&#x27;、&#x27;輕便&#x27;、&#x27;PVC材質&#x27;等，原文均无提及。</li><li>未提取商品核心卖点&#x27;只送不賣&#x27;和&#x27;官方直營&#x27;。</li><li>长尾搜索词中存在重复项（&#x27;210x120公分雨傘&#x27;和&#x27;210公分x120公分雨傘&#x27;）。</li></ul>
+          <ul><li>独特卖点&#x27;加热即食&#x27;的内容自相矛盾，存在事实错误</li></ul>
         </div>
       </div>
     
@@ -2242,40 +2047,46 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;雨伞赠送&quot;,
-    &quot;户外防水伞&quot;,
-    &quot;旅行折叠伞&quot;
+    &quot;250g大份装&quot;,
+    &quot;户外野餐糖果&quot;,
+    &quot;家庭烘焙用品&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Herschel&quot;
+      &quot;Hothing&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Herschel&quot;
+      &quot;Hothing&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;Rain Umbrella&quot;
+      &quot;GIGA超大棉花糖&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Rain Umbrella&quot;
+      &quot;Giga Cotton Candy&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;正品保障&quot;: [
-      &quot;Official Store&quot;,
-      &quot;Brand Authenticity&quot;
+    &quot;健康友好&quot;: [
+      &quot;响应环保&quot;,
+      &quot;使用回收再利用纸箱&quot;
     ],
-    &quot;正品保障_en&quot;: [
-      &quot;Official Store&quot;,
-      &quot;Brand Authenticity&quot;
+    &quot;健康友好_en&quot;: [
+      &quot;Eco-friendly Packaging&quot;,
+      &quot;Recycled Paper Box Usage&quot;
     ],
-    &quot;赠品服务&quot;: [
-      &quot;Free Gift with Purchase&quot;,
-      &quot;Gift Included&quot;
+    &quot;口感体验&quot;: [
+      &quot;烤到金黃酥脆的外表&quot;,
+      &quot;软绵甜蜜的内里&quot;
     ],
-    &quot;赠品服务_en&quot;: [
-      &quot;Free Gift with Purchase&quot;,
-      &quot;Gift Included&quot;
+    &quot;口感体验_en&quot;: [
+      &quot;Golden Crispy Exterior&quot;,
+      &quot;Soft and Sweet Interior&quot;
+    ],
+    &quot;适用场景&quot;: [
+      &quot;烤肉聚会&quot;
+    ],
+    &quot;适用场景_en&quot;: [
+      &quot;BBQ Party&quot;
     ]
   }
 }</pre>
@@ -2286,65 +2097,275 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;Herschel 雨傘&quot;,
-    &quot;戶外防水雨傘&quot;,
-    &quot;輕便雨傘&quot;,
-    &quot;210x120公分雨傘&quot;,
-    &quot;Herschel 防水雨傘&quot;,
-    &quot;戶外用雨傘&quot;,
-    &quot;210公分x120公分雨傘&quot;,
-    &quot;Herschel 雨具&quot;
+    &quot;蜜意坊棉花糖&quot;,
+    &quot;超大棉花糖&quot;,
+    &quot;250g棉花糖&quot;,
+    &quot;烤肉甜點&quot;,
+    &quot;野餐甜點&quot;,
+    &quot;家庭聚會甜點&quot;,
+    &quot;金黃酥脆棉花糖&quot;,
+    &quot;軟綿甜蜜棉花糖&quot;
   ],
   &quot;long_tail_keywords_en&quot;: [
-    &quot;Herschel umbrella&quot;,
-    &quot;outdoor waterproof umbrella&quot;,
-    &quot;lightweight umbrella&quot;,
-    &quot;210x120cm umbrella&quot;,
-    &quot;Herschel waterproof umbrella&quot;,
-    &quot;outdoor umbrella&quot;,
-    &quot;210cm x 120cm umbrella&quot;,
-    &quot;Herschel rain gear&quot;
+    &quot;Miteyi坊棉花糖&quot;,
+    &quot;super large marshmallow&quot;,
+    &quot;250g marshmallow&quot;,
+    &quot;barbecue dessert&quot;,
+    &quot;picnic dessert&quot;,
+    &quot;family gathering dessert&quot;,
+    &quot;golden crispy marshmallow&quot;,
+    &quot;soft and sweet marshmallow&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Herschel&quot;
+      &quot;Hothing&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Herschel&quot;
+      &quot;Hothing&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;雨傘&quot;
+      &quot;棉花糖&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;umbrella&quot;
+      &quot;marshmallow&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;便攜性&quot;: [
-      &quot;輕便&quot;,
-      &quot;易攜帶&quot;
+    &quot;加热即食&quot;: [
+      &quot;烤到金黃酥脆&quot;,
+      &quot;直接食用&quot;,
+      &quot;無需加熱&quot;
     ],
-    &quot;便攜性_en&quot;: [
-      &quot;lightweight&quot;,
-      &quot;portable&quot;
+    &quot;加热即食_en&quot;: [
+      &quot;roasted golden crispy&quot;,
+      &quot;ready to eat&quot;,
+      &quot;no need to heat&quot;
     ],
-    &quot;材質安全&quot;: [
-      &quot;PVC材質&quot;,
-      &quot;耐用&quot;,
-      &quot;防水&quot;
+    &quot;口味/风味&quot;: [
+      &quot;金黃酥脆&quot;,
+      &quot;軟綿甜蜜&quot;,
+      &quot;香甜可口&quot;
     ],
-    &quot;材質安全_en&quot;: [
-      &quot;PVC material&quot;,
-      &quot;durable&quot;,
-      &quot;waterproof&quot;
+    &quot;口味/风味_en&quot;: [
+      &quot;golden crispy&quot;,
+      &quot;soft and sweet&quot;,
+      &quot;sweet and fragrant&quot;
     ],
-    &quot;用途&quot;: [
-      &quot;戶外活動&quot;,
-      &quot;雨天出行&quot;
+    &quot;尺寸&quot;: [
+      &quot;5公分大小&quot;,
+      &quot;250g&quot;,
+      &quot;超大&quot;
     ],
-    &quot;用途_en&quot;: [
-      &quot;outdoor activities&quot;,
-      &quot;rainy day travel&quot;
+    &quot;尺寸_en&quot;: [
+      &quot;5cm size&quot;,
+      &quot;250g&quot;,
+      &quot;super large&quot;
+    ],
+    &quot;适用场景&quot;: [
+      &quot;烤肉聚會&quot;,
+      &quot;野餐&quot;,
+      &quot;家庭聚會&quot;
+    ],
+    &quot;适用场景_en&quot;: [
+      &quot;barbecue party&quot;,
+      &quot;picnic&quot;,
+      &quot;family gathering&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 8</div>
+            <h3>嘉義現貨（日本山葵種子） 高級調料辣根種子綠芥末種子 多年生四季蔬菜種子#調料horseradish</h3>
+            <div class="case-meta">
+              <span>Item 43074315347</span>
+              <span>TW</span>
+              <span>Home &amp; Living|Gardening|Seeds &amp; Bulbs</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-b">B 胜出（v6）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>候选B在事实忠实度上优于候选A，尽管两者都存在品牌错误和各自的硬约束问题，但A存在明显的事实编造，而B仅是结构键的语言不符。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将店铺名“秦川園藝”误作品牌。</li><li>unique_selling_points中“天然”系列（天然無毒、無添加、純天然）完全编造，原文无此信息。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>品牌错误，将地点/状态“嘉義現貨”误作品牌。</li><li>unique_selling_points的key使用了简体中文（如“专业检测”、“季节适应”、“科学种植”），不符合目标地区繁体中文要求。</li></ul>
+        </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;日本山葵種子&quot;,
+    &quot;多年生蔬菜種子&quot;,
+    &quot;四季蔬菜種子&quot;,
+    &quot;家庭菜園種子&quot;,
+    &quot;園藝愛好者種子&quot;,
+    &quot;種植愛好者種子&quot;,
+    &quot;發芽率高的種子&quot;,
+    &quot;秋季種子&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Japanese horseradish seeds&quot;,
+    &quot;perennial vegetable seeds&quot;,
+    &quot;four-season vegetable seeds&quot;,
+    &quot;home garden seeds&quot;,
+    &quot;gardening enthusiast seeds&quot;,
+    &quot;garden lover seeds&quot;,
+    &quot;high germination rate seeds&quot;,
+    &quot;autumn seeds&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;秦川園藝&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Qin Chuan Garden&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;山葵種子&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;horseradish seeds&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;天然&quot;: [
+      &quot;天然無毒&quot;,
+      &quot;無添加&quot;,
+      &quot;純天然&quot;
+    ],
+    &quot;天然_en&quot;: [
+      &quot;natural and toxin-free&quot;,
+      &quot;no additives&quot;,
+      &quot;pure natural&quot;
+    ],
+    &quot;發芽率&quot;: [
+      &quot;發芽率高&quot;,
+      &quot;發芽率好&quot;,
+      &quot;發芽率佳&quot;
+    ],
+    &quot;發芽率_en&quot;: [
+      &quot;high germination rate&quot;,
+      &quot;good germination rate&quot;,
+      &quot;excellent germination rate&quot;
+    ],
+    &quot;適用種植時間&quot;: [
+      &quot;秋季&quot;,
+      &quot;9月至11月&quot;,
+      &quot;秋季播種&quot;
+    ],
+    &quot;適用種植時間_en&quot;: [
+      &quot;autumn planting&quot;,
+      &quot;September to November&quot;,
+      &quot;autumn season&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;多樣季節適用&quot;,
+    &quot;科學育苗技術&quot;,
+    &quot;健康食用植物&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;嘉義現貨&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Jia Yi Present&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;多年生四季蔬菜種子&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Perennial Four Seasons Vegetable Seeds&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;专业检测&quot;: [
+      &quot;專業通過檢測防疫及測試成功發芽率&quot;
+    ],
+    &quot;专业检测_en&quot;: [
+      &quot;Professionally Tested and Successful Germination Rate&quot;
+    ],
+    &quot;季节适应&quot;: [
+      &quot;多年生四季&quot;
+    ],
+    &quot;季节适应_en&quot;: [
+      &quot;Multi-season Perennials&quot;
+    ],
+    &quot;科学种植&quot;: [
+      &quot;冷凍處理&quot;,
+      &quot;藥劑處理&quot;
+    ],
+    &quot;科学种植_en&quot;: [
+      &quot;Freezing Treatment&quot;,
+      &quot;Pharmaceutical Processing&quot;
     ]
   }
 }</pre>
@@ -2370,7 +2391,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A虽然在品牌识别上存在问题，但其内容忠实度、搜索价值和地区语言符合度远优于候选B，候选B存在严重的简体中文污染和不准确的词语。</p>
+          <p>候选A虽然存在品牌识别错误和轻微的事实扩展，但其语言符合目标市场，且没有严重的事实编造。候选B存在严重的语言不符和事实编造问题，尤其将水桶错误识别为储物箱，且大量使用简体中文，不适合台湾市场。</p>
         </div>
         <div class="case-grid">
           
@@ -2381,20 +2402,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>3</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌字段将店铺名“圻媽雜貨舖”误作品牌</li><li>`brand_en`字段将“杂货铺”翻译为简中“KeMa杂货铺”</li></ul>
+          <ul><li>将店铺名“圻媽雜貨舖”误识别为品牌</li><li>在适用场景和长尾词中轻微扩展了原文未明确提及的场景（如“户外活动”、“办公室”）</li></ul>
         </div>
       </div>
     
@@ -2406,20 +2427,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>2</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌字段将店铺名“圻媽雜貨舖”误作品牌，且中文品牌名使用简中“圻媽杂货铺”</li><li>`long_tail_keywords`和`unique_selling_points`中多处出现简体中文词语（如“塑料”、“储”、“学”）</li><li>`brand_en`翻译不自然</li></ul>
+          <ul><li>将店铺名“圻媽杂货铺”误识别为品牌，且使用了简体中文</li><li>在长尾搜索词中将“水桶”错误地识别为“储物箱”，存在严重事实错误</li><li>大量使用简体中文（如“塑料”、“储物箱”、“杂货铺”、“人体工程学”、“应用”），不符合台湾目标市场语言</li></ul>
         </div>
       </div>
     
@@ -2570,11 +2591,11 @@ Beauty|Skincare|Lip Treatment
               <span>swap=True</span>
             </div>
           </div>
-          <div class="winner-badge winner-b">B 胜出（v6）</div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>尽管两者都存在严重的地区语言不符问题，但候选B在品牌提取上更准确，且其事实忠实度问题（语病）比候选A的编造内容（耐用设计）更轻微，因此B更优。</p>
+          <p>候选B因大量使用简体中文，严重不符合目标市场（台湾）的语言要求，存在硬约束问题。候选A在语言和品牌方面均正确，且内容忠实度较高，是更优选择。</p>
         </div>
         <div class="case-grid">
           
@@ -2584,21 +2605,21 @@ Beauty|Skincare|Lip Treatment
           <span class="side-chip">new_v9</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>语言不符合目标地区，大量使用简体中文。</li><li>在&#x27;耐用性&#x27;卖点下，&#x27;耐用設計&#x27;为原文未提及的编造内容。</li><li>品牌只提取了中文名&#x27;萬達康&#x27;，未提取标题中的主要品牌名&#x27;Wonder Core&#x27;。</li></ul>
+          <ul><li>独特卖点中&#x27;耐用性&#x27;的描述有轻微推断和归类不当</li><li>独特卖点中存在少量重复内容</li></ul>
         </div>
       </div>
     
@@ -2613,17 +2634,17 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>编造</span><strong>否</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>语言不符合目标地区，大量使用简体中文。</li><li>在&#x27;安全性保障&#x27;卖点下，&#x27;获得多国专利于证认证&#x27;存在语病/错别字。</li><li>产品类型&#x27;全能塑体健身机&#x27;中的&#x27;塑体&#x27;为简体中文。</li></ul>
+          <ul><li>所有中文内容均为简体中文，与目标市场（台湾，繁体中文）语言不符</li><li>核心吸引点和长尾搜索词因语言问题导致事实忠实度低</li><li>搜索价值因语言不符而大幅降低</li></ul>
         </div>
       </div>
     
@@ -2771,68 +2792,68 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 11</div>
-            <h3>嘉義現貨（日本山葵種子） 高級調料辣根種子綠芥末種子 多年生四季蔬菜種子#調料horseradish</h3>
+            <h3>【Herschel】官方直營 品牌 雨傘 H55518612000F 只送不賣</h3>
             <div class="case-meta">
-              <span>Item 43074315347</span>
+              <span>Item 57005310057</span>
               <span>TW</span>
-              <span>Home &amp; Living|Gardening|Seeds &amp; Bulbs</span>
-              <span>swap=True</span>
+              <span>Sports &amp; Outdoors|Sports &amp; Outdoor Accessories|Umbrellas</span>
+              <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-b">B 胜出（v6）</div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>尽管两者都存在品牌错误，但候选B在事实忠实度上表现更好，其独特卖点完全忠实于原文，且结构更清晰。候选A存在明显编造问题，且独特卖点有重复。</p>
+          <p>候选A虽然存在语言不符的硬伤，但其内容忠实度远高于候选B。候选B存在大量凭空编造的事实，特别是具体的尺寸信息，这会严重误导用户，因此候选A更适合。</p>
         </div>
         <div class="case-grid">
           
       <div class="side-panel side-a">
         <div class="side-head">
-          <h4>A · new_v9</h4>
-          <span class="side-chip">new_v9</span>
-        </div>
-        <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
-        </div>
-        <div class="issues">
-          <div class="issues-title">关键问题</div>
-          <ul><li>品牌&#x27;秦川園藝&#x27;为店铺名，而非商品品牌，属于品牌错误。</li><li>独特卖点中&#x27;天然無毒&#x27;、&#x27;無添加&#x27;、&#x27;純天然&#x27;等信息在原文中无明确支持，属于明显编造。</li><li>独特卖点中存在较多语义重复的词语，如&#x27;天然無毒&#x27;/&#x27;純天然&#x27;，&#x27;發芽率高&#x27;/&#x27;發芽率佳&#x27;。</li></ul>
-        </div>
-      </div>
-    
-          
-      <div class="side-panel side-b">
-        <div class="side-head">
-          <h4>B · v6</h4>
+          <h4>A · v6</h4>
           <span class="side-chip">v6</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌&#x27;嘉義現貨&#x27;为地点/现货状态，而非商品品牌，属于品牌错误。</li><li>unique_selling_points的键名（如&#x27;专业检测&#x27;、&#x27;季节适应&#x27;、&#x27;科学种植&#x27;）使用了简体中文，与目标地区繁体中文不符。</li></ul>
+          <ul><li>语言不符，使用简体字（如“伞”、“赠送”、“正品”）不符合台湾繁体中文市场。</li><li>长尾词“旅行折叠伞”中的“折叠”为原文未提及的编造信息。</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>独特卖点和长尾词中存在大量编造事实，如“轻便”、“PVC材质”、“耐用”、“210x120公分”等，原文均无提及。</li><li>长尾词中存在重复内容，如“210x120公分雨伞”和“210公分x120公分雨傘”。</li></ul>
         </div>
       </div>
     
@@ -2843,69 +2864,40 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;日本山葵種子&quot;,
-    &quot;多年生蔬菜種子&quot;,
-    &quot;四季蔬菜種子&quot;,
-    &quot;家庭菜園種子&quot;,
-    &quot;園藝愛好者種子&quot;,
-    &quot;種植愛好者種子&quot;,
-    &quot;發芽率高的種子&quot;,
-    &quot;秋季種子&quot;
-  ],
-  &quot;long_tail_keywords_en&quot;: [
-    &quot;Japanese horseradish seeds&quot;,
-    &quot;perennial vegetable seeds&quot;,
-    &quot;four-season vegetable seeds&quot;,
-    &quot;home garden seeds&quot;,
-    &quot;gardening enthusiast seeds&quot;,
-    &quot;garden lover seeds&quot;,
-    &quot;high germination rate seeds&quot;,
-    &quot;autumn seeds&quot;
+    &quot;雨伞赠送&quot;,
+    &quot;户外防水伞&quot;,
+    &quot;旅行折叠伞&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;秦川園藝&quot;
+      &quot;Herschel&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Qin Chuan Garden&quot;
+      &quot;Herschel&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;山葵種子&quot;
+      &quot;Rain Umbrella&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;horseradish seeds&quot;
+      &quot;Rain Umbrella&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;天然&quot;: [
-      &quot;天然無毒&quot;,
-      &quot;無添加&quot;,
-      &quot;純天然&quot;
+    &quot;正品保障&quot;: [
+      &quot;Official Store&quot;,
+      &quot;Brand Authenticity&quot;
     ],
-    &quot;天然_en&quot;: [
-      &quot;natural and toxin-free&quot;,
-      &quot;no additives&quot;,
-      &quot;pure natural&quot;
+    &quot;正品保障_en&quot;: [
+      &quot;Official Store&quot;,
+      &quot;Brand Authenticity&quot;
     ],
-    &quot;發芽率&quot;: [
-      &quot;發芽率高&quot;,
-      &quot;發芽率好&quot;,
-      &quot;發芽率佳&quot;
+    &quot;赠品服务&quot;: [
+      &quot;Free Gift with Purchase&quot;,
+      &quot;Gift Included&quot;
     ],
-    &quot;發芽率_en&quot;: [
-      &quot;high germination rate&quot;,
-      &quot;good germination rate&quot;,
-      &quot;excellent germination rate&quot;
-    ],
-    &quot;適用種植時間&quot;: [
-      &quot;秋季&quot;,
-      &quot;9月至11月&quot;,
-      &quot;秋季播種&quot;
-    ],
-    &quot;適用種植時間_en&quot;: [
-      &quot;autumn planting&quot;,
-      &quot;September to November&quot;,
-      &quot;autumn season&quot;
+    &quot;赠品服务_en&quot;: [
+      &quot;Free Gift with Purchase&quot;,
+      &quot;Gift Included&quot;
     ]
   }
 }</pre>
@@ -2916,44 +2908,65 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;多樣季節適用&quot;,
-    &quot;科學育苗技術&quot;,
-    &quot;健康食用植物&quot;
+    &quot;Herschel 雨傘&quot;,
+    &quot;戶外防水雨傘&quot;,
+    &quot;輕便雨傘&quot;,
+    &quot;210x120公分雨傘&quot;,
+    &quot;Herschel 防水雨傘&quot;,
+    &quot;戶外用雨傘&quot;,
+    &quot;210公分x120公分雨傘&quot;,
+    &quot;Herschel 雨具&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;Herschel umbrella&quot;,
+    &quot;outdoor waterproof umbrella&quot;,
+    &quot;lightweight umbrella&quot;,
+    &quot;210x120cm umbrella&quot;,
+    &quot;Herschel waterproof umbrella&quot;,
+    &quot;outdoor umbrella&quot;,
+    &quot;210cm x 120cm umbrella&quot;,
+    &quot;Herschel rain gear&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;嘉義現貨&quot;
+      &quot;Herschel&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Jia Yi Present&quot;
+      &quot;Herschel&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;多年生四季蔬菜種子&quot;
+      &quot;雨傘&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Perennial Four Seasons Vegetable Seeds&quot;
+      &quot;umbrella&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;专业检测&quot;: [
-      &quot;專業通過檢測防疫及測試成功發芽率&quot;
+    &quot;便攜性&quot;: [
+      &quot;輕便&quot;,
+      &quot;易攜帶&quot;
     ],
-    &quot;专业检测_en&quot;: [
-      &quot;Professionally Tested and Successful Germination Rate&quot;
+    &quot;便攜性_en&quot;: [
+      &quot;lightweight&quot;,
+      &quot;portable&quot;
     ],
-    &quot;季节适应&quot;: [
-      &quot;多年生四季&quot;
+    &quot;材質安全&quot;: [
+      &quot;PVC材質&quot;,
+      &quot;耐用&quot;,
+      &quot;防水&quot;
     ],
-    &quot;季节适应_en&quot;: [
-      &quot;Multi-season Perennials&quot;
+    &quot;材質安全_en&quot;: [
+      &quot;PVC material&quot;,
+      &quot;durable&quot;,
+      &quot;waterproof&quot;
     ],
-    &quot;科学种植&quot;: [
-      &quot;冷凍處理&quot;,
-      &quot;藥劑處理&quot;
+    &quot;用途&quot;: [
+      &quot;戶外活動&quot;,
+      &quot;雨天出行&quot;
     ],
-    &quot;科学种植_en&quot;: [
-      &quot;Freezing Treatment&quot;,
-      &quot;Pharmaceutical Processing&quot;
+    &quot;用途_en&quot;: [
+      &quot;outdoor activities&quot;,
+      &quot;rainy day travel&quot;
     ]
   }
 }</pre>
@@ -2967,19 +2980,19 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 12</div>
-            <h3>【Hothing】蜜意坊 GIGA超大棉花糖 250g</h3>
+            <h3>Abib Jericho Rose Bifida 精華緊緻滴劑 50ml★韓國發貨★</h3>
             <div class="case-meta">
-              <span>Item 40269127675</span>
+              <span>Item 41256802716</span>
               <span>TW</span>
-              <span>Food &amp; Beverages|Snacks|Pudding, Jellies &amp; Marshmallow</span>
+              <span>Beauty|Skincare|Facial Serum &amp; Essence</span>
               <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-b">B 胜出（new_v9）</div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B在地区语言和本地化方面表现更好，尽管两边都存在轻微的事实忠实度问题，但A的语言问题更为严重。</p>
+          <p>候选A的主要问题是语言不符，但内容忠实于原文；候选B虽然语言符合，但严重编造了产品功效，这在电商搜索中是更严重的错误，因为它会误导用户。因此，A更优。</p>
         </div>
         <div class="case-grid">
           
@@ -2990,20 +3003,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>语言不符合目标地区，使用了简体中文而非繁体中文。</li><li>将“响应环保，使用回收再利用纸箱”归类到“健康友好”是事实误解。</li><li>“家庭烘焙用品”作为长尾词对成品棉花糖来说略有牵强。</li></ul>
+          <ul><li>输出语言为简体中文，不符合台湾（繁体中文）目标市场</li></ul>
         </div>
       </div>
     
@@ -3015,20 +3028,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>“加热即食”卖点中包含“无需加热”与商品描述中强调的“烤到金黃酥脆”存在矛盾，且“加热即食”的分类不完全准确。</li><li>英文长尾词中“Miteyi坊棉花糖”的翻译不自然且不一致。</li></ul>
+          <ul><li>凭空编造了“抗老”、“抗皱”、“毛孔”等产品功效，原文未提及</li><li>长尾搜索词中包含大量编造的功效词</li></ul>
         </div>
       </div>
     
@@ -3039,46 +3052,46 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;250g大份装&quot;,
-    &quot;户外野餐糖果&quot;,
-    &quot;家庭烘焙用品&quot;
+    &quot;玫瑰比菲达&quot;,
+    &quot;美容护理液&quot;,
+    &quot;皮肤紧致精华&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Hothing&quot;
+      &quot;Abib&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Hothing&quot;
+      &quot;Abib&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;GIGA超大棉花糖&quot;
+      &quot;精华紧致滴剂&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Giga Cotton Candy&quot;
+      &quot;Essence for Tightening Skin&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;健康友好&quot;: [
-      &quot;响应环保&quot;,
-      &quot;使用回收再利用纸箱&quot;
+    &quot;正品保障&quot;: [
+      &quot;100%授权产品&quot;,
+      &quot;最近制造的产品&quot;
     ],
-    &quot;健康友好_en&quot;: [
-      &quot;Eco-friendly Packaging&quot;,
-      &quot;Recycled Paper Box Usage&quot;
+    &quot;正品保障_en&quot;: [
+      &quot;Official Product Guarantee&quot;,
+      &quot;Recently Manufactured Products&quot;
     ],
-    &quot;口感体验&quot;: [
-      &quot;烤到金黃酥脆的外表&quot;,
-      &quot;软绵甜蜜的内里&quot;
+    &quot;物流优势&quot;: [
+      &quot;韩国直发&quot;,
+      &quot;快速配送&quot;
     ],
-    &quot;口感体验_en&quot;: [
-      &quot;Golden Crispy Exterior&quot;,
-      &quot;Soft and Sweet Interior&quot;
+    &quot;物流优势_en&quot;: [
+      &quot;Direct Shipping from Korea&quot;,
+      &quot;Fast Delivery Service&quot;
     ],
-    &quot;适用场景&quot;: [
-      &quot;烤肉聚会&quot;
+    &quot;赠品福利&quot;: [
+      &quot;免费赠送礼品&quot;
     ],
-    &quot;适用场景_en&quot;: [
-      &quot;BBQ Party&quot;
+    &quot;赠品福利_en&quot;: [
+      &quot;Free Gift with Purchase&quot;
     ]
   }
 }</pre>
@@ -3089,79 +3102,65 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;蜜意坊棉花糖&quot;,
-    &quot;超大棉花糖&quot;,
-    &quot;250g棉花糖&quot;,
-    &quot;烤肉甜點&quot;,
-    &quot;野餐甜點&quot;,
-    &quot;家庭聚會甜點&quot;,
-    &quot;金黃酥脆棉花糖&quot;,
-    &quot;軟綿甜蜜棉花糖&quot;
+    &quot;韓國緊緻滴劑&quot;,
+    &quot;抗老緊緻滴劑&quot;,
+    &quot;50ml緊緻滴劑&quot;,
+    &quot;韓國抗老滴劑&quot;,
+    &quot;玫瑰比菲達滴劑&quot;,
+    &quot;緊緻毛孔滴劑&quot;,
+    &quot;韓國美容滴劑&quot;,
+    &quot;抗皺滴劑&quot;
   ],
   &quot;long_tail_keywords_en&quot;: [
-    &quot;Miteyi坊棉花糖&quot;,
-    &quot;super large marshmallow&quot;,
-    &quot;250g marshmallow&quot;,
-    &quot;barbecue dessert&quot;,
-    &quot;picnic dessert&quot;,
-    &quot;family gathering dessert&quot;,
-    &quot;golden crispy marshmallow&quot;,
-    &quot;soft and sweet marshmallow&quot;
+    &quot;Korean tightening serum&quot;,
+    &quot;anti-aging tightening serum&quot;,
+    &quot;50ml tightening serum&quot;,
+    &quot;Korean anti-aging serum&quot;,
+    &quot;rose bifida serum&quot;,
+    &quot;tightening pores serum&quot;,
+    &quot;Korean beauty serum&quot;,
+    &quot;anti-wrinkle serum&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Hothing&quot;
+      &quot;Abib&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Hothing&quot;
+      &quot;Abib&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;棉花糖&quot;
+      &quot;緊緻滴劑&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;marshmallow&quot;
+      &quot;tightening serum&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;加热即食&quot;: [
-      &quot;烤到金黃酥脆&quot;,
-      &quot;直接食用&quot;,
-      &quot;無需加熱&quot;
+    &quot;原產國&quot;: [
+      &quot;韓國&quot;,
+      &quot;韓國製造&quot;
     ],
-    &quot;加热即食_en&quot;: [
-      &quot;roasted golden crispy&quot;,
-      &quot;ready to eat&quot;,
-      &quot;no need to heat&quot;
+    &quot;原產國_en&quot;: [
+      &quot;Korea&quot;,
+      &quot;made in Korea&quot;
     ],
-    &quot;口味/风味&quot;: [
-      &quot;金黃酥脆&quot;,
-      &quot;軟綿甜蜜&quot;,
-      &quot;香甜可口&quot;
+    &quot;抗老抗皺&quot;: [
+      &quot;抗老&quot;,
+      &quot;抗皺&quot;,
+      &quot;緊緻&quot;
     ],
-    &quot;口味/风味_en&quot;: [
-      &quot;golden crispy&quot;,
-      &quot;soft and sweet&quot;,
-      &quot;sweet and fragrant&quot;
+    &quot;抗老抗皺_en&quot;: [
+      &quot;anti-aging&quot;,
+      &quot;anti-wrinkle&quot;,
+      &quot;tightening&quot;
     ],
-    &quot;尺寸&quot;: [
-      &quot;5公分大小&quot;,
-      &quot;250g&quot;,
-      &quot;超大&quot;
+    &quot;數量與包裝&quot;: [
+      &quot;50ml&quot;,
+      &quot;50毫升&quot;
     ],
-    &quot;尺寸_en&quot;: [
-      &quot;5cm size&quot;,
-      &quot;250g&quot;,
-      &quot;super large&quot;
-    ],
-    &quot;适用场景&quot;: [
-      &quot;烤肉聚會&quot;,
-      &quot;野餐&quot;,
-      &quot;家庭聚會&quot;
-    ],
-    &quot;适用场景_en&quot;: [
-      &quot;barbecue party&quot;,
-      &quot;picnic&quot;,
-      &quot;family gathering&quot;
+    &quot;數量與包裝_en&quot;: [
+      &quot;50ml&quot;,
+      &quot;50 milliliters&quot;
     ]
   }
 }</pre>
@@ -3175,220 +3174,6 @@ Beauty|Skincare|Lip Treatment
         <div class="case-head">
           <div>
             <div class="case-kicker">Case 13</div>
-            <h3>免運開發票 可定製水桶架 可移動水桶架 廚房桶架加厚不鏽鋼 湯桶架 奶茶桶架 帶滑輪支架 食堂餐廳保溫桶架 開水桶推車架</h3>
-            <div class="case-meta">
-              <span>Item 41605479489</span>
-              <span>TW</span>
-              <span>Home &amp; Living|Furniture|Shelves &amp; Racks</span>
-              <span>swap=False</span>
-            </div>
-          </div>
-          <div class="winner-badge winner-a">A 胜出（v6）</div>
-        </div>
-        <div class="verdict">
-          <div class="verdict-label">结论摘要</div>
-          <p>候选A忠实于原始商品信息，没有编造内容，且结构清晰、搜索价值高。候选B存在多处明显编造的卖点，且结构冗余，因此A更优。</p>
-        </div>
-        <div class="case-grid">
-          
-      <div class="side-panel side-a">
-        <div class="side-head">
-          <h4>A · v6</h4>
-          <span class="side-chip">v6</span>
-        </div>
-        <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
-          <div class="metric-row"><span>编造</span><strong>否</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
-        </div>
-        <div class="issues">
-          <div class="issues-title">关键问题</div>
-          <div class="empty">无</div>
-        </div>
-      </div>
-    
-          
-      <div class="side-panel side-b">
-        <div class="side-head">
-          <h4>B · new_v9</h4>
-          <span class="side-chip">new_v9</span>
-        </div>
-        <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
-        </div>
-        <div class="issues">
-          <div class="issues-title">关键问题</div>
-          <ul><li>明显编造了多个卖点，如“輕便”、“耐用”、“長壽命”、“防水”、“防潮”、“防漏”，这些信息在原文中均未提及。</li><li>unique_selling_points 中存在冗余分类，如“便携性/轻便性”和“机械工学”内容高度重叠。</li><li>top_attractiveness 中的 product_type &#x27;水桶架&#x27; 过于宽泛，未能抓住商品的核心特征 &#x27;帶滑輪支架&#x27;。</li></ul>
-        </div>
-      </div>
-    
-        </div>
-        <div class="output-grid">
-          
-      <div class="output-panel">
-        <div class="output-head">A 实际输出</div>
-        <pre>{
-  &quot;long_tail_keywords&quot;: [
-    &quot;廚房桶架&quot;,
-    &quot;食堂保溫桶架&quot;,
-    &quot;開水桶推車架&quot;
-  ],
-  &quot;top_attractiveness&quot;: {
-    &quot;product_type&quot;: [
-      &quot;帶滑輪支架&quot;
-    ],
-    &quot;product_type_en&quot;: [
-      &quot;Wheeled Bucket Stand&quot;
-    ]
-  },
-  &quot;unique_selling_points&quot;: {
-    &quot;便捷移动&quot;: [
-      &quot;可移動水桶架&quot;,
-      &quot;带滑轮支架&quot;
-    ],
-    &quot;便捷移动_en&quot;: [
-      &quot;Portable Water Bucket Frame with Wheels&quot;,
-      &quot;Rolling Bucket Support System&quot;
-    ],
-    &quot;多功能应用&quot;: [
-      &quot;湯桶架&quot;,
-      &quot;奶茶桶架&quot;
-    ],
-    &quot;多功能应用_en&quot;: [
-      &quot;Soup Bucket Rack&quot;,
-      &quot;Tea Milk Bottle Holder&quot;
-    ],
-    &quot;定制能力&quot;: [
-      &quot;可定製水桶架&quot;
-    ],
-    &quot;定制能力_en&quot;: [
-      &quot;Customizable Water Bucket Frame&quot;
-    ]
-  }
-}</pre>
-      </div>
-    
-          
-      <div class="output-panel">
-        <div class="output-head">B 实际输出</div>
-        <pre>{
-  &quot;long_tail_keywords&quot;: [
-    &quot;廚房水桶架&quot;,
-    &quot;移動水桶架&quot;,
-    &quot;湯桶架&quot;,
-    &quot;奶茶桶架&quot;,
-    &quot;保溫桶架&quot;,
-    &quot;帶滑輪水桶架&quot;,
-    &quot;可定製水桶架&quot;,
-    &quot;食堂水桶架&quot;
-  ],
-  &quot;long_tail_keywords_en&quot;: [
-    &quot;kitchen water bucket rack&quot;,
-    &quot;movable water bucket rack&quot;,
-    &quot;soup bucket rack&quot;,
-    &quot;milk tea bucket rack&quot;,
-    &quot;insulated bucket rack&quot;,
-    &quot;wheel water bucket rack&quot;,
-    &quot;customizable water bucket rack&quot;,
-    &quot;canteen water bucket rack&quot;
-  ],
-  &quot;top_attractiveness&quot;: {
-    &quot;product_type&quot;: [
-      &quot;水桶架&quot;
-    ],
-    &quot;product_type_en&quot;: [
-      &quot;water bucket rack&quot;
-    ]
-  },
-  &quot;unique_selling_points&quot;: {
-    &quot;便携性/轻便性&quot;: [
-      &quot;可移動&quot;,
-      &quot;帶滑輪&quot;,
-      &quot;輕便&quot;
-    ],
-    &quot;便携性/轻便性_en&quot;: [
-      &quot;movable&quot;,
-      &quot;with wheels&quot;,
-      &quot;lightweight&quot;
-    ],
-    &quot;多功能性&quot;: [
-      &quot;湯桶架&quot;,
-      &quot;奶茶桶架&quot;,
-      &quot;保溫桶架&quot;
-    ],
-    &quot;多功能性_en&quot;: [
-      &quot;soup bucket rack&quot;,
-      &quot;milk tea bucket rack&quot;,
-      &quot;insulated bucket rack&quot;
-    ],
-    &quot;定制&quot;: [
-      &quot;可定製&quot;,
-      &quot;私人訂製&quot;
-    ],
-    &quot;定制_en&quot;: [
-      &quot;customizable&quot;,
-      &quot;private customization&quot;
-    ],
-    &quot;机械工学&quot;: [
-      &quot;可移動&quot;,
-      &quot;帶滑輪&quot;,
-      &quot;移動方便&quot;
-    ],
-    &quot;机械工学_en&quot;: [
-      &quot;movable&quot;,
-      &quot;with wheels&quot;,
-      &quot;convenient to move&quot;
-    ],
-    &quot;耐用性&quot;: [
-      &quot;加厚不鏽鋼&quot;,
-      &quot;耐用&quot;,
-      &quot;長壽命&quot;
-    ],
-    &quot;耐用性_en&quot;: [
-      &quot;thick stainless steel&quot;,
-      &quot;durable&quot;,
-      &quot;long-lasting&quot;
-    ],
-    &quot;防水防潮&quot;: [
-      &quot;防水&quot;,
-      &quot;防潮&quot;,
-      &quot;防漏&quot;
-    ],
-    &quot;防水防潮_en&quot;: [
-      &quot;waterproof&quot;,
-      &quot;moisture-proof&quot;,
-      &quot;leak-proof&quot;
-    ]
-  }
-}</pre>
-      </div>
-    
-        </div>
-      </article>
-    
-
-      <article class="case-card">
-        <div class="case-head">
-          <div>
-            <div class="case-kicker">Case 14</div>
             <h3>◥⊕【客製化】【衣架】兒童衣架童裝小實木防滑嬰兒寶寶大童服裝店專用木質衣撐訂製小孩</h3>
             <div class="case-meta">
               <span>Item 24266814636</span>
@@ -3401,7 +3186,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A忠实于原始商品信息，品牌处理正确，内容无编造，且语言符合目标地区，搜索价值高。候选B存在严重的品牌错误、内容编造和语言不符问题，不适合作为搜索卖点结果。</p>
+          <p>候选A在品牌、语言、事实忠实度方面均无硬伤，且内容准确、有搜索价值；候选B存在严重的品牌错误、语言错误和事实编造问题，完全不符合要求。</p>
         </div>
         <div class="case-grid">
           
@@ -3446,11 +3231,11 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>2</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>将商品型号名（如W10、WF8）误识别为品牌。</li><li>多处内容明显编造，例如“Tree Branch Style Storage Aid”、“Real Tree Branch Structure”、“Non-toxic Painted Surface”、“Child-friendly Safety Standards”等在原文中均无提及。</li><li>主要字段（如long_tail_keywords、top_attractiveness中的product_type、unique_selling_points的值）使用英文，不符合目标地区（TW）的语言要求。</li></ul>
+          <ul><li>将型号名误作品牌</li><li>主字段语言（如long_tail_keywords, product_type, unique_selling_points的值）大量使用英文，不符合目标地区繁体中文要求</li><li>多处内容凭空编造（如&#x27;Real Tree Branch Structure&#x27;, &#x27;Non-toxic Painted Surface&#x27;, &#x27;Child-friendly Safety Standards&#x27;）</li></ul>
         </div>
       </div>
     
@@ -3617,69 +3402,69 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 15</div>
-            <h3>[ETUDE] 薑糖隔夜唇膜 23g</h3>
+            <div class="case-kicker">Case 14</div>
+            <h3>免運開發票 可定製水桶架 可移動水桶架 廚房桶架加厚不鏽鋼 湯桶架 奶茶桶架 帶滑輪支架 食堂餐廳保溫桶架 開水桶推車架</h3>
             <div class="case-meta">
-              <span>Item 19873128577</span>
+              <span>Item 41605479489</span>
               <span>TW</span>
-              <span>Beauty|Skincare|Lip Treatment</span>
-              <span>swap=True</span>
+              <span>Home &amp; Living|Furniture|Shelves &amp; Racks</span>
+              <span>swap=False</span>
             </div>
           </div>
-          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+          <div class="winner-badge winner-a">A 胜出（v6）</div>
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A虽然在事实忠实度上存在一些推断和泛化，但其品牌正确、语言符合目标地区，且没有明显的成分编造。而候选B存在明显的成分编造（蜂蜜、更新配方）和严重的地区语言不符问题（使用简体中文而非繁体中文）。</p>
+          <p>候选A虽然存在一个简体字错误，但内容忠实于原文，且结构清晰；候选B存在严重的事实编造问题，且结构有冗余。</p>
         </div>
         <div class="case-grid">
           
       <div class="side-panel side-a">
         <div class="side-head">
-          <h4>A · new_v9</h4>
-          <span class="side-chip">new_v9</span>
+          <h4>A · v6</h4>
+          <span class="side-chip">v6</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>2</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>unique_selling_points中&#x27;適用群體&#x27;的&#x27;女性&#x27;是编造，其他词语过于泛化。</li><li>long_tail_keywords中的&#x27;干燥天氣護唇&#x27;是推断，原文未直接提及。</li><li>unique_selling_points中&#x27;舒緩修復&#x27;的&#x27;修復&#x27;略强于原文&#x27;呵護死皮細胞&#x27;。</li></ul>
+          <ul><li>在`unique_selling_points.便捷移动`中，使用了简体字“带”而非繁体字“帶”。</li></ul>
         </div>
       </div>
     
           
       <div class="side-panel side-b">
         <div class="side-head">
-          <h4>B · v6</h4>
-          <span class="side-chip">v6</span>
+          <h4>B · new_v9</h4>
+          <span class="side-chip">new_v9</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
           <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>long_tail_keywords中的&#x27;生姜蜂蜜面膜&#x27;编造了&#x27;蜂蜜&#x27;成分，原文为&#x27;糖&#x27;。</li><li>unique_selling_points中&#x27;夜间护肤&#x27;的&#x27;每日涂抹更新配方&#x27;编造了&#x27;更新配方&#x27;。</li><li>语言不符合目标地区(TW)，使用了大量简体中文。</li></ul>
+          <ul><li>在`unique_selling_points.防水防潮`中，凭空编造了“防水”、“防潮”、“防漏”等功能，原文未提及。</li><li>在`unique_selling_points`中，存在“轻便”、“私人订制”、“耐用”、“长寿命”等推断性词语，未直接在原文中体现。</li><li>在`unique_selling_points`中，存在“可移動”和“帶滑輪”的重复分类和冗余。</li></ul>
         </div>
       </div>
     
@@ -3690,69 +3475,40 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;姜糖護唇&quot;,
-    &quot;睡前護唇&quot;,
-    &quot;日常護唇&quot;,
-    &quot;干燥天氣護唇&quot;,
-    &quot;韓國製造&quot;,
-    &quot;23g唇膜&quot;,
-    &quot;隔夜護唇&quot;,
-    &quot;姜橙護唇&quot;
-  ],
-  &quot;long_tail_keywords_en&quot;: [
-    &quot;ginger sugar lip care&quot;,
-    &quot;overnight lip care&quot;,
-    &quot;daily lip care&quot;,
-    &quot;dry weather lip care&quot;,
-    &quot;made in korea&quot;,
-    &quot;23g lip mask&quot;,
-    &quot;overnight lip treatment&quot;,
-    &quot;ginger orange lip care&quot;
+    &quot;廚房桶架&quot;,
+    &quot;食堂保溫桶架&quot;,
+    &quot;開水桶推車架&quot;
   ],
   &quot;top_attractiveness&quot;: {
-    &quot;brand&quot;: [
-      &quot;ETUDE&quot;
-    ],
-    &quot;brand_en&quot;: [
-      &quot;ETUDE&quot;
-    ],
     &quot;product_type&quot;: [
-      &quot;隔夜唇膜&quot;
+      &quot;帶滑輪支架&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;overnight lip mask&quot;
+      &quot;Wheeled Bucket Stand&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;滋润保湿&quot;: [
-      &quot;保濕&quot;,
-      &quot;滋润&quot;,
-      &quot;保湿&quot;
+    &quot;便捷移动&quot;: [
+      &quot;可移動水桶架&quot;,
+      &quot;带滑轮支架&quot;
     ],
-    &quot;滋润保湿_en&quot;: [
-      &quot;moisturizing&quot;,
-      &quot;hydration&quot;,
-      &quot;moisture retention&quot;
+    &quot;便捷移动_en&quot;: [
+      &quot;Portable Water Bucket Frame with Wheels&quot;,
+      &quot;Rolling Bucket Support System&quot;
     ],
-    &quot;舒緩修復&quot;: [
-      &quot;舒緩&quot;,
-      &quot;修復&quot;,
-      &quot;鎮定&quot;
+    &quot;多功能应用&quot;: [
+      &quot;湯桶架&quot;,
+      &quot;奶茶桶架&quot;
     ],
-    &quot;舒緩修復_en&quot;: [
-      &quot;relaxation&quot;,
-      &quot;repair&quot;,
-      &quot;calming&quot;
+    &quot;多功能应用_en&quot;: [
+      &quot;Soup Bucket Rack&quot;,
+      &quot;Tea Milk Bottle Holder&quot;
     ],
-    &quot;適用群體&quot;: [
-      &quot;女性&quot;,
-      &quot;愛護唇部的人&quot;,
-      &quot;需要護唇的人&quot;
+    &quot;定制能力&quot;: [
+      &quot;可定製水桶架&quot;
     ],
-    &quot;適用群體_en&quot;: [
-      &quot;women&quot;,
-      &quot;lip care enthusiasts&quot;,
-      &quot;people who need lip care&quot;
+    &quot;定制能力_en&quot;: [
+      &quot;Customizable Water Bucket Frame&quot;
     ]
   }
 }</pre>
@@ -3763,48 +3519,91 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;生姜蜂蜜面膜&quot;,
-    &quot;晚安唇霜&quot;,
-    &quot;滋养修护唇膜&quot;
+    &quot;廚房水桶架&quot;,
+    &quot;移動水桶架&quot;,
+    &quot;湯桶架&quot;,
+    &quot;奶茶桶架&quot;,
+    &quot;保溫桶架&quot;,
+    &quot;帶滑輪水桶架&quot;,
+    &quot;可定製水桶架&quot;,
+    &quot;食堂水桶架&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;kitchen water bucket rack&quot;,
+    &quot;movable water bucket rack&quot;,
+    &quot;soup bucket rack&quot;,
+    &quot;milk tea bucket rack&quot;,
+    &quot;insulated bucket rack&quot;,
+    &quot;wheel water bucket rack&quot;,
+    &quot;customizable water bucket rack&quot;,
+    &quot;canteen water bucket rack&quot;
   ],
   &quot;top_attractiveness&quot;: {
-    &quot;brand&quot;: [
-      &quot;ETUDE&quot;
-    ],
-    &quot;brand_en&quot;: [
-      &quot;ETUDE&quot;
-    ],
     &quot;product_type&quot;: [
-      &quot;隔夜唇膜&quot;
+      &quot;水桶架&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Overnight Lip Mask&quot;
+      &quot;water bucket rack&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;夜间护肤&quot;: [
-      &quot;可用于晚间滋润护唇&quot;,
-      &quot;每日涂抹更新配方&quot;
+    &quot;便携性/轻便性&quot;: [
+      &quot;可移動&quot;,
+      &quot;帶滑輪&quot;,
+      &quot;輕便&quot;
     ],
-    &quot;夜间护肤_en&quot;: [
-      &quot;Suitable for Nighttime Moisturizing Care&quot;,
-      &quot;Daily Application with Fresh Formula Update&quot;
+    &quot;便携性/轻便性_en&quot;: [
+      &quot;movable&quot;,
+      &quot;with wheels&quot;,
+      &quot;lightweight&quot;
     ],
-    &quot;天然成分&quot;: [
-      &quot;含姜+橙油成分&quot;,
-      &quot;含糖+乳木果油成分&quot;
+    &quot;多功能性&quot;: [
+      &quot;湯桶架&quot;,
+      &quot;奶茶桶架&quot;,
+      &quot;保溫桶架&quot;
     ],
-    &quot;天然成分_en&quot;: [
-      &quot;Contains Ginger + Orange Oil Ingredients&quot;,
-      &quot;Contains Sugar + Shea Butter Components&quot;
+    &quot;多功能性_en&quot;: [
+      &quot;soup bucket rack&quot;,
+      &quot;milk tea bucket rack&quot;,
+      &quot;insulated bucket rack&quot;
     ],
-    &quot;舒缓护理&quot;: [
-      &quot;稳定身心&quot;,
-      &quot;呵护干燥细胞&quot;
+    &quot;定制&quot;: [
+      &quot;可定製&quot;,
+      &quot;私人訂製&quot;
     ],
-    &quot;舒缓护理_en&quot;: [
-      &quot;Stabilizes Mind and Body&quot;,
-      &quot;Nurtures Dry Cells&quot;
+    &quot;定制_en&quot;: [
+      &quot;customizable&quot;,
+      &quot;private customization&quot;
+    ],
+    &quot;机械工学&quot;: [
+      &quot;可移動&quot;,
+      &quot;帶滑輪&quot;,
+      &quot;移動方便&quot;
+    ],
+    &quot;机械工学_en&quot;: [
+      &quot;movable&quot;,
+      &quot;with wheels&quot;,
+      &quot;convenient to move&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;加厚不鏽鋼&quot;,
+      &quot;耐用&quot;,
+      &quot;長壽命&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;thick stainless steel&quot;,
+      &quot;durable&quot;,
+      &quot;long-lasting&quot;
+    ],
+    &quot;防水防潮&quot;: [
+      &quot;防水&quot;,
+      &quot;防潮&quot;,
+      &quot;防漏&quot;
+    ],
+    &quot;防水防潮_en&quot;: [
+      &quot;waterproof&quot;,
+      &quot;moisture-proof&quot;,
+      &quot;leak-proof&quot;
     ]
   }
 }</pre>
@@ -3817,7 +3616,7 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 16</div>
+            <div class="case-kicker">Case 15</div>
             <h3>普拉提床 瑜伽床 核心床 普拉提核心床瑜伽館健身房家用普拉提大器械五件套普拉提床</h3>
             <div class="case-meta">
               <span>Item 26090338070</span>
@@ -3830,7 +3629,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B存在明显编造商品事实的严重问题，而候选A虽然有语言和拼写问题，但未编造事实，因此A更优。</p>
+          <p>候选B因凭空编造商品尺寸和材质，严重违反了内容忠实于原始商品信息的原则，这是比候选A的语言不符更严重的错误。尽管候选A存在语言问题和拼写错误，但其内容并未编造事实。</p>
         </div>
         <div class="case-grid">
           
@@ -3841,20 +3640,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
-          <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>语言不符合目标地区（使用简体中文而非繁体中文）</li><li>top_attractiveness中的&#x27;Pratice&#x27;存在拼写错误</li><li>top_attractiveness未直接使用商品最核心的&#x27;普拉提床&#x27;作为产品类型</li></ul>
+          <ul><li>主要字段（如long_tail_keywords, product_type, unique_selling_points的键和值）使用了简体中文或英文，不符合台湾繁体中文的目标市场语言要求。</li><li>top_attractiveness中的product_type值&#x27;Pratice Bed Set&#x27;存在拼写错误（Pratice应为Pilates）。</li></ul>
         </div>
       </div>
     
@@ -3873,13 +3672,13 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
           <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>明显编造了商品原文中未提及的&#x27;尺寸&#x27;信息</li><li>明显编造了商品原文中未提及的&#x27;材质&#x27;信息</li></ul>
+          <ul><li>凭空编造了商品尺寸（&#x27;尺寸&#x27;字段）和材质（&#x27;材质&#x27;字段），原始商品信息中均未提及。</li><li>unique_selling_points中的&#x27;尺寸&#x27;字段存在冗余和不一致的单位表示（cm和m，以及重复的&#x27;公分&#x27;）。</li></ul>
         </div>
       </div>
     
@@ -4003,7 +3802,7 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 17</div>
+            <div class="case-kicker">Case 16</div>
             <h3>寇比造型蛋糕 小小兵 造型蛋糕 客製化 人偶蛋糕</h3>
             <div class="case-meta">
               <span>Item 1175102786</span>
@@ -4016,7 +3815,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A在品牌、事实忠实度和地区语言方面均表现良好，虽然存在一些分类问题，但无硬伤。候选B存在品牌错误、内容编造和语言不符等严重问题，不符合评审要求。</p>
+          <p>候选A在品牌、事实忠实度、语言本地化和搜索价值方面均表现出色，没有硬约束问题。候选B存在明显的事实编造（如「不含添加剂」）和语言不符（简体中文、不自然英文翻译）问题，因此候选A更优。</p>
         </div>
         <div class="case-grid">
           
@@ -4031,16 +3830,16 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>5</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>5</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>5</strong></div>
           <div class="metric-row"><span>本地化</span><strong>5</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>unique_selling_points中存在归类错误，例如将“客製化”、“可自取”归类到“保存方式”，将“小小兵”归类到“口味多樣”，将“蛋奶素”归类到“食品工藝”。</li></ul>
+          <div class="empty">无</div>
         </div>
       </div>
     
@@ -4051,21 +3850,21 @@ Beauty|Skincare|Lip Treatment
           <span class="side-chip">v6</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
           <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌英文翻译错误，将“寇比”翻译为“Kobi”而非“Kopi”。</li><li>unique_selling_points中存在明显编造，例如“不含添加剂”原文无支持，且原文提及食用色素。</li><li>中文内容存在简体字（如“鲜奶卡士达”、“创新口感”），不符合TW地区繁体中文的语言要求。</li></ul>
+          <ul><li>unique_selling_points.健康友好 中包含原文未提及的「不含添加剂」，属于凭空编造。</li><li>存在简体中文（如「不含添加剂」、「鲜奶」、「卡士达」）和不自然的英文翻译（如 `Homemade Fresh Cream Cheese`），不符合目标地区语言要求。</li><li>long_tail_keywords 数量较少，未能充分捕捉搜索价值。</li></ul>
         </div>
       </div>
     
@@ -4249,12 +4048,12 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 18</div>
-            <h3>刮勺 挖勺 面膜挖勺 分裝勺 分裝棒 面膜勺 調膜棒 面霜勺 美妝工具 化妝品 分裝刮勺【L084】Color me</h3>
+            <div class="case-kicker">Case 17</div>
+            <h3>[ETUDE] 薑糖隔夜唇膜 23g</h3>
             <div class="case-meta">
-              <span>Item 22923223497</span>
+              <span>Item 19873128577</span>
               <span>TW</span>
-              <span>Beauty|Beauty Tools|Others</span>
+              <span>Beauty|Skincare|Lip Treatment</span>
               <span>swap=True</span>
             </div>
           </div>
@@ -4262,7 +4061,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选B存在明显编造和对原文事实的严重误读，且搜索价值较低。候选A虽然有轻微编造，但在事实忠实度、搜索价值和语言本地化方面表现更优。</p>
+          <p>候选A虽然存在部分简体中文和轻微编造，但候选B存在严重的语言不符（大量简体中文）和明显的事实编造，因此A更优。</p>
         </div>
         <div class="case-grid">
           
@@ -4272,21 +4071,21 @@ Beauty|Skincare|Lip Treatment
           <span class="side-chip">new_v9</span>
         </div>
         <div class="metric-list">
-          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
           <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>2</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>4</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>2</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>独特卖点中的“易清洗”和“耐用”在原文中没有直接支持，属于轻微编造。</li><li>product_type列表过于冗长，包含大量同义词，可适当精简。</li></ul>
+          <ul><li>unique_selling_points的键名使用了简体中文</li><li>长尾词&#x27;干燥天氣護唇&#x27;和适用群体&#x27;女性&#x27;等为轻微编造</li></ul>
         </div>
       </div>
     
@@ -4299,19 +4098,19 @@ Beauty|Skincare|Lip Treatment
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
           <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
-          <div class="metric-row"><span>核心吸引点</span><strong>3</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
-          <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>1</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>独特卖点中的“輕巧設計”在原文中完全没有提及，属于明显编造。</li><li>独特卖点“耐用性”下使用了原文中描述产品可能存在瑕疵（刮痕或小掉漆）的文字，属于对事实的严重误读和误导。</li><li>核心吸引点product_type过于狭窄，未能涵盖标题中的多个关键商品类型。</li></ul>
+          <ul><li>大部分字段（long_tail_keywords, unique_selling_points的键和值）使用了简体中文，不符合TW地区语言</li><li>长尾词&#x27;生姜蜂蜜面膜&#x27;与商品信息严重不符，属于明显编造</li><li>独特卖点&#x27;每日涂抹更新配方&#x27;为凭空编造</li></ul>
         </div>
       </div>
     
@@ -4322,83 +4121,69 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">A 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;面膜刮勺&quot;,
-    &quot;分裝刮勺&quot;,
-    &quot;面膜挖勺&quot;,
-    &quot;分裝勺&quot;,
-    &quot;面膜勺&quot;,
-    &quot;調膜棒&quot;,
-    &quot;面霜勺&quot;,
-    &quot;美妝工具&quot;,
-    &quot;化妝品刮勺&quot;,
-    &quot;面膜分裝工具&quot;
+    &quot;姜糖護唇&quot;,
+    &quot;睡前護唇&quot;,
+    &quot;日常護唇&quot;,
+    &quot;干燥天氣護唇&quot;,
+    &quot;韓國製造&quot;,
+    &quot;23g唇膜&quot;,
+    &quot;隔夜護唇&quot;,
+    &quot;姜橙護唇&quot;
   ],
   &quot;long_tail_keywords_en&quot;: [
-    &quot;mask scraper&quot;,
-    &quot;portioning scraper&quot;,
-    &quot;mask digger&quot;,
-    &quot;portioning spoon&quot;,
-    &quot;mask spoon&quot;,
-    &quot;adjustment rod&quot;,
-    &quot;cream spoon&quot;,
-    &quot;beauty tool&quot;,
-    &quot;cosmetic scraper&quot;,
-    &quot;mask portioning tool&quot;
+    &quot;ginger sugar lip care&quot;,
+    &quot;overnight lip care&quot;,
+    &quot;daily lip care&quot;,
+    &quot;dry weather lip care&quot;,
+    &quot;made in korea&quot;,
+    &quot;23g lip mask&quot;,
+    &quot;overnight lip treatment&quot;,
+    &quot;ginger orange lip care&quot;
   ],
   &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;ETUDE&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;ETUDE&quot;
+    ],
     &quot;product_type&quot;: [
-      &quot;刮勺&quot;,
-      &quot;挖勺&quot;,
-      &quot;面膜挖勺&quot;,
-      &quot;分裝勺&quot;,
-      &quot;分裝棒&quot;,
-      &quot;面膜勺&quot;,
-      &quot;調膜棒&quot;,
-      &quot;面霜勺&quot;
+      &quot;隔夜唇膜&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;scraper&quot;,
-      &quot;spoon&quot;,
-      &quot;mask scraper&quot;,
-      &quot;portioning spoon&quot;,
-      &quot;portioning rod&quot;,
-      &quot;mask spoon&quot;,
-      &quot;adjustment rod&quot;,
-      &quot;cream spoon&quot;
+      &quot;overnight lip mask&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;功能描述&quot;: [
-      &quot;方便分裝&quot;,
-      &quot;易清洗&quot;,
-      &quot;耐用&quot;,
-      &quot;多功能&quot;
+    &quot;滋润保湿&quot;: [
+      &quot;保濕&quot;,
+      &quot;滋润&quot;,
+      &quot;保湿&quot;
     ],
-    &quot;功能描述_en&quot;: [
-      &quot;convenient portioning&quot;,
-      &quot;easy to clean&quot;,
-      &quot;durable&quot;,
-      &quot;multi-functional&quot;
+    &quot;滋润保湿_en&quot;: [
+      &quot;moisturizing&quot;,
+      &quot;hydration&quot;,
+      &quot;moisture retention&quot;
     ],
-    &quot;適用人群&quot;: [
-      &quot;美妝愛好者&quot;,
-      &quot;化妝品使用者&quot;,
-      &quot;面膜愛用者&quot;
+    &quot;舒緩修復&quot;: [
+      &quot;舒緩&quot;,
+      &quot;修復&quot;,
+      &quot;鎮定&quot;
     ],
-    &quot;適用人群_en&quot;: [
-      &quot;beauty enthusiasts&quot;,
-      &quot;cosmetic users&quot;,
-      &quot;mask users&quot;
+    &quot;舒緩修復_en&quot;: [
+      &quot;relaxation&quot;,
+      &quot;repair&quot;,
+      &quot;calming&quot;
     ],
-    &quot;適用場景&quot;: [
-      &quot;分裝面膜&quot;,
-      &quot;分裝化妝品&quot;,
-      &quot;美妝工具&quot;
+    &quot;適用群體&quot;: [
+      &quot;女性&quot;,
+      &quot;愛護唇部的人&quot;,
+      &quot;需要護唇的人&quot;
     ],
-    &quot;適用場景_en&quot;: [
-      &quot;portioning masks&quot;,
-      &quot;portioning cosmetics&quot;,
-      &quot;beauty tools&quot;
+    &quot;適用群體_en&quot;: [
+      &quot;women&quot;,
+      &quot;lip care enthusiasts&quot;,
+      &quot;people who need lip care&quot;
     ]
   }
 }</pre>
@@ -4409,48 +4194,48 @@ Beauty|Skincare|Lip Treatment
         <div class="output-head">B 实际输出</div>
         <pre>{
   &quot;long_tail_keywords&quot;: [
-    &quot;分裝刮勺&quot;,
-    &quot;面膜挖勺&quot;,
-    &quot;調整薄膜工具&quot;
+    &quot;生姜蜂蜜面膜&quot;,
+    &quot;晚安唇霜&quot;,
+    &quot;滋养修护唇膜&quot;
   ],
   &quot;top_attractiveness&quot;: {
     &quot;brand&quot;: [
-      &quot;Color me&quot;
+      &quot;ETUDE&quot;
     ],
     &quot;brand_en&quot;: [
-      &quot;Color me&quot;
+      &quot;ETUDE&quot;
     ],
     &quot;product_type&quot;: [
-      &quot;分裝刮勺&quot;
+      &quot;隔夜唇膜&quot;
     ],
     &quot;product_type_en&quot;: [
-      &quot;Packaging Spatula&quot;
+      &quot;Overnight Lip Mask&quot;
     ]
   },
   &quot;unique_selling_points&quot;: {
-    &quot;便携性/轻便性&quot;: [
-      &quot;美妝工具&quot;,
-      &quot;輕巧設計&quot;
+    &quot;夜间护肤&quot;: [
+      &quot;可用于晚间滋润护唇&quot;,
+      &quot;每日涂抹更新配方&quot;
     ],
-    &quot;便携性/轻便性_en&quot;: [
-      &quot;Makeup Tool&quot;,
-      &quot;Lightweight Design&quot;
+    &quot;夜间护肤_en&quot;: [
+      &quot;Suitable for Nighttime Moisturizing Care&quot;,
+      &quot;Daily Application with Fresh Formula Update&quot;
     ],
-    &quot;多功能性&quot;: [
-      &quot;面膜挖勺&quot;,
-      &quot;調膜棒&quot;
+    &quot;天然成分&quot;: [
+      &quot;含姜+橙油成分&quot;,
+      &quot;含糖+乳木果油成分&quot;
     ],
-    &quot;多功能性_en&quot;: [
-      &quot;Mask Scoop&quot;,
-      &quot;Film Adjuster&quot;
+    &quot;天然成分_en&quot;: [
+      &quot;Contains Ginger + Orange Oil Ingredients&quot;,
+      &quot;Contains Sugar + Shea Butter Components&quot;
     ],
-    &quot;耐用性&quot;: [
-      &quot;機器製程&quot;,
-      &quot;運送時造成的刮痕或小掉漆難免會有&quot;
+    &quot;舒缓护理&quot;: [
+      &quot;稳定身心&quot;,
+      &quot;呵护干燥细胞&quot;
     ],
-    &quot;耐用性_en&quot;: [
-      &quot;Machine Processed&quot;,
-      &quot;Scratches from Transportation&quot;
+    &quot;舒缓护理_en&quot;: [
+      &quot;Stabilizes Mind and Body&quot;,
+      &quot;Nurtures Dry Cells&quot;
     ]
   }
 }</pre>
@@ -4463,7 +4248,7 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 19</div>
+            <div class="case-kicker">Case 18</div>
             <h3>【秒殺預售】寶可夢 PTCG 日版 超級夢想X 可達鴨 AR 199/193 M2a MEGA 日文</h3>
             <div class="case-meta">
               <span>Item 51402536216</span>
@@ -4476,7 +4261,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A的品牌识别正确，而候选B存在严重的品牌识别错误，根据评审规则，品牌错误是严重错误，原则上不能获胜。</p>
+          <p>候选A虽然存在编造和事实错误，但品牌正确且语言符合目标市场。候选B的品牌错误和语言不符是更严重的硬约束问题。</p>
         </div>
         <div class="case-grid">
           
@@ -4492,15 +4277,15 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>3</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>独特卖点中&#x27;数量与包装&#x27;字段内容（如&#x27;一包&#x27;,&#x27;一盒&#x27;）在原文中未提及，属于编造。</li><li>长尾搜索词和知名IP中将&#x27;可达鸭&#x27;错误地写成&#x27;Pikachu&#x27;（皮卡丘）。</li></ul>
+          <ul><li>独特卖点中“数量与包装”完全凭空编造</li><li>独特卖点中“知名IP”将“可达鸭”错写为“Pikachu”</li><li>长尾关键词的英文翻译有误（Pikachu card）</li></ul>
         </div>
       </div>
     
@@ -4513,19 +4298,19 @@ Beauty|Skincare|Lip Treatment
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
           <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
           <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>2</strong></div>
-          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>5</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>1</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>top_attractiveness中的品牌错误地识别为&#x27;PTCG&#x27;，PTCG是系列/游戏类型而非品牌，品牌应为&#x27;寶可夢&#x27;。</li><li>独特卖点中&#x27;限量预购&#x27;包含&#x27;现货保障&#x27;，与原文描述的&#x27;下單前可以先詢問存貨&#x27;、&#x27;若缺貨時會通知&#x27;不符，属于编造。</li></ul>
+          <ul><li>品牌错误，将“PTCG”作为品牌</li><li>语言不符合目标地区（台湾），使用简体中文</li><li>独特卖点中“限量预购”的“现货保障”凭空编造</li></ul>
         </div>
       </div>
     
@@ -4690,7 +4475,7 @@ Beauty|Skincare|Lip Treatment
       <article class="case-card">
         <div class="case-head">
           <div>
-            <div class="case-kicker">Case 20</div>
+            <div class="case-kicker">Case 19</div>
             <h3>🪐216張美國山海經搞笑抽象沙雕貼紙意義不明創意趣味裝飾貼畫防水</h3>
             <div class="case-meta">
               <span>Item 41004677407</span>
@@ -4703,7 +4488,7 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="verdict">
           <div class="verdict-label">结论摘要</div>
-          <p>候选A存在品牌错误、严重的事实编造（误译）和语言不符（简体中文），这些是致命性错误。候选B虽然存在轻微的事实扩展和`_en`字段的语言污染，但其主要内容忠实于原文，且语言符合目标地区（繁体中文），整体质量远高于A。</p>
+          <p>候选B在品牌识别和目标市场语言方面表现更优，尽管存在轻微的事实推断和`_en`字段语言混杂问题，但远优于候选A的品牌错误和主要内容语言不符的严重问题。</p>
         </div>
         <div class="case-grid">
           
@@ -4714,20 +4499,20 @@ Beauty|Skincare|Lip Treatment
         </div>
         <div class="metric-list">
           <div class="metric-row"><span>品牌</span><strong>错误</strong></div>
-          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
-          <div class="metric-row"><span>地区语言</span><strong>否</strong></div>
+          <div class="metric-row"><span>编造</span><strong>否</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
           <div class="metric-row"><span>品牌正确性</span><strong>1</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>1</strong></div>
-          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
-          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>3</strong></div>
           <div class="metric-row"><span>本地化</span><strong>1</strong></div>
           <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>品牌错误：将“美國山海經”误识别为品牌。</li><li>明显编造：将“意義不明”错误翻译为“Meaningful”，与原文意思完全相反。</li><li>语言不符：使用简体中文而非台湾地区使用的繁体中文。</li></ul>
+          <ul><li>品牌错误：将“美國山海經”误识别为品牌。</li><li>语言不符：主要内容使用简体中文，而非目标地区（台湾）的繁体中文。</li></ul>
         </div>
       </div>
     
@@ -4741,18 +4526,18 @@ Beauty|Skincare|Lip Treatment
           <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
           <div class="metric-row"><span>编造</span><strong>轻微</strong></div>
           <div class="metric-row"><span>地区语言</span><strong>部分否</strong></div>
-          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
           <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
           <div class="metric-row"><span>独特卖点</span><strong>3</strong></div>
-          <div class="metric-row"><span>长尾搜索词</span><strong>4</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>3</strong></div>
           <div class="metric-row"><span>事实综合</span><strong>3</strong></div>
           <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
           <div class="metric-row"><span>本地化</span><strong>3</strong></div>
-          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
         </div>
         <div class="issues">
           <div class="issues-title">关键问题</div>
-          <ul><li>事实忠实度：在独特卖点和长尾词中对适用场景和功能（如“防潮”）进行了轻微的扩展，原文未直接提及。</li><li>语言污染：`long_tail_keywords_en` 字段中混入了简体中文。</li><li>结构重复：`long_tail_keywords` 和 `unique_selling_points.適用場景` 存在内容重复。</li></ul>
+          <ul><li>事实忠实度有轻微不足：推断了原文未提及的适用场景（如儿童房、办公室装饰）和“防潮”属性。</li><li>`_en`字段中混杂了简体中文，存在语言污染。</li></ul>
         </div>
       </div>
     
@@ -4864,6 +4649,220 @@ Beauty|Skincare|Lip Treatment
       &quot;waterproof sticker&quot;,
       &quot;moisture-proof sticker&quot;,
       &quot;waterproof&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+        </div>
+      </article>
+    
+
+      <article class="case-card">
+        <div class="case-head">
+          <div>
+            <div class="case-kicker">Case 20</div>
+            <h3>刮勺 挖勺 面膜挖勺 分裝勺 分裝棒 面膜勺 調膜棒 面霜勺 美妝工具 化妝品 分裝刮勺【L084】Color me</h3>
+            <div class="case-meta">
+              <span>Item 22923223497</span>
+              <span>TW</span>
+              <span>Beauty|Beauty Tools|Others</span>
+              <span>swap=True</span>
+            </div>
+          </div>
+          <div class="winner-badge winner-a">A 胜出（new_v9）</div>
+        </div>
+        <div class="verdict">
+          <div class="verdict-label">结论摘要</div>
+          <p>尽管A未提取品牌，但其在搜索价值和核心产品类型提取上远优于B。B虽然提取了品牌，但其对原文的误读和编造问题更严重，且搜索词覆盖面过窄。</p>
+        </div>
+        <div class="case-grid">
+          
+      <div class="side-panel side-a">
+        <div class="side-head">
+          <h4>A · new_v9</h4>
+          <span class="side-chip">new_v9</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>缺失但未写错</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>3</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>5</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>5</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>2</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>4</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>5</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>4</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>未提取品牌信息</li><li>独特卖点中“易清洗”、“耐用”为凭空编造，且“耐用”与原文描述的瑕疵免责条款相悖</li></ul>
+        </div>
+      </div>
+    
+          
+      <div class="side-panel side-b">
+        <div class="side-head">
+          <h4>B · v6</h4>
+          <span class="side-chip">v6</span>
+        </div>
+        <div class="metric-list">
+          <div class="metric-row"><span>品牌</span><strong>正确</strong></div>
+          <div class="metric-row"><span>编造</span><strong>明显</strong></div>
+          <div class="metric-row"><span>地区语言</span><strong>是</strong></div>
+          <div class="metric-row"><span>品牌正确性</span><strong>5</strong></div>
+          <div class="metric-row"><span>核心吸引点</span><strong>2</strong></div>
+          <div class="metric-row"><span>独特卖点</span><strong>1</strong></div>
+          <div class="metric-row"><span>长尾搜索词</span><strong>2</strong></div>
+          <div class="metric-row"><span>事实综合</span><strong>1</strong></div>
+          <div class="metric-row"><span>搜索价值</span><strong>1</strong></div>
+          <div class="metric-row"><span>本地化</span><strong>4</strong></div>
+          <div class="metric-row"><span>结构与去重</span><strong>3</strong></div>
+        </div>
+        <div class="issues">
+          <div class="issues-title">关键问题</div>
+          <ul><li>核心吸引点中的产品类型提取不全</li><li>独特卖点中“輕巧設計”为凭空编造</li><li>独特卖点中将原文的瑕疵免责条款（“機器製程，運送時造成的刮痕或小掉漆難免會有”）错误解读为“耐用性”的卖点，严重误导</li></ul>
+        </div>
+      </div>
+    
+        </div>
+        <div class="output-grid">
+          
+      <div class="output-panel">
+        <div class="output-head">A 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;面膜刮勺&quot;,
+    &quot;分裝刮勺&quot;,
+    &quot;面膜挖勺&quot;,
+    &quot;分裝勺&quot;,
+    &quot;面膜勺&quot;,
+    &quot;調膜棒&quot;,
+    &quot;面霜勺&quot;,
+    &quot;美妝工具&quot;,
+    &quot;化妝品刮勺&quot;,
+    &quot;面膜分裝工具&quot;
+  ],
+  &quot;long_tail_keywords_en&quot;: [
+    &quot;mask scraper&quot;,
+    &quot;portioning scraper&quot;,
+    &quot;mask digger&quot;,
+    &quot;portioning spoon&quot;,
+    &quot;mask spoon&quot;,
+    &quot;adjustment rod&quot;,
+    &quot;cream spoon&quot;,
+    &quot;beauty tool&quot;,
+    &quot;cosmetic scraper&quot;,
+    &quot;mask portioning tool&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;product_type&quot;: [
+      &quot;刮勺&quot;,
+      &quot;挖勺&quot;,
+      &quot;面膜挖勺&quot;,
+      &quot;分裝勺&quot;,
+      &quot;分裝棒&quot;,
+      &quot;面膜勺&quot;,
+      &quot;調膜棒&quot;,
+      &quot;面霜勺&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;scraper&quot;,
+      &quot;spoon&quot;,
+      &quot;mask scraper&quot;,
+      &quot;portioning spoon&quot;,
+      &quot;portioning rod&quot;,
+      &quot;mask spoon&quot;,
+      &quot;adjustment rod&quot;,
+      &quot;cream spoon&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;功能描述&quot;: [
+      &quot;方便分裝&quot;,
+      &quot;易清洗&quot;,
+      &quot;耐用&quot;,
+      &quot;多功能&quot;
+    ],
+    &quot;功能描述_en&quot;: [
+      &quot;convenient portioning&quot;,
+      &quot;easy to clean&quot;,
+      &quot;durable&quot;,
+      &quot;multi-functional&quot;
+    ],
+    &quot;適用人群&quot;: [
+      &quot;美妝愛好者&quot;,
+      &quot;化妝品使用者&quot;,
+      &quot;面膜愛用者&quot;
+    ],
+    &quot;適用人群_en&quot;: [
+      &quot;beauty enthusiasts&quot;,
+      &quot;cosmetic users&quot;,
+      &quot;mask users&quot;
+    ],
+    &quot;適用場景&quot;: [
+      &quot;分裝面膜&quot;,
+      &quot;分裝化妝品&quot;,
+      &quot;美妝工具&quot;
+    ],
+    &quot;適用場景_en&quot;: [
+      &quot;portioning masks&quot;,
+      &quot;portioning cosmetics&quot;,
+      &quot;beauty tools&quot;
+    ]
+  }
+}</pre>
+      </div>
+    
+          
+      <div class="output-panel">
+        <div class="output-head">B 实际输出</div>
+        <pre>{
+  &quot;long_tail_keywords&quot;: [
+    &quot;分裝刮勺&quot;,
+    &quot;面膜挖勺&quot;,
+    &quot;調整薄膜工具&quot;
+  ],
+  &quot;top_attractiveness&quot;: {
+    &quot;brand&quot;: [
+      &quot;Color me&quot;
+    ],
+    &quot;brand_en&quot;: [
+      &quot;Color me&quot;
+    ],
+    &quot;product_type&quot;: [
+      &quot;分裝刮勺&quot;
+    ],
+    &quot;product_type_en&quot;: [
+      &quot;Packaging Spatula&quot;
+    ]
+  },
+  &quot;unique_selling_points&quot;: {
+    &quot;便携性/轻便性&quot;: [
+      &quot;美妝工具&quot;,
+      &quot;輕巧設計&quot;
+    ],
+    &quot;便携性/轻便性_en&quot;: [
+      &quot;Makeup Tool&quot;,
+      &quot;Lightweight Design&quot;
+    ],
+    &quot;多功能性&quot;: [
+      &quot;面膜挖勺&quot;,
+      &quot;調膜棒&quot;
+    ],
+    &quot;多功能性_en&quot;: [
+      &quot;Mask Scoop&quot;,
+      &quot;Film Adjuster&quot;
+    ],
+    &quot;耐用性&quot;: [
+      &quot;機器製程&quot;,
+      &quot;運送時造成的刮痕或小掉漆難免會有&quot;
+    ],
+    &quot;耐用性_en&quot;: [
+      &quot;Machine Processed&quot;,
+      &quot;Scratches from Transportation&quot;
     ]
   }
 }</pre>
